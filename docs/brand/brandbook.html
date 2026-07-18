@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABYSSAL LITURGY — Brand &amp; Art Direction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#050506;
+    --charcoal:#111318;
+    --panel:#0b0c10;
+    --slate:#2b3038;
+    --ash:#6d727b;
+    --bone:#e9e4da;
+    --silver:#9a9d95;
+    --hair:rgba(233,228,218,0.14);
+    --bio:#3c4b46;
+    --serif:'Fraunces', serif;
+    --sans:'Space Grotesk', sans-serif;
+    --mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--void);
+    color:var(--bone);
+    font-family:var(--sans);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+
+  /* grain overlay */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    pointer-events:none;
+    z-index:999;
+    opacity:0.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode:overlay;
+  }
+
+  .wrap{max-width:1180px; margin:0 auto; padding:0 48px;}
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--ash);
+  }
+
+  section{position:relative; border-bottom:1px solid var(--hair);}
+  section .wrap{padding-top:120px; padding-bottom:120px;}
+
+  h1,h2,h3{font-family:var(--serif); font-weight:400; letter-spacing:0.01em;}
+
+  /* ============ COVER ============ */
+  .cover{
+    min-height:100vh;
+    display:flex;
+    align-items:flex-end;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 8%, rgba(154,157,149,0.10), transparent 60%),
+      linear-gradient(180deg, #000 0%, #08090b 55%, #050506 100%);
+    border-bottom:1px solid var(--hair);
+  }
+  .cover-halo{
+    position:absolute; top:12%; left:50%; transform:translateX(-50%);
+    width:420px; opacity:0.9;
+  }
+  .cover .wrap{padding-top:0; padding-bottom:80px; width:100%;}
+  .cover-title{
+    font-size:clamp(56px, 10vw, 148px);
+    line-height:0.92;
+    font-weight:300;
+    letter-spacing:-0.01em;
+    text-transform:uppercase;
+  }
+  .cover-title em{font-style:italic; font-weight:300; color:var(--silver);}
+  .cover-sub{
+    margin-top:28px;
+    display:flex; justify-content:space-between; align-items:flex-end;
+    gap:24px; flex-wrap:wrap;
+    border-top:1px solid var(--hair);
+    padding-top:20px;
+  }
+  .cover-sub p{max-width:480px; color:var(--silver); font-size:15px; font-weight:300;}
+  .cover-num{font-family:var(--mono); font-size:11px; color:var(--ash); letter-spacing:0.2em;}
+
+  /* ============ SECTION LABELS ============ */
+  .sec-head{display:flex; align-items:baseline; gap:18px; margin-bottom:56px;}
+  .sec-head .idx{font-family:var(--mono); font-size:13px; color:var(--ash); letter-spacing:0.15em;}
+  .sec-head h2{font-size:clamp(30px,4vw,46px); font-weight:300; text-transform:uppercase; letter-spacing:0.01em;}
+  .sec-head .line{flex:1; height:1px; background:var(--hair);}
+
+  /* ============ MANIFESTO ============ */
+  .manifesto p{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:clamp(22px,3vw,34px);
+    font-weight:300;
+    color:var(--bone);
+    max-width:900px;
+    line-height:1.5;
+  }
+  .manifesto .support{
+    margin-top:40px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:32px;
+  }
+  .manifesto .support div{
+    font-size:14px; color:var(--silver); font-weight:300;
+    border-top:1px solid var(--hair); padding-top:16px;
+  }
+  .manifesto .support strong{
+    display:block; font-family:var(--mono); font-size:11px;
+    letter-spacing:0.15em; text-transform:uppercase; color:var(--ash); margin-bottom:8px; font-weight:400;
+  }
+
+  /* ============ PALETTE ============ */
+  .palette-grid{display:grid; grid-template-columns:repeat(6,1fr); gap:1px; background:var(--hair); border:1px solid var(--hair);}
+  .swatch{background:var(--void); padding:28px 18px; min-height:220px; display:flex; flex-direction:column; justify-content:flex-end;}
+  .swatch .chip{height:110px; margin-bottom:22px; border:1px solid var(--hair);}
+  .swatch .name{font-family:var(--serif); font-style:italic; font-size:18px; margin-bottom:6px;}
+  .swatch .hex{font-family:var(--mono); font-size:11px; color:var(--ash); letter-spacing:0.05em;}
+  .swatch .use{font-size:12px; color:var(--silver); margin-top:10px; font-weight:300; line-height:1.5;}
+
+  .avoid-row{margin-top:40px; display:flex; gap:14px; flex-wrap:wrap; align-items:center;}
+  .avoid-row .tag{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.08em;
+    border:1px solid var(--hair); padding:8px 14px; color:var(--ash);
+  }
+  .avoid-row .tag::before{content:"✕ "; color:#5a3838;}
+
+  /* ============ TYPE ============ */
+  .type-block{border-top:1px solid var(--hair); padding:44px 0;}
+  .type-block:first-of-type{border-top:none;}
+  .type-role{display:flex; justify-content:space-between; gap:24px; margin-bottom:18px; flex-wrap:wrap;}
+  .type-role .rolelabel{font-family:var(--mono); font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--ash);}
+  .type-role .meta{font-family:var(--mono); font-size:11px; color:var(--silver); text-align:right;}
+  .type-display{font-family:var(--serif); font-style:italic; font-weight:300; font-size:clamp(40px,6vw,86px); line-height:1.05;}
+  .type-body-sample{font-family:var(--sans); font-weight:300; font-size:19px; max-width:640px; color:var(--silver);}
+  .type-mono-sample{font-family:var(--mono); font-size:13px; letter-spacing:0.05em; color:var(--silver);}
+
+  /* ============ LIGHT & TEXTURE ============ */
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:80px;}
+  .cardlist div{padding:22px 0; border-top:1px solid var(--hair);}
+  .cardlist div:last-child{border-bottom:1px solid var(--hair);}
+  .cardlist strong{font-family:var(--serif); font-style:italic; font-weight:400; font-size:19px; display:block; margin-bottom:6px;}
+  .cardlist span{font-size:14px; color:var(--silver); font-weight:300;}
+
+  .light-visual{
+    aspect-ratio:4/5;
+    position:relative;
+    background:radial-gradient(ellipse 70% 45% at 50% 0%, rgba(233,228,218,0.16), transparent 65%),
+               linear-gradient(180deg,#050506 0%, #000 100%);
+    border:1px solid var(--hair);
+  }
+
+  /* ============ MARK SYSTEM ============ */
+  .mark-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--hair); border:1px solid var(--hair);}
+  .mark-cell{background:var(--void); aspect-ratio:1; display:flex; align-items:center; justify-content:center; position:relative;}
+  .mark-cell svg{width:52%; height:52%;}
+  .mark-cell .cap{position:absolute; bottom:16px; left:16px; font-family:var(--mono); font-size:10px; letter-spacing:0.1em; color:var(--ash); text-transform:uppercase;}
+  .mark-cell.dark svg{filter:none;}
+  .mark-cell.on-bone{background:var(--bone);}
+  .mark-cell.on-bone .cap{color:#6b6a63;}
+
+  /* ============ STORY ARC ============ */
+  .arc-list{display:flex; flex-direction:column;}
+  .arc-item{
+    display:grid; grid-template-columns:80px 1fr 2fr; gap:32px;
+    padding:26px 0; border-top:1px solid var(--hair); align-items:baseline;
+  }
+  .arc-item:last-child{border-bottom:1px solid var(--hair);}
+  .arc-item .num{font-family:var(--mono); font-size:13px; color:var(--ash);}
+  .arc-item .title{font-family:var(--serif); font-style:italic; font-size:22px;}
+  .arc-item .desc{font-size:14px; color:var(--silver); font-weight:300;}
+
+  /* ============ MATERIALS / DO-DONT ============ */
+  .chip-cloud{display:flex; flex-wrap:wrap; gap:10px;}
+  .chip-cloud span{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.04em;
+    border:1px solid var(--hair); padding:9px 16px; color:var(--silver); background:var(--panel);
+  }
+
+  .dodont{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--hair); border:1px solid var(--hair); margin-top:60px;}
+  .dodont .col{background:var(--void); padding:36px;}
+  .dodont h4{font-family:var(--mono); font-size:11px; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:22px;}
+  .dodont .do h4{color:var(--bone);}
+  .dodont .dont h4{color:var(--ash);}
+  .dodont ul{list-style:none;}
+  .dodont li{font-size:14px; font-weight:300; color:var(--silver); padding:10px 0; border-top:1px solid var(--hair);}
+  .dodont li:first-of-type{border-top:none;}
+
+  /* ============ APPLICATIONS ============ */
+  .app-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .app-card{border:1px solid var(--hair); background:var(--panel); overflow:hidden;}
+  .app-visual{aspect-ratio:4/5; position:relative; background:linear-gradient(180deg,#0a0b0d,#000);}
+  .app-visual .glow{position:absolute; inset:0; background:radial-gradient(ellipse 60% 40% at 50% 10%, rgba(233,228,218,0.14), transparent 70%);}
+  .app-label{padding:18px 20px; border-top:1px solid var(--hair);}
+  .app-label .k{font-family:var(--mono); font-size:10px; letter-spacing:0.15em; color:var(--ash); text-transform:uppercase; display:block; margin-bottom:4px;}
+  .app-label .v{font-family:var(--serif); font-style:italic; font-size:17px;}
+
+  /* social post mock */
+  .mock-social{position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; padding:22px;}
+  .mock-social .word{font-family:var(--serif); font-style:italic; font-size:26px; color:var(--bone);}
+  .mock-social .tag{font-family:var(--mono); font-size:10px; letter-spacing:0.15em; color:var(--ash); margin-top:8px; text-transform:uppercase;}
+
+  /* web hero mock */
+  .mock-web{position:absolute; inset:16px; border:1px solid rgba(233,228,218,0.2); display:flex; flex-direction:column; justify-content:space-between; padding:16px;}
+  .mock-web .navline{display:flex; justify-content:space-between; font-family:var(--mono); font-size:9px; letter-spacing:0.1em; color:var(--ash);}
+  .mock-web .heroword{font-family:var(--serif); font-style:italic; font-size:22px; align-self:flex-start;}
+
+  /* video still mock */
+  .mock-video{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;}
+  .mock-video .ring{width:70px; height:70px; border:1px solid rgba(233,228,218,0.5); border-radius:50%;}
+  .mock-video .timecode{position:absolute; bottom:18px; left:20px; font-family:var(--mono); font-size:10px; color:var(--ash); letter-spacing:0.1em;}
+
+  /* ============ FOOTER ============ */
+  footer{padding:80px 0 60px;}
+  footer .wrap{padding:0 48px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:24px;}
+  footer .mark-small svg{width:42px; height:42px;}
+  footer p{font-family:var(--mono); font-size:11px; color:var(--ash); letter-spacing:0.08em;}
+
+  @media (max-width:900px){
+    .wrap{padding:0 24px;}
+    .two-col, .manifesto .support{grid-template-columns:1fr;}
+    .palette-grid{grid-template-columns:repeat(2,1fr);}
+    .mark-grid{grid-template-columns:repeat(2,1fr);}
+    .dodont{grid-template-columns:1fr;}
+    .app-grid{grid-template-columns:1fr;}
+    .arc-item{grid-template-columns:1fr; gap:8px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<section class="cover">
+  <svg class="cover-halo" viewBox="0 0 200 200" fill="none">
+    <circle cx="100" cy="100" r="94" stroke="#e9e4da" stroke-opacity="0.15"/>
+    <circle cx="100" cy="100" r="72" stroke="#e9e4da" stroke-opacity="0.22"/>
+    <circle cx="100" cy="100" r="46" stroke="#e9e4da" stroke-opacity="0.3"/>
+    <path d="M100 6 L100 194" stroke="#e9e4da" stroke-opacity="0.18"/>
+    <path d="M60 154 Q100 190 140 154" stroke="#e9e4da" stroke-opacity="0.4" fill="none"/>
+  </svg>
+  <div class="wrap">
+    <p class="eyebrow">Brand &amp; Art Direction — Vol. I</p>
+    <h1 class="cover-title">Abyssal<br><em>Liturgy</em></h1>
+    <div class="cover-sub">
+      <p>A ceremonial identity system built for the edge of land and sea — where fashion, ritual, and biological horror are photographed as forgotten religious painting, submerged for centuries.</p>
+      <span class="cover-num">001 — EST. TIDAL YEAR</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MANIFESTO ============ -->
+<section class="manifesto">
+  <div class="wrap">
+    <div class="sec-head"><span class="idx">01</span><h2>Premise</h2><span class="line"></span></div>
+    <p>Every frame is a procession. Nothing attacks, nothing performs — the figures are simply being reclaimed, slowly, by an ecosystem older than the camera itself. The horror is ambiguity, not violence. The luxury is restraint, not shine.</p>
+    <div class="support">
+      <div><strong>Register</strong>Avant-garde fashion, museum photography, oceanic biology, fine-art horror. Never fantasy. Never cyberpunk.</div>
+      <div><strong>Emotional key</strong>Eerie, ritualistic, funereal, quiet. A held breath rather than a scream.</div>
+      <div><strong>Governing rule</strong>95% black. One light source. Everything else is allowed to disappear.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PALETTE ============ -->
+<section id="palette">
+  <div class="wrap">
+    <div class="sec-head"><span class="idx">02</span><h2>Palette</h2><span class="line"></span></div>
+    <div class="palette-grid">
+      <div class="swatch">
+        <div class="chip" style="background:#050506;"></div>
+        <div class="name">Void</div>
+        <div class="hex">#050506</div>
+        <div class="use">Dominant ground. 95% of every frame. Never pure #000 — leave a whisper of tone.</div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:#111318;"></div>
+        <div class="name">Charcoal</div>
+        <div class="hex">#111318</div>
+        <div class="use">Where the void begins to breathe. Wall, water, shadow gradient.</div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:#2b3038;"></div>
+        <div class="name">Cold Slate</div>
+        <div class="hex">#2b3038</div>
+        <div class="use">Blue-black shadow. Never saturated. Wardrobe base, deep water.</div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:#6d727b;"></div>
+        <div class="name">Ash Gray</div>
+        <div class="hex">#6d727b</div>
+        <div class="use">Mid-tone fog. Captions, hairline rules, secondary text.</div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:#e9e4da;"></div>
+        <div class="name">Bone White</div>
+        <div class="hex">#e9e4da</div>
+        <div class="use">The only light allowed in. Skin highlight, headline type, single accent.</div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background:#3c4b46;"></div>
+        <div class="name">Bioluminescent Residue</div>
+        <div class="hex">#3c4b46</div>
+        <div class="use">Used sparingly — a trace of green-black at the edge of a wound or wet surface. Never a highlight color.</div>
+      </div>
+    </div>
+    <div class="avoid-row">
+      <span class="tag">Saturated blues</span>
+      <span class="tag">Neon</span>
+      <span class="tag">Warm skin tones</span>
+      <span class="tag">Colorful styling</span>
+      <span class="tag">Pure white (#fff)</span>
+      <span class="tag">Pure black (#000 as a fill)</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TYPOGRAPHY ============ -->
+<section id="type">
+  <div class="wrap">
+    <div class="sec-head"><span class="idx">03</span><h2>Typography</h2><span class="line"></span></div>
+
+    <div class="type-block">
+      <div class="type-role"><span class="rolelabel">Display — Liturgical Voice</span><span class="meta">Fraunces · Italic · Weight 300</span></div>
+      <div class="type-display">the ocean arranged it</div>
+    </div>
+
+    <div class="type-block">
+      <div class="type-role"><span class="rolelabel">Body — Editorial Voice</span><span class="meta">Space Grotesk · Weight 300–400</span></div>
+      <p class="type-body-sample">Garments should appear waterlogged, heavy, collapsing, asymmetrical, hand-aged. No visible logos. No futuristic armor. Everything feels archival — set in a body face that stays quiet so the imagery can speak.</p>
+    </div>
+
+    <div class="type-block">
+      <div class="type-role"><span class="rolelabel">Utility — Field Notes</span><span class="meta">JetBrains Mono · Weight 300</span></div>
+      <div class="type-mono-sample">FIG. VII — CATHEDRAL OF WATER — 100mm — f/2.8 — SINGLE SOURCE, TOP-DOWN — NO FILL</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LIGHT & TEXTURE ============ -->
+<section id="light">
+  <div class="wrap">
+    <div class="sec-head"><span class="idx">04</span><h2>Light &amp; Texture</h2><span class="line"></span></div>
+    <div class="two-col">
+      <div class="cardlist">
+        <div><strong>One source only</strong><span>Overcast lighthouse window, skylight in an abandoned cathedral, moonlight diffused through fog. Never a second fill.</span></div>
+        <div><strong>Blacks stay black</strong><span>Large areas of negative space remain completely unreadable. Do not lift shadows in post.</span></div>
+        <div><strong>Highlights on moisture only</strong><span>Skin catches specular reflections; clothing disappears into darkness. Light exists to reveal wetness, not form.</span></div>
+        <div><strong>Grain is structural</strong><span>Coarse film grain, condensation, salt residue, cracked skin, oxidized metal — nothing is left digitally clean.</span></div>
+      </div>
+      <div class="light-visual"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARK SYSTEM ============ -->
+<section id="marks">
+  <div class="wrap">
+    <div class="sec-head"><span class="idx">05</span><h2>Mark System</h2><span class="line"></span></div>
+    <div class="mark-grid">
+
+      <div class="mark-cell dark">
+        <svg viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="46" stroke="#e9e4da" stroke-opacity="0.9"/>
+          <circle cx="50" cy="50" r="32" stroke="#e9e4da" stroke-opacity="0.55"/>
+          <circle cx="50" cy="50" r="18" stroke="#e9e4da" stroke-opacity="0.3"/>
+          <line x1="50" y1="4" x2="50" y2="96" stroke="#e9e4da" stroke-opacity="0.4"/>
+        </svg>
+        <span class="cap">Tidal Halo — Primary</span>
+      </div>
+
+      <div class="mark-cell dark">
+        <svg viewBox="0 0 100 100" fill="none">
+          <path d="M20 30 Q50 10 80 30" stroke="#e9e4da" stroke-opacity="0.85" fill="none"/>
+          <path d="M20 50 Q50 30 80 50" stroke="#e9e4da" stroke-opacity="0.6" fill="none"/>
+          <path d="M20 70 Q50 50 80 70" stroke="#e9e4da" stroke-opacity="0.35" fill="none"/>
+        </svg>
+        <span class="cap">Erosion Map</span>
+      </div>
+
+      <div class="mark-cell dark">
+        <svg viewBox="0 0 100 100" fill="none">
+          <path d="M50 8 C 30 30, 30 45, 50 58 C 70 45, 70 30, 50 8 Z" stroke="#e9e4da" stroke-opacity="0.85"/>
+          <line x1="50" y1="58" x2="50" y2="92" stroke="#e9e4da" stroke-opacity="0.5"/>
+          <circle cx="50" cy="92" r="2.5" fill="#e9e4da" fill-opacity="0.7"/>
+        </svg>
+        <span class="cap">Reliquary Drop</span>
+      </div>
+
+      <div class="mark-cell dark">
+        <svg viewBox="0 0 100 100" fill="none">
+          <line x1="10" y1="50" x2="90" y2="50" stroke="#e9e4da" stroke-opacity="0.6"/>
+          <line x1="50" y1="10" x2="50" y2="90" stroke="#e9e4da" stroke-opacity="0.6"/>
+          <circle cx="50" cy="50" r="4" fill="#e9e4da"/>
+        </svg>
+        <span class="cap">Chart Mark — Micro</span>
+      </div>
+
+      <div class="mark-cell on-bone">
+        <svg viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="46" stroke="#050506" stroke-opacity="0.85"/>
+          <circle cx="50" cy="50" r="32" stroke="#050506" stroke-opacity="0.5"/>
+          <circle cx="50" cy="50" r="18" stroke="#050506" stroke-opacity="0.3"/>
+          <line x1="50" y1="4" x2="50" y2="96" stroke="#050506" stroke-opacity="0.4"/>
+        </svg>
+        <span class="cap">On Bone Ground</span>
+      </div>
+
+      <div class="mark-cell dark">
+        <svg viewBox="0 0 100 100" fill="none">
+          <path d="M15 20 Q40 40 20 55 Q45 65 30 85" stroke="#e9e4da" stroke-opacity="0.75" fill="none" stroke-width="1.4"/>
+        </svg>
+        <span class="cap">Ritual Marking — Fragment</span>
+      </div>
+
+      <div class="mark-cell dark">
+        <svg viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="40" stroke="#e9e4da" stroke-opacity="0.7" stroke-dasharray="1 6"/>
+        </svg>
+        <span class="cap">Perimeter — Stamp Use</span>
+      </div>
+
+      <div class="mark-cell dark">
+        <svg viewBox="0 0 100 100" fill="none">
+          <text x="50" y="56" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#e9e4da" fill-opacity="0.8" letter-spacing="2">A · L</text>
+          <line x1="20" y1="66" x2="80" y2="66" stroke="#e9e4da" stroke-opacity="0.3"/>
+        </svg>
+        <span class="cap">Monogram — Field Use</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ MATERIALS ============ -->
+<section id="materials">
+  <div class="wrap">
+    <div class="sec-head"><span class="idx">06</span><h2>Materials &amp; Wardrobe</h2><span class="line"></span></div>
+    <div class="two-col">
+      <div>
+        <p class="eyebrow" style="margin-bottom:18px;">Approved fabrics</p>
+        <div class="chip-cloud">
+          <span>waxed leather</span><span>rubberized cotton</span><span>wet silk</span>
+          <span>distressed linen</span><span>coated wool</span><span>matte latex</span>
+          <span>translucent organza over black</span>
+        </div>
+      </div>
+      <div>
+        <p class="eyebrow" style="margin-bottom:18px;">Organic coexistence</p>
+        <div class="chip-cloud">
+          <span>eel bodies as collars</span><span>kelp as ceremonial robes</span>
+          <span>barnacle mineral growths</span><span>translucent membranes</span>
+          <span>coral textures</span><span>shell fragments</span><span>slick tendrils</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STORY ARC ============ -->
+<section id="arc">
+  <div class="wrap">
+    <div class="sec-head"><span class="idx">07</span><h2>The Eight Beats</h2><span class="line"></span></div>
+    <div class="arc-list">
+      <div class="arc-item"><span class="num">I</span><span class="title">The Arrival</span><span class="desc">A single figure emerges from absolute darkness. Only the face exists.</span></div>
+      <div class="arc-item"><span class="num">II</span><span class="title">Initiation</span><span class="desc">Three figures in black water, eyes closed, hair dripping, no movement.</span></div>
+      <div class="arc-item"><span class="num">III</span><span class="title">Communion</span><span class="desc">Eel-like forms appear at collars and sleeves — unclear if garment or organism.</span></div>
+      <div class="arc-item"><span class="num">IV</span><span class="title">Tithe</span><span class="desc">Macro studies: skin, water, scars, salt crystals, wet leather.</span></div>
+      <div class="arc-item"><span class="num">V</span><span class="title">Procession</span><span class="desc">Six figures arranged as a submerged altarpiece. Negative space dominates.</span></div>
+      <div class="arc-item"><span class="num">VI</span><span class="title">Shedding</span><span class="desc">Garments dissolve into kelp and membrane. Human silhouettes begin disappearing.</span></div>
+      <div class="arc-item"><span class="num">VII</span><span class="title">Cathedral of Water</span><span class="desc">The environment overwhelms the fashion. Architecture barely visible behind mist.</span></div>
+      <div class="arc-item"><span class="num">VIII</span><span class="title">Return</span><span class="desc">One final portrait, nearly swallowed by darkness. Only pale skin and wet reflection remain.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DO / DON'T ============ -->
+<section id="dodont-section">
+  <div class="wrap">
+    <div class="sec-head"><span class="idx">08</span><h2>Discipline</h2><span class="line"></span></div>
+    <div class="dodont">
+      <div class="col do">
+        <h4>Hold the line</h4>
+        <ul>
+          <li>Let 95% of the frame remain unreadable black</li>
+          <li>One light source, always</li>
+          <li>Composition off-center, icon-like, suspended</li>
+          <li>Texture over color as the primary signal</li>
+          <li>Ambiguity between garment and organism</li>
+        </ul>
+      </div>
+      <div class="col dont">
+        <h4>Never allow</h4>
+        <ul>
+          <li>A second fill light or lifted shadow</li>
+          <li>Saturated color, neon, or warm skin tones</li>
+          <li>Visible logos or futuristic armor</li>
+          <li>Digitally clean, grain-free surfaces</li>
+          <li>Creatures depicted as attacking or threatening</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APPLICATIONS ============ -->
+<section id="applications">
+  <div class="wrap">
+    <div class="sec-head"><span class="idx">09</span><h2>Applications</h2><span class="line"></span></div>
+    <div class="app-grid">
+
+      <div class="app-card">
+        <div class="app-visual">
+          <div class="glow"></div>
+          <div class="mock-social">
+            <span class="word">no clear ending</span>
+            <span class="tag">@abyssal.liturgy — beat viii</span>
+          </div>
+        </div>
+        <div class="app-label"><span class="k">Social Post</span><span class="v">Single-line caption, bone italic, lower third</span></div>
+      </div>
+
+      <div class="app-card">
+        <div class="app-visual">
+          <div class="glow"></div>
+          <div class="mock-web">
+            <div class="navline"><span>ABYSSAL LITURGY</span><span>MENU</span></div>
+            <div class="heroword">procession</div>
+            <div class="navline"><span>SCROLL</span><span>VOL. I</span></div>
+          </div>
+        </div>
+        <div class="app-label"><span class="k">Website Hero</span><span class="v">Hairline frame, mono nav, one italic word</span></div>
+      </div>
+
+      <div class="app-card">
+        <div class="app-visual">
+          <div class="glow"></div>
+          <div class="mock-video">
+            <div class="ring"></div>
+            <span class="timecode">00:00:07:12 — SINGLE TAKE</span>
+          </div>
+        </div>
+        <div class="app-label"><span class="k">Video Still</span><span class="v">Static frame, breathing halo motif, no cuts</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="mark-small">
+      <svg viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="46" stroke="#e9e4da" stroke-opacity="0.9"/>
+        <circle cx="50" cy="50" r="32" stroke="#e9e4da" stroke-opacity="0.55"/>
+        <circle cx="50" cy="50" r="18" stroke="#e9e4da" stroke-opacity="0.3"/>
+        <line x1="50" y1="4" x2="50" y2="96" stroke="#e9e4da" stroke-opacity="0.4"/>
+      </svg>
+    </div>
+    <p>ABYSSAL LITURGY — BRAND &amp; ART DIRECTION — VOL. I — HANDLE WITH RESTRAINT</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<svg viewBox="0 0 900 190" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg     { fill: #050506; }
+      .name   { fill: #e9e4da; font-family: 'Fraunces', 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; }
+      .hex    { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.02em; }
+      .kicker { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; }
+      .sw     { stroke: rgba(233,228,218,0.14); stroke-width: 1; }
+    </style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="900" height="190" />
+  <text class="kicker" x="30" y="34">Abyssal Liturgy — Core Palette</text>
+
+  <g transform="translate(30,54)">
+    <rect class="sw" width="110" height="80" rx="3" fill="#050506" />
+    <text class="name" x="0" y="102">Void</text>
+    <text class="hex" x="0" y="118">#050506</text>
+  </g>
+  <g transform="translate(175,54)">
+    <rect class="sw" width="110" height="80" rx="3" fill="#111318" />
+    <text class="name" x="0" y="102">Charcoal</text>
+    <text class="hex" x="0" y="118">#111318</text>
+  </g>
+  <g transform="translate(320,54)">
+    <rect class="sw" width="110" height="80" rx="3" fill="#2b3038" />
+    <text class="name" x="0" y="102">Slate</text>
+    <text class="hex" x="0" y="118">#2b3038</text>
+  </g>
+  <g transform="translate(465,54)">
+    <rect class="sw" width="110" height="80" rx="3" fill="#3c4b46" />
+    <text class="name" x="0" y="102">Bio</text>
+    <text class="hex" x="0" y="118">#3c4b46</text>
+  </g>
+  <g transform="translate(610,54)">
+    <rect class="sw" width="110" height="80" rx="3" fill="#6d727b" />
+    <text class="name" x="0" y="102">Ash</text>
+    <text class="hex" x="0" y="118">#6d727b</text>
+  </g>
+  <g transform="translate(755,54)">
+    <rect class="sw" width="110" height="80" rx="3" fill="#e9e4da" />
+    <text class="name" x="0" y="102" fill="#050506">Bone</text>
+    <text class="hex" x="0" y="118" fill="#6d727b">#e9e4da</text>
+  </g>
+</svg>

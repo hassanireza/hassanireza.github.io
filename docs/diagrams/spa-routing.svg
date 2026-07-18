@@ -1,0 +1,58 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg      { fill: #050506; }
+      .actor   { fill: #e9e4da; font-family: 'Fraunces', 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; }
+      .life    { stroke: rgba(233,228,218,0.18); stroke-width: 1; }
+      .msg     { stroke: #6d727b; stroke-width: 1.2; fill: none; marker-end: url(#arrow2); }
+      .msg-acc { stroke: #3c4b46; stroke-width: 1.4; fill: none; marker-end: url(#arrow2); }
+      .label   { fill: #9a9d95; font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+      .kicker  { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; }
+      .step    { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; }
+    </style>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6d727b" />
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="900" height="400" />
+  <text class="kicker" x="30" y="34">Direct Visit To /portfolio — Recovery Sequence</text>
+
+  <!-- Actors -->
+  <text class="actor" x="110" y="70" text-anchor="middle">Visitor</text>
+  <text class="actor" x="330" y="70" text-anchor="middle">GitHub Pages</text>
+  <text class="actor" x="560" y="70" text-anchor="middle">404.html</text>
+  <text class="actor" x="790" y="70" text-anchor="middle">React Router</text>
+
+  <line class="life" x1="110" y1="84" x2="110" y2="370" />
+  <line class="life" x1="330" y1="84" x2="330" y2="370" />
+  <line class="life" x1="560" y1="84" x2="560" y2="370" />
+  <line class="life" x1="790" y1="84" x2="790" y2="370" />
+
+  <text class="step" x="20" y="112">1</text>
+  <line class="msg" x1="110" y1="120" x2="330" y2="120" />
+  <text class="label" x="220" y="112" text-anchor="middle">GET /portfolio</text>
+
+  <text class="step" x="20" y="152">2</text>
+  <line class="msg" x1="330" y1="160" x2="560" y2="160" />
+  <text class="label" x="445" y="152" text-anchor="middle">no file at path, serves 404.html</text>
+
+  <text class="step" x="20" y="192">3</text>
+  <line class="msg-acc" x1="560" y1="200" x2="330" y2="200" />
+  <text class="label" x="445" y="192" text-anchor="middle">encode path into query string</text>
+
+  <text class="step" x="20" y="232">4</text>
+  <line class="msg" x1="330" y1="240" x2="110" y2="240" />
+  <text class="label" x="220" y="232" text-anchor="middle">redirect to site root, ?/portfolio</text>
+
+  <text class="step" x="20" y="272">5</text>
+  <line class="msg" x1="110" y1="280" x2="790" y2="280" />
+  <text class="label" x="450" y="272" text-anchor="middle">inline script decodes query, history.replaceState</text>
+
+  <text class="step" x="20" y="312">6</text>
+  <line class="msg-acc" x1="790" y1="320" x2="110" y2="320" />
+  <text class="label" x="450" y="312" text-anchor="middle">Router mounts, matches /portfolio, renders</text>
+
+  <text class="kicker" x="30" y="358">Result</text>
+  <text class="step" x="30" y="378">Instant and invisible from the visitor's side, no flash of a broken page</text>
+</svg>

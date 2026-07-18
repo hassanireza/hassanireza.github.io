@@ -1,0 +1,44 @@
+<svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg     { fill: #050506; }
+      .stage  { fill: #0b0c10; stroke: rgba(233,228,218,0.16); stroke-width: 1; }
+      .title  { fill: #e9e4da; font-family: 'Fraunces', 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; }
+      .sub    { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; }
+      .num    { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+      .kicker { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; }
+      .edge   { stroke: rgba(233,228,218,0.3); stroke-width: 1.2; fill: none; marker-end: url(#a3); }
+    </style>
+    <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6d727b" />
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="900" height="220" />
+  <text class="kicker" x="30" y="34">Updating Portfolio Content</text>
+
+  <rect class="stage" x="40" y="70" width="180" height="70" rx="3" />
+  <text class="num" x="52" y="90">01</text>
+  <text class="title" x="130" y="106" text-anchor="middle">Drop assets</text>
+  <text class="sub" x="130" y="124" text-anchor="middle">public/assets/images/</text>
+
+  <rect class="stage" x="270" y="70" width="200" height="70" rx="3" />
+  <text class="num" x="282" y="90">02</text>
+  <text class="title" x="370" y="106" text-anchor="middle">Add typed entry</text>
+  <text class="sub" x="370" y="124" text-anchor="middle">src/data/projects.ts</text>
+
+  <rect class="stage" x="520" y="70" width="160" height="70" rx="3" />
+  <text class="num" x="532" y="90">03</text>
+  <text class="title" x="600" y="106" text-anchor="middle">Push to main</text>
+  <text class="sub" x="600" y="124" text-anchor="middle">git commit + push</text>
+
+  <rect class="stage" x="730" y="70" width="140" height="70" rx="3" />
+  <text class="num" x="742" y="90">04</text>
+  <text class="title" x="800" y="106" text-anchor="middle">Live</text>
+  <text class="sub" x="800" y="124" text-anchor="middle">CI builds, deploys</text>
+
+  <line class="edge" x1="220" y1="105" x2="268" y2="105" />
+  <line class="edge" x1="470" y1="105" x2="518" y2="105" />
+  <line class="edge" x1="680" y1="105" x2="728" y2="105" />
+
+  <text class="sub" x="40" y="184">Type mismatch or missing field fails the build at tsc -b, not silently at runtime.</text>
+</svg>

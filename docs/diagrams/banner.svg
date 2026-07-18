@@ -1,0 +1,24 @@
+<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg     { fill: #050506; }
+      .word   { fill: #e9e4da; font-family: 'Fraunces', 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 58px; }
+      .role   { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.28em; text-transform: uppercase; }
+      .rule   { stroke: rgba(233,228,218,0.25); stroke-width: 1; }
+    </style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1200" height="300" />
+
+  <!-- Tidal Halo mark -->
+  <g transform="translate(150,150)">
+    <circle r="92" stroke="#e9e4da" stroke-opacity="0.85" fill="none" />
+    <circle r="64" stroke="#e9e4da" stroke-opacity="0.5" fill="none" />
+    <circle r="36" stroke="#e9e4da" stroke-opacity="0.3" fill="none" />
+    <line x1="0" y1="-100" x2="0" y2="100" stroke="#e9e4da" stroke-opacity="0.35" />
+  </g>
+
+  <line class="rule" x1="290" y1="60" x2="290" y2="240" />
+
+  <text class="word" x="330" y="150">Reza Hassani</text>
+  <text class="role" x="332" y="185">Portfolio · React &amp; TypeScript SPA</text>
+</svg>
