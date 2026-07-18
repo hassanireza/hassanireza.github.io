@@ -1,0 +1,89 @@
+.sheet-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition: border-color 0.3s var(--ease), transform 0.3s var(--ease);
+}
+
+.sheet-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.sheet-card-spine {
+  height: 2px;
+  background: var(--text-2);
+  opacity: 0.5;
+}
+
+.sheet-card-body {
+  padding: 1.4rem 1.4rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex: 1;
+}
+
+.sheet-card-category {
+  font-family: "JetBrains Mono", var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.sheet-card-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.15rem;
+  color: var(--text);
+}
+
+.sheet-card-desc {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+.sheet-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+}
+
+.sheet-tag {
+  font-family: "JetBrains Mono", var(--font-body);
+  font-size: 0.6rem;
+  color: var(--text-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 0.25rem 0.55rem;
+}
+
+.sheet-card-open {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: "JetBrains Mono", var(--font-body);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  padding: 0.9rem 1.4rem;
+  border-top: 1px solid var(--border);
+  transition: color 0.3s var(--ease);
+}
+
+.sheet-card-open svg {
+  width: 10px;
+  height: 10px;
+  fill: currentColor;
+  opacity: 0.6;
+}
+
+.sheet-card:hover .sheet-card-open {
+  color: var(--text);
+}

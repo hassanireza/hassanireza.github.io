@@ -1,0 +1,495 @@
+/* =========================================================
+   CV PAGE. Reuses tokens from src/styles/global.css
+   (--void, --charcoal, --bone, --ash, --bio-bright, fonts, --ease)
+   ========================================================= */
+
+.cv-page {
+  position: relative;
+  z-index: 3;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 96px 32px 120px;
+  animation: riseIn 0.8s var(--ease) both;
+}
+
+@media (max-width: 640px) {
+  .cv-page {
+    padding: 72px 20px 90px;
+  }
+}
+
+.cv-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 56px;
+  transition: color 0.3s var(--ease);
+}
+
+.cv-back svg {
+  width: 13px;
+  height: 13px;
+  fill: currentColor;
+}
+
+.cv-back:hover {
+  color: var(--bone);
+}
+
+/* ---------------------------------------------------------
+   HEADER
+   --------------------------------------------------------- */
+.cv-header {
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 64px;
+}
+
+.cv-header h1 {
+  font-size: clamp(2.6rem, 6vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  margin-top: 16px;
+}
+
+.cv-header h1 em {
+  font-style: italic;
+  color: var(--text-2);
+}
+
+.cv-role {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bio-bright);
+  margin-top: 14px;
+}
+
+.cv-contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 22px;
+  margin-top: 28px;
+}
+
+.cv-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  transition: color 0.3s var(--ease);
+}
+
+.cv-contact-link svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cv-contact-link:hover {
+  color: var(--bone);
+}
+
+/* ---------------------------------------------------------
+   SECTION HEAD, shared across summary / experience / etc.
+   --------------------------------------------------------- */
+.cv-section {
+  margin-bottom: 56px;
+}
+
+.cv-section-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.cv-idx {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+}
+
+.cv-section-head h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.3rem;
+  color: var(--text);
+}
+
+.cv-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.cv-summary {
+  max-width: 66ch;
+  font-size: 0.98rem;
+  line-height: 1.85;
+  color: var(--text-2);
+}
+
+/* ---------------------------------------------------------
+   EXPERIENCE
+   --------------------------------------------------------- */
+.cv-jobs {
+  display: flex;
+  flex-direction: column;
+}
+
+.cv-job {
+  padding: 28px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.cv-job:first-child {
+  padding-top: 0;
+}
+
+.cv-job:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.cv-job-top {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 24px;
+  align-items: start;
+}
+
+.cv-job h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.15rem;
+  color: var(--text);
+}
+
+.cv-job-company {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bio-bright);
+  margin-top: 4px;
+}
+
+.cv-job-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  gap: 2px;
+}
+
+.cv-job-desc {
+  grid-column: 1 / -1;
+  margin-top: 16px;
+  font-size: 0.9rem;
+  color: var(--text-2);
+  line-height: 1.8;
+}
+
+.cv-job-desc li {
+  list-style: none;
+  padding-left: 16px;
+  position: relative;
+  margin-bottom: 6px;
+}
+
+.cv-job-desc li::before {
+  content: "\00B7";
+  position: absolute;
+  left: 0;
+  color: var(--text-3);
+}
+
+@media (max-width: 640px) {
+  .cv-job-top {
+    grid-template-columns: 1fr;
+  }
+  .cv-job-meta {
+    align-items: flex-start;
+    text-align: left;
+    margin-top: 6px;
+    order: -1;
+  }
+}
+
+/* ---------------------------------------------------------
+   TECH STACKS
+   --------------------------------------------------------- */
+.cv-tech-group {
+  margin-bottom: 26px;
+}
+
+.cv-tech-group:last-child {
+  margin-bottom: 0;
+}
+
+.cv-tech-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 12px;
+}
+
+.cv-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cv-skill {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-2);
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  transition: color 0.3s var(--ease), border-color 0.3s var(--ease), background 0.3s var(--ease);
+}
+
+.cv-skill:hover {
+  color: var(--bone);
+  border-color: var(--border-hi);
+  background: rgba(233, 228, 218, 0.03);
+}
+
+/* ---------------------------------------------------------
+   LANGUAGES
+   --------------------------------------------------------- */
+.cv-languages {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cv-language {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.cv-language-name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--text);
+  min-width: 100px;
+}
+
+.cv-language-level {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+}
+
+/* ---------------------------------------------------------
+   ACTIONS + FOOTER
+   --------------------------------------------------------- */
+.cv-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.cv-footer {
+  margin-top: 60px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.cv-footer .foot-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------------------------------------------------------
+   PRINT. Light, ink-friendly, single-page export.
+   NOTE: modern Chrome ignores @page size for the paper-size
+   dropdown (privacy/fingerprinting restriction) and reuses
+   whatever paper size was last used on that machine. So this
+   can't reliably force "Tabloid" itself — instead the content
+   below is sized compactly enough to fit ONE page on Tabloid,
+   A4, or Letter, in portrait, regardless of which is selected.
+   --------------------------------------------------------- */
+@media print {
+  @page {
+    size: tabloid portrait;
+    margin: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    height: auto;
+  }
+
+  #backdrop,
+  #depth-field,
+  #depth-gradient,
+  #gauge,
+  #particle-field {
+    display: none !important;
+  }
+
+  .cv-page {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0.4in 0.55in;
+    color: #141210;
+    animation: none !important;
+    box-sizing: border-box;
+    font-size: 0.85em;
+  }
+
+  .cv-header {
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+  }
+
+  .cv-header h1 {
+    font-size: 2.1rem;
+  }
+
+  .cv-contact {
+    margin-top: 14px;
+    gap: 16px;
+  }
+
+  .cv-section {
+    margin-bottom: 22px;
+  }
+
+  .cv-section-head {
+    margin-bottom: 14px;
+  }
+
+  .cv-summary {
+    line-height: 1.5;
+  }
+
+  .cv-job {
+    padding: 12px 0;
+  }
+
+  .cv-job-desc {
+    margin-top: 8px;
+    line-height: 1.45;
+  }
+
+  .cv-job-desc li {
+    margin-bottom: 2px;
+  }
+
+  .cv-tech-group {
+    margin-bottom: 14px;
+  }
+
+  .cv-skill {
+    padding: 4px 10px;
+  }
+
+  .cv-languages {
+    gap: 6px;
+  }
+
+  .cv-footer {
+    margin-top: 24px;
+    padding-top: 16px;
+  }
+
+  /* Portrait gives ~15-16in of usable height, plenty for one
+     column. Landscape only gives ~9-10in, so reflow the body
+     sections into two columns to stay on one page either way. */
+  @media (orientation: landscape) {
+    .cv-body {
+      column-count: 2;
+      column-gap: 36px;
+    }
+
+    .cv-section {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+  }
+
+  /* Discourage (not force, since content is already sized to
+     fit) awkward splits if a page ever does run tight */
+  .cv-section,
+  .cv-job,
+  .cv-header,
+  .cv-footer {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .cv-header,
+  .cv-job,
+  .cv-line {
+    border-color: rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .cv-header h1,
+  .cv-section-head h2,
+  .cv-job h3,
+  .cv-language-name {
+    color: #141210 !important;
+  }
+
+  .cv-summary,
+  .cv-job-desc,
+  .cv-contact-link,
+  .cv-skill {
+    color: #3a3330 !important;
+  }
+
+  .cv-role,
+  .cv-job-company {
+    color: #8a5a37 !important;
+  }
+}

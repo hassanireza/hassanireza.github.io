@@ -1,0 +1,59 @@
+import { useEffect, useRef, useState } from "react";
+
+/**
+ * Attaches an IntersectionObserver to the returned ref and flips `visible`
+ * to true the first time the element enters the viewport. Used to drive
+ * the reveal-on-scroll fade/rise transitions throughout the page.
+ */
+export function useReveal<T extends HTMLElement>(threshold = 0.2) {
+  const ref = useRef<T | null>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisible(true);
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold, rootMargin: "0px 0px -8% 0px" }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  return { ref, visible };
+}
+
+/**
+ * Same as useReveal, but toggles visibility both ways, used for elements
+ * (like an entire chamber) that should re-dim when scrolled past.
+ */
+export function useActiveInView<T extends HTMLElement>(threshold = 0.35) {
+  const ref = useRef<T | null>(null);
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => setActive(entry.isIntersecting));
+      },
+      { threshold }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  return { ref, active };
+}
