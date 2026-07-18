@@ -1,0 +1,292 @@
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 3rem;
+  align-items: center;
+  padding-top: 2rem;
+}
+
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.6rem;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(2rem, 4.4vw, 3rem);
+  line-height: 1.18;
+  color: var(--text);
+  max-width: 640px;
+}
+
+.hero-lead {
+  font-size: 0.98rem;
+  line-height: 1.75;
+  color: var(--text-2);
+  max-width: 560px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 2.4rem;
+  margin-top: 0.6rem;
+}
+
+.hero-stats > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.hero-stats strong {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.hero-stats span {
+  font-size: 0.72rem;
+  color: var(--text-3);
+  letter-spacing: 0.02em;
+}
+
+.hero-visual svg {
+  width: 100%;
+  height: auto;
+}
+
+/* ===== Hero diagram animation =====
+   Timing is authored in HeroDiagram.tsx (see the T table there) and
+   passed down per-element via animation-delay / animation-duration,
+   so the CSS keyframes below only define the *shape* of each move -
+   never its timing. */
+
+.hero-diagram .hd-link {
+  stroke-dashoffset: var(--hd-len, 0);
+  animation-name: hdDrawLink;
+  animation-timing-function: var(--ease-out, ease);
+  animation-fill-mode: forwards;
+}
+
+.hero-diagram .hd-link-pending {
+  stroke-dashoffset: 0;
+  opacity: 0;
+  animation-name: hdDrawPending;
+}
+
+@keyframes hdDrawLink {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes hdDrawPending {
+  to {
+    opacity: 1;
+  }
+}
+
+.hero-diagram .hd-node {
+  opacity: 0;
+  transform: scale(0.8);
+  animation: hdNodeReveal 0.5s var(--ease-out, ease) forwards;
+}
+
+.hero-diagram .hd-node-pending {
+  animation-name: hdNodeRevealPending;
+}
+
+@keyframes hdNodeReveal {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes hdNodeRevealPending {
+  to {
+    opacity: 0.72;
+    transform: scale(1);
+  }
+}
+
+.hero-diagram .hd-node-core {
+  opacity: 0;
+  animation: hdBreathe 2.6s ease-in-out var(--hd-breathe-delay, 0s) infinite;
+}
+
+.hero-diagram .hd-node-core-pending {
+  animation-name: hdBreathePending;
+  animation-duration: 3.4s;
+}
+
+@keyframes hdBreathe {
+  0% {
+    opacity: 0.5;
+    r: 1.4px;
+  }
+  35% {
+    opacity: 1;
+    r: 2.4px;
+  }
+  100% {
+    opacity: 0.5;
+    r: 1.4px;
+  }
+}
+
+@keyframes hdBreathePending {
+  0% {
+    opacity: 0.28;
+    r: 1.3px;
+  }
+  35% {
+    opacity: 0.6;
+    r: 1.9px;
+  }
+  100% {
+    opacity: 0.28;
+    r: 1.3px;
+  }
+}
+
+.hero-diagram .hd-pulse {
+  filter: drop-shadow(0 0 3px var(--accent-bright));
+}
+
+.hero-diagram .hd-pulse-pending {
+  filter: drop-shadow(0 0 2px var(--accent-bright));
+}
+
+.hero-diagram .hd-node:hover circle:first-of-type {
+  transition: stroke-opacity 0.35s var(--ease, ease);
+  stroke-opacity: 0.85;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-diagram .hd-link,
+  .hero-diagram .hd-node,
+  .hero-diagram .hd-node-core {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  .hero-diagram .hd-node-pending {
+    opacity: 0.72 !important;
+  }
+
+  .hero-diagram .hd-pulse {
+    display: none;
+  }
+}
+
+.current-phase-section {
+  border-top: 1px solid var(--border);
+}
+
+.current-phase-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.8rem;
+  padding: 2rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+
+.current-phase-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid var(--border-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+
+.current-phase-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.current-phase-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.current-phase-body h3 {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.current-phase-body p {
+  font-size: 0.86rem;
+  color: var(--text-2);
+}
+
+.current-phase-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.skill-pill {
+  font-family: "JetBrains Mono", var(--font-body);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  color: var(--text-3);
+}
+
+.current-phase-cta {
+  justify-self: end;
+}
+
+.home-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.8rem;
+}
+
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-visual {
+    order: -1;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+  .current-phase-card {
+    grid-template-columns: auto 1fr;
+  }
+  .current-phase-cta {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
