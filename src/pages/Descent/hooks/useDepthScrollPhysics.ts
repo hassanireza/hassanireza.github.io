@@ -77,8 +77,27 @@ export function useDepthScrollPhysics({
 
     const prevHtmlOverflow = document.documentElement.style.overflow;
     const prevBodyOverflow = document.body.style.overflow;
+    const prevBodyPosition = document.body.style.position;
+    const prevBodyTop = document.body.style.top;
+    const prevBodyWidth = document.body.style.width;
+    const prevBodyTouchAction = document.body.style.touchAction;
+    const prevHtmlOverscroll = document.documentElement.style.overscrollBehavior;
+
+    // overflow:hidden alone does not stop scrolling on iOS Safari - the
+    // page can still rubber-band/bounce natively. With the rig also being
+    // transformed by hand every frame below, that native bounce fights
+    // the virtual transform and shows up as content jumping/vanishing
+    // mid-scroll on mobile. Pinning body to position:fixed removes the
+    // native scroll surface entirely so only the virtual transform moves
+    // anything.
+    const scrollY = window.scrollY;
     document.documentElement.style.overflow = "hidden";
+    document.documentElement.style.overscrollBehavior = "none";
     document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+    document.body.style.touchAction = "none";
 
     const measure = () => {
       const contentHeight = rig.getBoundingClientRect().height;
@@ -229,7 +248,13 @@ export function useDepthScrollPhysics({
       window.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("keydown", onKeyDown);
       document.documentElement.style.overflow = prevHtmlOverflow;
+      document.documentElement.style.overscrollBehavior = prevHtmlOverscroll;
       document.body.style.overflow = prevBodyOverflow;
+      document.body.style.position = prevBodyPosition;
+      document.body.style.top = prevBodyTop;
+      document.body.style.width = prevBodyWidth;
+      document.body.style.touchAction = prevBodyTouchAction;
+      window.scrollTo(0, scrollY);
     };
   }, [rigRef, turbulenceRef, displacementRef]);
 }
