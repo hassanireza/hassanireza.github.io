@@ -83,6 +83,7 @@ export function useDepthScrollPhysics({
     if (isIOS) {
       const mainEl = rig.querySelector("main");
       if (mainEl instanceof HTMLElement) mainEl.style.filter = "none";
+      document.documentElement.classList.add("is-ios");
     }
 
     if (reduced) {
@@ -294,6 +295,7 @@ export function useDepthScrollPhysics({
       document.body.style.top = prevBodyTop;
       document.body.style.width = prevBodyWidth;
       document.body.style.touchAction = prevBodyTouchAction;
+      document.documentElement.classList.remove("is-ios");
       window.scrollTo(0, scrollY);
     };
   }, [rigRef, turbulenceRef, displacementRef]);

@@ -407,6 +407,8 @@
   animation:riseIn 1.1s var(--ease) 0.4s forwards;
 }
 
+html.is-ios .descent-page .hero h1 { filter:none; animation-name:riseInNoBlur; }
+
 .descent-page .hero .scramble-title {
   font-variant-numeric:tabular-nums;
   display:inline-block;
@@ -438,6 +440,7 @@
 @keyframes drift { to{ left:100%; } }
 
 @keyframes riseIn { to{ opacity:1; transform:translateY(0); filter:blur(0); } }
+@keyframes riseInNoBlur { to{ opacity:1; transform:translateY(0); } }
 
 .descent-page .origin-mark {
   position:absolute; right:0; top:50%; transform:translateY(-50%);
@@ -551,6 +554,18 @@
 .descent-page .reveal { opacity:0; transform:translateY(24px); filter:blur(3px); transition:all 0.9s var(--ease); }
 
 .descent-page .reveal.visible { opacity:1; transform:translateY(0); filter:blur(0); }
+
+/* iOS: filter transitions on elements sitting inside a per-frame
+   transformed ancestor (.scroll-rig) can fail mid-animation in WebKit,
+   which shows up as text appearing once and then vanishing right as
+   you scroll up to it. The fade + rise alone are enough motion without
+   the blur step that's actually triggering the bug. */
+html.is-ios .descent-page .reveal {
+  filter:none;
+  transition:opacity 0.9s var(--ease), transform 0.9s var(--ease);
+}
+
+html.is-ios .descent-page .reveal.visible { filter:none; }
 
 .descent-page .reveal.d1 { transition-delay:0.05s; }
 
