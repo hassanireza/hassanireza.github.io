@@ -82,15 +82,41 @@
   }
 
   .section-nav-item {
-    flex: 1;
+    flex: 1 1 0;
+    min-width: 0;
     flex-direction: column;
     gap: 0.3rem;
-    padding: 0.55rem 0.4rem;
+    padding: 0.55rem 0.25rem;
     font-size: 0.56rem;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.06em;
   }
 
   .section-nav-label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
+  }
+}
+
+/* Extra-narrow phones: labels get too tight for 6-item nav rails
+   (e.g. Branding page) even after the shrink above, so drop the text
+   and rely on the icon + active pill alone. */
+@media (max-width: 420px) {
+  .section-nav ul {
+    gap: 0.15rem;
+  }
+
+  .section-nav-item {
+    padding: 0.6rem 0.2rem;
+  }
+
+  .section-nav ul:has(> :nth-child(5)) .section-nav-label {
+    display: none;
+  }
+
+  .section-nav ul:has(> :nth-child(5)) .section-nav-icon {
+    width: 16px;
+    height: 16px;
   }
 }
