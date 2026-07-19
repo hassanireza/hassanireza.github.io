@@ -67,6 +67,24 @@ export function useDepthScrollPhysics({
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    // All iOS browsers (Safari, Chrome, Firefox) are WebKit under the
+    // hood - Apple requires it. WebKit has a compositor bug where a
+    // filtered element (main, via filter:url(#water-distortion)) whose
+    // ancestor (.scroll-rig) is being transformed every single frame
+    // can intermittently fail to repaint and just go blank mid-scroll.
+    // Forcing main onto its own GPU layer (translateZ(0), still applied
+    // in CSS) did not resolve it in testing, so the reliable fix is
+    // dropping the filter on iOS entirely - the scroll physics itself
+    // is untouched, this only removes one decorative visual effect.
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+    if (isIOS) {
+      const mainEl = rig.querySelector("main");
+      if (mainEl instanceof HTMLElement) mainEl.style.filter = "none";
+    }
+
     if (reduced) {
       rig.style.position = "relative";
       rig.style.transform = "none";
