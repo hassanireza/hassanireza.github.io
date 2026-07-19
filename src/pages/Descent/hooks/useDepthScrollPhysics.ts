@@ -167,7 +167,12 @@ export function useDepthScrollPhysics({
           break;
         case "Home":
           e.preventDefault();
-          virtualTarget.current = 0;
+          gsap.to(virtualTarget, {
+            current: 0,
+            duration: 2.8,
+            ease: "power2.inOut",
+            overwrite: true,
+          });
           break;
         case "End":
           e.preventDefault();
@@ -179,7 +184,17 @@ export function useDepthScrollPhysics({
     };
 
     const onScrollToTop = () => {
-      virtualTarget.current = 0;
+      // Snapping virtualTarget straight to 0 skipped the depth-based
+      // damping entirely and just teleported. Tweening it instead keeps
+      // the same per-frame chase (tick() below) doing the work, so the
+      // ascent still passes through the same resistance/damping curve
+      // as any other scroll - it reads as surfacing, not jumping.
+      gsap.to(virtualTarget, {
+        current: 0,
+        duration: 2.8,
+        ease: "power2.inOut",
+        overwrite: true,
+      });
     };
     window.addEventListener("descent:scroll-to-top", onScrollToTop);
 
@@ -246,6 +261,7 @@ export function useDepthScrollPhysics({
 
     return () => {
       gsap.ticker.remove(tick);
+      gsap.killTweensOf(virtualTarget);
       ro.disconnect();
       window.removeEventListener("resize", measure);
       window.removeEventListener("wheel", onWheel);
