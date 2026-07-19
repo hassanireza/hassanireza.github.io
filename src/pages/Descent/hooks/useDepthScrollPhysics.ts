@@ -178,6 +178,11 @@ export function useDepthScrollPhysics({
       }
     };
 
+    const onScrollToTop = () => {
+      virtualTarget.current = 0;
+    };
+    window.addEventListener("descent:scroll-to-top", onScrollToTop);
+
     window.addEventListener("wheel", onWheel, { passive: false });
     window.addEventListener("touchstart", onTouchStart, { passive: true });
     window.addEventListener("touchmove", onTouchMove, { passive: false });
@@ -244,6 +249,7 @@ export function useDepthScrollPhysics({
       ro.disconnect();
       window.removeEventListener("resize", measure);
       window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("descent:scroll-to-top", onScrollToTop);
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("keydown", onKeyDown);

@@ -66,14 +66,8 @@
   }
 
   .service-box {
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-  }
-}
-
-@media (max-width: 420px) {
-  .service-box {
     grid-template-columns: 1fr;
+    gap: 1px;
   }
 }
 

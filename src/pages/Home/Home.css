@@ -188,16 +188,14 @@ body.home-fullscreen #root {
     padding: 0 1.6rem 2.4rem;
   }
   .bar {
-    padding: 1.4rem 1.6rem 1.8rem;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.7rem;
-  }
-  .links {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.6rem;
-    width: 100%;
+    padding: 1.4rem 1.6rem 1.8rem;
+    align-items: stretch;
+  }
+  .links {
+    display: contents;
   }
   .link {
     width: 100%;
