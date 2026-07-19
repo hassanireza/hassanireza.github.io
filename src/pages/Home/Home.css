@@ -188,13 +188,25 @@ body.home-fullscreen #root {
     padding: 0 1.6rem 2.4rem;
   }
   .bar {
-    padding: 1.2rem 1.6rem;
+    padding: 1.4rem 1.6rem 1.8rem;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+    align-items: stretch;
+    gap: 0.7rem;
+  }
+  .links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    width: 100%;
   }
   .link {
-    padding: 0.4rem 0.7rem;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0.65rem 0.8rem;
+    gap: 0.5rem;
+  }
+  .link-arrow {
+    margin-left: auto;
   }
   .name {
     font-size: 1.8rem;

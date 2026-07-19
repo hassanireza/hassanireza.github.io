@@ -21,12 +21,12 @@ const PRINCIPLE_ICONS = [
 ];
 
 const NAV_ITEMS: SectionNavItem[] = [
-  { id: "manifesto", label: "Manifesto", icon: "layout" },
-  { id: "palette", label: "Palette", icon: "layout" },
-  { id: "typography", label: "Type", icon: "layout" },
-  { id: "marks", label: "Marks", icon: "code" },
+  { id: "manifesto", label: "Manifesto", icon: "manifesto" },
+  { id: "palette", label: "Palette", icon: "palette" },
+  { id: "typography", label: "Type", icon: "type" },
+  { id: "marks", label: "Marks", icon: "marks" },
   { id: "motion", label: "Motion", icon: "play" },
-  { id: "discipline", label: "Discipline", icon: "code" },
+  { id: "discipline", label: "Discipline", icon: "discipline" },
 ];
 
 // Largest spacing token defines 100% of the ruler's available height;
