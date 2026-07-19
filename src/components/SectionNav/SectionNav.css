@@ -76,47 +76,36 @@
 
   .section-nav ul {
     width: 100%;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 0.5rem;
     border-radius: 20px;
-    padding: 0.3rem;
+    padding: 0.4rem;
   }
 
+  /* Icon-only, fixed uniform size, regardless of label length or item
+     count - this is what keeps Portfolio's 3-item rail and Branding's
+     6-item rail visually consistent instead of stretching/squeezing
+     buttons to fit text. */
   .section-nav-item {
-    flex: 1 1 0;
-    min-width: 0;
-    flex-direction: column;
-    gap: 0.3rem;
-    padding: 0.55rem 0.25rem;
-    font-size: 0.56rem;
-    letter-spacing: 0.06em;
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    justify-content: center;
+  }
+
+  .section-nav-icon {
+    width: 18px;
+    height: 18px;
   }
 
   .section-nav-label {
-    max-width: 100%;
+    position: absolute;
+    width: 1px;
+    height: 1px;
     overflow: hidden;
-    text-overflow: ellipsis;
+    clip: rect(0 0 0 0);
     white-space: nowrap;
-  }
-}
-
-/* Extra-narrow phones: labels get too tight for 6-item nav rails
-   (e.g. Branding page) even after the shrink above, so drop the text
-   and rely on the icon + active pill alone. */
-@media (max-width: 420px) {
-  .section-nav ul {
-    gap: 0.15rem;
-  }
-
-  .section-nav-item {
-    padding: 0.6rem 0.2rem;
-  }
-
-  .section-nav ul:has(> :nth-child(5)) .section-nav-label {
-    display: none;
-  }
-
-  .section-nav ul:has(> :nth-child(5)) .section-nav-icon {
-    width: 16px;
-    height: 16px;
   }
 }
