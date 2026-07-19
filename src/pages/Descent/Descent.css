@@ -29,7 +29,7 @@
 .descent-page *::before,
 .descent-page *::after { margin:0; padding:0; box-sizing:border-box; }
 
-.descent-page { position:relative; scroll-behavior:smooth; background:var(--void); }
+.descent-page { position:relative; scroll-behavior:smooth; background:var(--void); touch-action:none; overscroll-behavior:none; }
 
 .descent-page {
   font-family:var(--font-body);
@@ -346,6 +346,7 @@
 
 .descent-page .hero {
   min-height:100vh;
+  min-height:100dvh;
   display:flex;
   flex-direction:column;
   justify-content:center;
