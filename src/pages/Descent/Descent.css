@@ -112,7 +112,21 @@
 
 }
 
-.descent-page main { position:relative; z-index:1; filter:url(#water-distortion); }
+.descent-page main {
+  position:relative;
+  z-index:1;
+  filter:url(#water-distortion);
+  /* iOS Safari specific: without forcing this onto its own compositing
+     layer, a filtered element whose ancestor (.scroll-rig below) is
+     being transformed every single frame can intermittently fail to
+     repaint in WebKit and just go blank mid-scroll, especially under
+     touch. translateZ(0) forces GPU layer promotion so the filter is
+     composited independently of the ancestor's moving transform. */
+  -webkit-transform:translateZ(0);
+  transform:translateZ(0);
+  -webkit-backface-visibility:hidden;
+  backface-visibility:hidden;
+}
 
 /* PHYSICS SCROLL RIG. Wraps Backdrop + main content together so the
    background image descends with the page instead of staying pinned to
@@ -135,6 +149,8 @@
   width:100%;
   z-index:3;
   will-change:transform;
+  -webkit-transform:translateZ(0);
+  transform:translateZ(0);
 }
 
 /* =========================================================
@@ -989,6 +1005,7 @@
   height:220px;
   overflow:hidden;
   cursor:none;
+  touch-action:none;
   /* Percentage-based tile size divides the box into exactly 8x5
      cells no matter how wide the container is, so every cell is
      identical and none get cropped at the edges (a fixed px tile
