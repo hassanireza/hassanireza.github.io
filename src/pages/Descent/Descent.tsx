@@ -12,6 +12,7 @@ import { Chamber } from "./components/Chamber";
 import { Thread } from "./components/Thread";
 import { Surface } from "./components/Surface";
 import { Footer } from "./components/Footer";
+import { HomeLink } from "./components/HomeLink";
 import "./Descent.css";
 
 export default function Descent() {
@@ -41,6 +42,7 @@ export default function Descent() {
       <ParticleField />
       <div id="depth-gradient" aria-hidden="true" />
       <DepthMask />
+      <HomeLink />
       <DepthGauge />
 
       {/* Physics rig: the document no longer scrolls at all

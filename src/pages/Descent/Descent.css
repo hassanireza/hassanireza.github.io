@@ -234,6 +234,30 @@
    DEPTH GAUGE. Fixed left rail, fathom ruler + tracker
    ========================================================= */
 
+.descent-page .home-link {
+  position:fixed;
+  top:28px; right:28px;
+  z-index:20;
+  display:flex; align-items:center; gap:7px;
+  font-family:var(--font-mono); font-size:11px; letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--text-2);
+  padding:9px 14px;
+  border:1px solid var(--border-hi);
+  border-radius:99px;
+  background:rgba(8,9,11,0.4);
+  backdrop-filter:blur(10px);
+  transition:all 0.3s var(--ease);
+}
+
+.descent-page .home-link:hover { color:var(--bone); border-color:var(--bone); background:rgba(233,228,218,0.05); }
+
+.descent-page .home-link svg { width:12px; height:12px; }
+
+.descent-page .home-link:focus-visible {
+  outline:1px solid var(--bone); outline-offset:3px;
+}
+
 .descent-page #gauge {
   position:fixed;
   left:0; top:0; bottom:0;
@@ -300,6 +324,10 @@
 .descent-page #gauge .tick-label { display:none; }
 
 .descent-page #gauge .marker-label { font-size:8px; left:10px; }
+
+.descent-page .home-link { top:16px; right:16px; padding:8px 12px; }
+
+.descent-page .home-link span { display:none; }
 
 }
 
