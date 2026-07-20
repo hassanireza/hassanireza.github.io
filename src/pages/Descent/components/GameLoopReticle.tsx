@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { useEffect, useRef, useState, type PointerEvent, type TouchEvent } from "react";
 import { useReveal } from "../hooks/useReveal";
 
 interface Target {
@@ -64,14 +64,49 @@ export function GameLoopReticle() {
     };
   }, [visible]);
 
-  function handlePointerMove(event: PointerEvent<HTMLDivElement>) {
+  function updatePos(clientX: number, clientY: number) {
     const rect = viewportRef.current?.getBoundingClientRect();
     if (!rect) return;
-    setTracking(true);
     setPos({
-      x: clamp(((event.clientX - rect.left) / rect.width) * 100, 2, 98),
-      y: clamp(((event.clientY - rect.top) / rect.height) * 100, 2, 98),
+      x: clamp(((clientX - rect.left) / rect.width) * 100, 2, 98),
+      y: clamp(((clientY - rect.top) / rect.height) * 100, 2, 98),
     });
+  }
+
+  function handlePointerDown(event: PointerEvent<HTMLDivElement>) {
+    // On touch, there's no hover before contact - a tap that doesn't
+    // drag never fires pointermove, so without this the reticle just
+    // sits at its default spot no matter where you tap.
+    setTracking(true);
+    updatePos(event.clientX, event.clientY);
+  }
+
+  function handlePointerMove(event: PointerEvent<HTMLDivElement>) {
+    setTracking(true);
+    updatePos(event.clientX, event.clientY);
+  }
+
+  // Raw touch handlers as a fallback alongside the pointer handlers
+  // above. This page hijacks the document's real scroll (see
+  // useDepthScrollPhysics), which sets touch-action:none and calls
+  // preventDefault() on a window-level touchmove listener - on iOS
+  // WebKit in particular, that combination can make the browser skip
+  // synthesizing PointerEvents from touch input, so pointerdown/
+  // pointermove above silently never fire there even though they work
+  // fine on desktop and Android Chrome. Reading straight from the touch
+  // list sidesteps that synthesis step entirely.
+  function handleTouchStart(event: TouchEvent<HTMLDivElement>) {
+    const t = event.touches[0];
+    if (!t) return;
+    setTracking(true);
+    updatePos(t.clientX, t.clientY);
+  }
+
+  function handleTouchMove(event: TouchEvent<HTMLDivElement>) {
+    const t = event.touches[0];
+    if (!t) return;
+    setTracking(true);
+    updatePos(t.clientX, t.clientY);
   }
 
   function handleHit(id: number) {
@@ -92,8 +127,12 @@ export function GameLoopReticle() {
       <div
         className="game-viewport"
         ref={viewportRef}
+        onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerLeave={() => setTracking(false)}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={() => setTracking(false)}
       >
         <span className="game-crosshair game-crosshair-h" />
         <span className="game-crosshair game-crosshair-v" />
