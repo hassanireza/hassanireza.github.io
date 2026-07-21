@@ -1,0 +1,208 @@
+[
+  {
+    "id": "abyssal-liturgy",
+    "title": "Abyssal Liturgy",
+    "desc": "A scroll-synced coffee brewing guide.",
+    "img": "abyssalLiturgy.webp",
+    "category": "vibe-coding",
+    "href": "https://hassanireza.github.io/abyssalLiturgy/"
+  },
+  {
+    "id": "black-magic",
+    "title": "Black Magic",
+    "desc": "A dark, atmospheric UI experiment.",
+    "img": "black-magic.webp",
+    "category": "vibe-coding",
+    "href": "https://hassanireza.github.io/blackMagic/"
+  },
+  {
+    "id": "supercar-showcase",
+    "title": "Supercar Showcase",
+    "desc": "A scroll-driven, frame-by-frame supercar showcase.",
+    "img": "supercar-showcase.webp",
+    "category": "vibe-coding",
+    "href": "https://hassanireza.github.io/supercarShowcase/"
+  },
+  {
+    "id": "obsidian-game-store",
+    "title": "Obsidian Game Store",
+    "desc": "Instant browser games, no downloads.",
+    "img": "obsidianGameClub.webp",
+    "category": "vibe-coding",
+    "href": "https://hassanireza.github.io/obsidian/"
+  },
+  {
+    "id": "aetheros-cosmos",
+    "title": "Aetheros Cosmos",
+    "desc": "Scroll through an interactive cosmos.",
+    "img": "aetheros-cosmos.webp",
+    "category": "vibe-coding",
+    "href": "https://hassanireza.github.io/aetherosCosmos/"
+  },
+  {
+    "id": "verso",
+    "title": "Verso",
+    "desc": "Short-form posts, 160 characters.",
+    "img": "verso.webp",
+    "category": "frontend-development",
+    "href": "https://verso.up.railway.app/"
+  },
+  {
+    "id": "lexera",
+    "title": "Lexera",
+    "desc": "Learn vocabulary through play.",
+    "img": "lexera.webp",
+    "category": "frontend-development",
+    "href": "https://lexera.up.railway.app/"
+  },
+  {
+    "id": "meridian-health",
+    "title": "Meridian Health",
+    "desc": "Smarter symptom checking, simplified.",
+    "img": "meridianHealth.webp",
+    "category": "frontend-development",
+    "href": "https://hassanireza.github.io/meridianHealth/"
+  },
+  {
+    "id": "nexus-store",
+    "title": "Nexus Store",
+    "desc": "Premium tech, from phones to cameras.",
+    "img": "nexusStore.webp",
+    "category": "frontend-development",
+    "href": "https://nexusstore.up.railway.app/"
+  },
+  {
+    "id": "js-course",
+    "title": "JS Course",
+    "desc": "Learn JavaScript in 30 days.",
+    "img": "jslearn.webp",
+    "category": "frontend-development",
+    "href": "https://learnjs.up.railway.app/"
+  },
+  {
+    "id": "boomr",
+    "title": "BOOMR",
+    "desc": "Boomerangs, boldly reimagined.",
+    "img": "boomerang-store.webp",
+    "category": "frontend-development",
+    "href": "https://hassanireza.github.io/boomerangStore/"
+  },
+  {
+    "id": "chromatic",
+    "title": "Chromatic",
+    "desc": "Color palettes built on real theory.",
+    "img": "chromatic.webp",
+    "category": "frontend-development",
+    "href": "https://hassanireza.github.io/chromatic/"
+  },
+  {
+    "id": "anahita",
+    "title": "Anahita",
+    "desc": "Gods and myths, beautifully told.",
+    "img": "anahita.webp",
+    "category": "frontend-development",
+    "href": "https://hassanireza.github.io/anahita/"
+  },
+  {
+    "id": "the-archive",
+    "title": "The Archive",
+    "desc": "A private, members-only workspace.",
+    "img": "thearchive.webp",
+    "category": "frontend-development",
+    "href": "https://thearchive.up.railway.app/"
+  },
+  {
+    "id": "luminary",
+    "title": "Luminary",
+    "desc": "Share your best shots, beautifully.",
+    "img": "luminary.webp",
+    "category": "frontend-development",
+    "href": "https://luminaryapp.up.railway.app/"
+  },
+  {
+    "id": "book-store",
+    "title": "Book Store",
+    "desc": "Browse and discover your next read.",
+    "img": "bookStore.webp",
+    "category": "frontend-development",
+    "href": "https://hassanireza.github.io/bookStore/"
+  },
+  {
+    "id": "viber",
+    "title": "Viber",
+    "desc": "A messaging interface, reimagined.",
+    "img": "viber.webp",
+    "category": "frontend-development",
+    "href": "https://hassanireza.github.io/viber/"
+  },
+  {
+    "id": "laser-frame",
+    "title": "Laser Frame",
+    "desc": "Motion design, framed with precision.",
+    "img": "laserFrame.webp",
+    "category": "frontend-development",
+    "href": "https://hassanireza.github.io/laserFrame/"
+  },
+  {
+    "id": "atelier-aura",
+    "title": "Atelier Aura",
+    "desc": "Web design, refined and modern.",
+    "img": "atelierAura.webp",
+    "category": "frontend-development",
+    "href": "https://atelieraura.up.railway.app/"
+  },
+  {
+    "id": "idea",
+    "title": "Idea",
+    "desc": "Rigged with the puppet pin tool.",
+    "img": "Idea.webp",
+    "category": "animations",
+    "video": "Idea.mp4",
+    "alt": "Idea Guy"
+  },
+  {
+    "id": "ride-forward",
+    "title": "Ride Forward",
+    "desc": "A playful 2D scooter ride animation.",
+    "img": "scooter.webp",
+    "category": "animations",
+    "video": "scooter.mp4",
+    "alt": "Scooter Girl"
+  },
+  {
+    "id": "balance",
+    "title": "Balance",
+    "desc": "Yoga, animated with camera and light.",
+    "img": "yoga.webp",
+    "category": "animations",
+    "video": "yoga.mp4",
+    "alt": "Yoga"
+  },
+  {
+    "id": "synched-to-you",
+    "title": "Synched to You",
+    "desc": "A lip-sync animation set to music.",
+    "img": "guitarist.webp",
+    "category": "animations",
+    "video": "guitarist.mp4",
+    "alt": "Guitar Girl"
+  },
+  {
+    "id": "reach",
+    "title": "Reach",
+    "desc": "A hand rig, animated with sliders.",
+    "img": "handRig.webp",
+    "category": "animations",
+    "video": "handRig.mp4",
+    "alt": "Hand Rig"
+  },
+  {
+    "id": "pass-it",
+    "title": "Pass It",
+    "desc": "A simple 2D bounce animation.",
+    "img": "boxes.webp",
+    "category": "animations",
+    "video": "boxes.mp4",
+    "alt": "Logo Reveal"
+  }
+]
