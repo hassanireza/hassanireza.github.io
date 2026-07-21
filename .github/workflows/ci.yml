@@ -43,6 +43,9 @@ jobs:
         run: npm run lint
 
       - name: Type-check & build
+        env:
+          VITE_GITHUB_OAUTH_CLIENT_ID: ${{ secrets.VITE_GITHUB_OAUTH_CLIENT_ID }}
+          VITE_OAUTH_PROXY_URL: ${{ secrets.VITE_OAUTH_PROXY_URL }}
         run: npm run build
 
       - name: Upload build output (CI artifact)
