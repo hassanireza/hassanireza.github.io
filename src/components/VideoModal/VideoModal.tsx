@@ -35,7 +35,7 @@ export default function VideoModal({ project, onClose }: VideoModalProps) {
       }}
     >
       <div className="video-container">
-        {project && (
+        {project && project.video && (
           <>
             <video
               className="main-video"
