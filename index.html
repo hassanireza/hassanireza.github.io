@@ -41,10 +41,14 @@
           var decoded = l.search.slice(3).split("&").map(function (s) {
             return s.replace(/~and~/g, "&");
           });
+          var path = decoded[0];
+          var originalQuery = decoded[1] ? decoded[1].replace(/^q=/, "") : "";
           window.history.replaceState(
             null,
             "",
-            l.pathname.slice(0, -1) + decoded[0] + (window.location.hash || "")
+            l.pathname.slice(0, -1) + path +
+              (originalQuery ? "?" + originalQuery : "") +
+              (window.location.hash || "")
           );
         }
       })(window.location);

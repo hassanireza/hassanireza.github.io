@@ -1,0 +1,5 @@
+[
+  { "id": "vibe-coding", "label": "Vibe Coding", "icon": "code" },
+  { "id": "frontend-development", "label": "Frontend Development", "icon": "layout" },
+  { "id": "animations", "label": "Animations", "icon": "play" }
+]

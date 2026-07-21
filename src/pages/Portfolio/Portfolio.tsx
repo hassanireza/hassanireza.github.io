@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import ProjectGrid from "../../components/ProjectGrid/ProjectGrid";
@@ -6,62 +6,70 @@ import VideoModal from "../../components/VideoModal/VideoModal";
 import ScrollProgress from "../../components/ScrollProgress/ScrollProgress";
 import PortfolioBackdrop from "../../components/PortfolioBackdrop/PortfolioBackdrop";
 import SectionNav, { type SectionNavItem } from "../../components/SectionNav/SectionNav";
-import {
-  vibeCodingProjects,
-  frontendProjects,
-  animationProjects,
-} from "../../data/projects";
-import type { AnimationProject, AnyProject } from "../../types/project";
+import type { Category, Project, SiteConfig } from "../../types/project";
 import "./Portfolio.css";
 
-/**
- * Section registry for the whole page: the section nav, scroll-spy, and
- * grid rendering all read from this one list. To add a brand-new category
- * of work later, add one entry here (and the matching data array import
- * above) — nothing else on the page needs to change.
- */
-const SECTIONS: Array<{
-  id: string;
-  index: string;
-  navLabel: string;
-  navIcon: SectionNavItem["icon"];
-  title: string;
-  projects: AnyProject[];
-  isAnimationGrid?: boolean;
-}> = [
-  {
-    id: "vibe-coding",
-    index: "01",
-    navLabel: "Vibe Coding",
-    navIcon: "code",
-    title: "Vibe Coding",
-    projects: vibeCodingProjects,
-  },
-  {
-    id: "frontend-development",
-    index: "02",
-    navLabel: "Frontend",
-    navIcon: "layout",
-    title: "Frontend Development",
-    projects: frontendProjects,
-  },
-  {
-    id: "animations",
-    index: "03",
-    navLabel: "Motion",
-    navIcon: "play",
-    title: "Animations",
-    projects: animationProjects,
-    isAnimationGrid: true,
-  },
-];
+const FALLBACK_CONFIG: SiteConfig = {
+  portfolioTitle: "Reza Hassani\u2019s Portfolio",
+  portfolioTagline:
+    "Front-end engineering and motion design: selected builds, from full-stack Django apps to hand-animated interaction work.",
+};
 
+/**
+ * Projects, categories, and the title/tagline above all live in
+ * /public/data/*.json and are fetched at runtime rather than imported
+ * as source - that's what lets the admin dashboard (/portfolio/admin)
+ * publish a new project or edit the tagline by committing a JSON file
+ * through the GitHub API, with the change visible on next page load
+ * and no rebuild required.
+ */
 export default function Portfolio() {
-  const [playing, setPlaying] = useState<AnimationProject | null>(null);
+  const [projects, setProjects] = useState<Project[] | null>(null);
+  const [categories, setCategories] = useState<Category[] | null>(null);
+  const [config, setConfig] = useState<SiteConfig>(FALLBACK_CONFIG);
+  const [playing, setPlaying] = useState<Project | null>(null);
   const heroRef = useRef<HTMLDivElement>(null);
 
-  function handlePlay(project: AnyProject) {
-    setPlaying(project as AnimationProject);
+  useEffect(() => {
+    let cancelled = false;
+    const base = import.meta.env.BASE_URL;
+
+    Promise.all([
+      fetch(`${base}data/projects.json`).then((r) => (r.ok ? r.json() : [])),
+      fetch(`${base}data/categories.json`).then((r) => (r.ok ? r.json() : [])),
+      fetch(`${base}data/site-config.json`).then((r) => (r.ok ? r.json() : FALLBACK_CONFIG)),
+    ])
+      .then(([projectsData, categoriesData, configData]) => {
+        if (cancelled) return;
+        setProjects(projectsData);
+        setCategories(categoriesData);
+        setConfig({ ...FALLBACK_CONFIG, ...configData });
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setProjects([]);
+        setCategories([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const sections = useMemo(() => {
+    if (!projects || !categories) return [];
+    return categories.map((cat, i) => ({
+      id: cat.id,
+      index: String(i + 1).padStart(2, "0"),
+      navLabel: cat.label,
+      navIcon: cat.icon,
+      title: cat.label,
+      projects: projects.filter((p) => p.category === cat.id),
+    }));
+  }, [projects, categories]);
+
+  function handlePlay(project: Project) {
+    setPlaying(project);
   }
 
   useEffect(() => {
@@ -97,7 +105,13 @@ export default function Portfolio() {
     }, hero);
 
     return () => ctx.revert();
-  }, []);
+  }, [config]);
+
+  const [titleStart, titleEm] = useMemo(() => {
+    const idx = config.portfolioTitle.lastIndexOf(" ");
+    if (idx === -1) return [config.portfolioTitle, ""];
+    return [config.portfolioTitle.slice(0, idx + 1), config.portfolioTitle.slice(idx + 1)];
+  }, [config.portfolioTitle]);
 
   return (
     <>
@@ -117,17 +131,15 @@ export default function Portfolio() {
           <span className="hero-eyebrow">Selected Works</span>
           <h1>
             <span className="hero-title-line">
-              Reza Hassani&rsquo;s <em>Portfolio</em>
+              {titleStart}
+              <em>{titleEm}</em>
             </span>
           </h1>
-          <p className="hero-sub">
-            Front-end engineering and motion design: selected builds, from full-stack
-            Django apps to hand-animated interaction work.
-          </p>
+          <p className="hero-sub">{config.portfolioTagline}</p>
           <div className="hero-meta">
-            <span>{SECTIONS.reduce((n, s) => n + s.projects.length, 0)} projects</span>
+            <span>{(projects ?? []).length} projects</span>
             <span className="dot" />
-            <span>{SECTIONS.length} disciplines</span>
+            <span>{sections.length} disciplines</span>
             <span className="dot" />
             <a href="https://hassanireza.github.io/descent" target="_blank" rel="noopener noreferrer">
               The Descent &middot; Career Roadmap
@@ -136,17 +148,17 @@ export default function Portfolio() {
         </header>
 
         <SectionNav
-          items={SECTIONS.map((s) => ({ id: s.id, label: s.navLabel, icon: s.navIcon }))}
+          items={sections.map((s) => ({ id: s.id, label: s.navLabel, icon: s.navIcon as SectionNavItem["icon"] }))}
         />
 
-        {SECTIONS.map((section) => (
+        {sections.map((section) => (
           <ProjectGrid
             key={section.id}
             id={section.id}
             index={section.index}
             title={section.title}
             projects={section.projects}
-            onPlay={section.isAnimationGrid ? handlePlay : undefined}
+            onPlay={handlePlay}
           />
         ))}
 

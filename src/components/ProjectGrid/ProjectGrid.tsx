@@ -66,7 +66,7 @@ export default function ProjectGrid({ id, index, title, projects, onPlay }: Proj
       </h3>
       <div className="service-box" style={{ perspective: "1400px" }}>
         {projects.map((project) => (
-          <ProjectCard key={project.title} project={project} onPlay={onPlay} />
+          <ProjectCard key={project.id} project={project} onPlay={onPlay} />
         ))}
       </div>
     </section>

@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Portfolio from "./pages/Portfolio/Portfolio";
+import Admin from "./pages/Portfolio/Admin/Admin";
 import Contact from "./pages/Contact/Contact";
 import Branding from "./pages/Branding/Branding";
 import Descent from "./pages/Descent/Descent";
@@ -23,6 +24,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/portfolio" element={<Portfolio />} />
+        <Route path="/portfolio/admin" element={<Admin />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/branding" element={<Branding />} />
         <Route path="/descent" element={<Descent />} />
