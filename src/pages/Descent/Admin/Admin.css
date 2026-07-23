@@ -1,0 +1,42 @@
+/* CV Admin - page-specific rules only. Shared gate/button/card/form
+   chrome lives in src/lib/admin/admin-shared.css. The generic
+   .admin-subcard/.admin-chip nested-list patterns also live there
+   (shared with any future list-of-things editor); only the CV-specific
+   bullet-list and save-bar layouts are defined here. */
+
+.admin-cv-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 760px;
+}
+
+.admin-subcard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.admin-bullet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-bullet-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  align-items: start;
+}
+
+.admin-bullet-row textarea {
+  font-size: 0.85rem;
+}
+
+.admin-save-bar {
+  position: sticky;
+  bottom: 0;
+  padding: 1rem 0;
+  background: linear-gradient(180deg, transparent, var(--bg) 30%);
+}
