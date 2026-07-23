@@ -31,7 +31,6 @@ One design language, several distinct experiences, all in one app.
 | `/branding` | The Abyssal Liturgy brand system, published in full |
 | `/contact` | Contact form, Cloudflare Turnstile verified |
 | `/descent` | The Descent — an immersive, scroll-driven career retrospective |
-| `/descent/cv` | Printable CV, reached from The Descent |
 | `/journey` | My Journey — a self-graded skill tree and progress tracker |
 | `/journey/roadmap` | The full phase-by-phase roadmap and achievements |
 | `/journey/cheatsheets` | A catalog of long-form reference guides |
