@@ -42,7 +42,10 @@ export function Footer() {
           &middot; CREATIVE TECHNOLOGIST
         </span>
         <Link to="/descent/cv" className="foot-note foot-link">
-          CURRICULUM VITAE &nbsp;&rarr;
+          CURRICULUM VITAE
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M3 8a.75.75 0 0 1 .75-.75h7.19L8.22 4.53a.75.75 0 1 1 1.06-1.06l4 4a.75.75 0 0 1 0 1.06l-4 4a.75.75 0 1 1-1.06-1.06l2.72-2.72H3.75A.75.75 0 0 1 3 8Z" />
+          </svg>
         </Link>
         <span className="foot-note" id="depth-readout">
           {ZONE_NAMES[zoneIndex]} &middot; {fathoms} FTM

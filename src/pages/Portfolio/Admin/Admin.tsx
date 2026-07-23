@@ -150,7 +150,10 @@ export default function Admin() {
           Continue with GitHub
         </button>
         <Link to="/portfolio" className="admin-back">
-          &larr; Back to Portfolio
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M13 7.25a.75.75 0 0 1 0 1.5H4.56l3.72 3.72a.75.75 0 1 1-1.06 1.06l-5-5a.75.75 0 0 1 0-1.06l5-5a.75.75 0 1 1 1.06 1.06L4.56 7.25H13z" />
+          </svg>
+          Back to Portfolio
         </Link>
       </div>
     );
@@ -181,7 +184,10 @@ export default function Admin() {
           Site Settings
         </button>
         <Link to="/portfolio" className="admin-tab-link">
-          View live site &nearr;
+          View live site
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M4.25 3.5a.75.75 0 0 0 0 1.5h5.19L2.97 11.47a.75.75 0 1 0 1.06 1.06L11.5 5.06v5.19a.75.75 0 0 0 1.5 0v-7a.75.75 0 0 0-.75-.75h-8Z" />
+          </svg>
         </Link>
       </nav>
 

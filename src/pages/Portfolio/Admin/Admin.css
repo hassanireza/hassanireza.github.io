@@ -59,11 +59,15 @@
 
 .admin-back {
   margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   color: var(--text-3);
   font-size: 0.85rem;
   transition: color 0.3s var(--ease);
 }
 .admin-back:hover { color: var(--text-2); }
+.admin-back svg { width: 13px; height: 13px; fill: currentColor; }
 
 /* ---- buttons ---- */
 
@@ -159,12 +163,16 @@
 
 .admin-tab-link {
   margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.8rem;
   color: var(--text-3);
   padding: 0.8rem 0;
   transition: color 0.3s var(--ease);
 }
 .admin-tab-link:hover { color: var(--text-2); }
+.admin-tab-link svg { width: 12px; height: 12px; fill: currentColor; }
 
 /* ---- layout ---- */
 

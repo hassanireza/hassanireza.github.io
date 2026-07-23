@@ -1182,6 +1182,17 @@
   color:var(--text-3);
 }
 
+.descent-page footer .foot-link {
+  display:inline-flex; align-items:center; gap:0.4em;
+  transition:color 0.3s var(--ease);
+}
+
+.descent-page footer .foot-link:hover { color:var(--bone); }
+
+.descent-page footer .foot-link svg {
+  width:11px; height:11px; fill:currentColor;
+}
+
 @media (prefers-reduced-motion: reduce) {
 
 .descent-page * { animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }

@@ -49,7 +49,9 @@ export default function VideoModal({ project, onClose }: VideoModalProps) {
               Your browser does not support video playback.
             </video>
             <button className="close-video" aria-label="Close video" onClick={onClose}>
-              &#x2715;
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M4.34 3.28a.75.75 0 0 0-1.06 1.06L6.94 8l-3.66 3.66a.75.75 0 1 0 1.06 1.06L8 9.06l3.66 3.66a.75.75 0 1 0 1.06-1.06L9.06 8l3.66-3.66a.75.75 0 0 0-1.06-1.06L8 6.94 4.34 3.28Z" />
+              </svg>
             </button>
           </>
         )}
