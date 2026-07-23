@@ -31,7 +31,6 @@ One design language, several distinct experiences, all in one app.
 | `/branding` | The Abyssal Liturgy brand system, published in full |
 | `/contact` | Contact form, Cloudflare Turnstile verified |
 | `/descent` | The Descent — an immersive, scroll-driven career retrospective |
-| `/descent/cv` | Printable CV, reached from The Descent |
 | `/journey` | My Journey — a self-graded skill tree and progress tracker |
 | `/journey/roadmap` | The full phase-by-phase roadmap and achievements |
 | `/journey/cheatsheets` | A catalog of long-form reference guides |
@@ -87,7 +86,7 @@ No global state library. State is local to each page — `useState` and `useEffe
 
 ## Routing on a static host
 
-GitHub Pages has no server-side routing, so a direct link or hard refresh on a nested path like `/descent/cv` or `/journey/roadmap` would 404 on a naive static deploy. This site handles that with the established `rafgraph/spa-github-pages` pattern: a small redirect shim encodes the intended path into a query string, and an inline script restores it with `history.replaceState` before React Router ever mounts. From the outside, it's instant and invisible — the only page a visitor actually sees for a broken link is the branded 404 itself.
+GitHub Pages has no server-side routing, so a direct link or hard refresh on a nested path like `/journey/roadmap` would 404 on a naive static deploy. This site handles that with the established `rafgraph/spa-github-pages` pattern: a small redirect shim encodes the intended path into a query string, and an inline script restores it with `history.replaceState` before React Router ever mounts. From the outside, it's instant and invisible — the only page a visitor actually sees for a broken link is the branded 404 itself.
 
 <div align="center">
   <img src="docs/diagrams/spa-routing.svg" alt="Sequence diagram, direct visit to a nested path served a 404, redirected through a query string, restored and matched by React Router" width="100%" />

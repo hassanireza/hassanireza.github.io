@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type DragEvent, type FormEvent } from "react";
-import { useGitHubAuth } from "./useGitHubAuth";
-import { putBinaryFile } from "./githubApi";
+import { useGitHubAuth } from "../../../lib/admin/useGitHubAuth";
+import { putBinaryFile } from "../../../lib/admin/githubApi";
 import { convertToWebp, slugifyFilename, slugifyId, type ConvertedImage } from "./imageToWebp";
 import type { Category, Project } from "../../../types/project";
 

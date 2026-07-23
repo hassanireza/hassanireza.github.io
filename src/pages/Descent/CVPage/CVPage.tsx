@@ -1,13 +1,37 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { cvSummary, cvJobs, cvSkillGroups, cvLanguages } from "../data/cv";
+import type { CVData } from "../../../types/cv";
 import "../Descent.css";
 import "./CVPage.css";
 
+const FALLBACK: CVData = {
+  role: "Frontend Developer \u00b7 Animator",
+  contact: { siteLabel: "hassanireza.github.io", email: "hassanireza@att.net", githubUsername: "hassanireza" },
+  summary: "",
+  jobs: [],
+  skillGroups: [],
+  languages: [],
+};
+
 export default function CVPage() {
+  const [cv, setCv] = useState<CVData | null>(null);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${import.meta.env.BASE_URL}data/cv.json`)
+      .then((r) => (r.ok ? r.json() : FALLBACK))
+      .then((data) => !cancelled && setCv(data))
+      .catch(() => !cancelled && setCv(FALLBACK));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const data = cv ?? FALLBACK;
 
   return (
     <div className="descent-page cv-page">
@@ -23,7 +47,7 @@ export default function CVPage() {
         <h1>
           Reza <em>Hassani</em>
         </h1>
-        <p className="cv-role">Frontend Developer &nbsp;&middot;&nbsp; Animator</p>
+        <p className="cv-role">{data.role}</p>
 
         <div className="cv-contact">
           <Link to="/" className="cv-contact-link">
@@ -32,17 +56,17 @@ export default function CVPage() {
               <line x1="2" y1="12" x2="22" y2="12" />
               <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
             </svg>
-            hassanireza.github.io
+            {data.contact.siteLabel}
           </Link>
-          <a href="mailto:hassanireza@att.net" className="cv-contact-link">
+          <a href={`mailto:${data.contact.email}`} className="cv-contact-link">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <rect x="2" y="4" width="20" height="16" rx="2" />
               <polyline points="2,4 12,13 22,4" />
             </svg>
-            hassanireza@att.net
+            {data.contact.email}
           </a>
           <a
-            href="https://github.com/hassanireza"
+            href={`https://github.com/${data.contact.githubUsername}`}
             target="_blank"
             rel="noopener noreferrer"
             className="cv-contact-link"
@@ -62,7 +86,7 @@ export default function CVPage() {
             <h2>Summary</h2>
             <span className="cv-line" />
           </div>
-          <p className="cv-summary">{cvSummary}</p>
+          <p className="cv-summary">{data.summary}</p>
         </section>
 
         <section className="cv-section">
@@ -73,7 +97,7 @@ export default function CVPage() {
           </div>
 
           <div className="cv-jobs">
-            {cvJobs.map((job) => (
+            {data.jobs.map((job) => (
               <article className="cv-job" key={`${job.company}-${job.period}`}>
                 <div className="cv-job-top">
                   <div>
@@ -103,7 +127,7 @@ export default function CVPage() {
           </div>
 
           <div className="cv-tech">
-            {cvSkillGroups.map((group) => (
+            {data.skillGroups.map((group) => (
               <div className="cv-tech-group" key={group.label}>
                 <span className="cv-tech-label">{group.label}</span>
                 <div className="cv-skills">
@@ -126,7 +150,7 @@ export default function CVPage() {
           </div>
 
           <div className="cv-languages">
-            {cvLanguages.map((language) => (
+            {data.languages.map((language) => (
               <div className="cv-language" key={language.name}>
                 <span className="cv-language-name">{language.name}</span>
                 <span className="cv-language-level">{language.level}</span>
@@ -148,7 +172,7 @@ export default function CVPage() {
 
       <footer className="cv-footer no-print">
         <span className="foot-note">
-          REZA HASSANI &middot; FRONT-END DEVELOPER &middot; ANIMATOR
+          REZA HASSANI &middot; {data.role.toUpperCase()}
         </span>
       </footer>
     </div>

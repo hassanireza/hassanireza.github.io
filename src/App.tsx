@@ -6,6 +6,7 @@ import Contact from "./pages/Contact/Contact";
 import Branding from "./pages/Branding/Branding";
 import Descent from "./pages/Descent/Descent";
 import CVPage from "./pages/Descent/CVPage/CVPage";
+import DescentAdmin from "./pages/Descent/Admin/Admin";
 import JourneyLayout from "./pages/Journey/JourneyLayout";
 import Overview from "./pages/Journey/Overview";
 import Roadmap from "./pages/Journey/Roadmap";
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/branding" element={<Branding />} />
         <Route path="/descent" element={<Descent />} />
         <Route path="/descent/cv" element={<CVPage />} />
+        <Route path="/descent/admin" element={<DescentAdmin />} />
         <Route path="/journey" element={<JourneyLayout />}>
           <Route index element={<Overview />} />
           <Route path="roadmap" element={<Roadmap />} />
