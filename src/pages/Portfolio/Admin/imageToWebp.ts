@@ -15,7 +15,12 @@ export interface ConvertedImage {
 }
 
 const TARGET_RATIO = 16 / 9;
-const MAX_WIDTH = 1600;
+// Project cards in the grid never render wider than ~600px even on a
+// large desktop (see ProjectGrid.css - the grid splits into multiple
+// columns well before a single card gets that wide). 960px covers that
+// with headroom for retina/high-DPI displays without shipping 3-4x more
+// pixels than any real layout will ever show.
+const MAX_WIDTH = 960;
 
 export function slugifyId(title: string): string {
   return (
