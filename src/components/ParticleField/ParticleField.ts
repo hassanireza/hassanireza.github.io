@@ -135,6 +135,7 @@ export class ParticleField {
   private rafId = 0;
   private running = false;
   private destroyed = false;
+  private readonly reducedMotion: boolean;
 
   private readonly canvas: HTMLCanvasElement;
 
@@ -150,6 +151,7 @@ export class ParticleField {
     this.colorText = options.colorText ?? "#e6e3da";
     this.colorAccent = options.colorAccent ?? "#7c8891";
     this.colorBgFade = options.colorBgFade ?? "rgba(8,9,11,0.22)";
+    this.reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     this.handleResize = this.handleResize.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -199,7 +201,14 @@ export class ParticleField {
     return pts;
   }
 
+  private resizeDebounceId = 0;
+
   private handleResize(): void {
+    window.clearTimeout(this.resizeDebounceId);
+    this.resizeDebounceId = window.setTimeout(() => this.applyResize(), 150);
+  }
+
+  private applyResize(): void {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     this.dpr = Math.min(window.devicePixelRatio || 1, MAX_DEVICE_PIXEL_RATIO);
@@ -218,6 +227,8 @@ export class ParticleField {
       if (i < pts.length) p.assignTarget(pts);
       this.particles.push(p);
     }
+
+    if (this.reducedMotion) this.settleAndDrawStatic();
   }
 
   private handleMouseMove(e: MouseEvent): void {
@@ -235,6 +246,24 @@ export class ParticleField {
   private handleMouseLeave(): void {
     this.mouse.x = -999;
     this.mouse.y = -999;
+  }
+
+  private settleAndDrawStatic(): void {
+    for (const p of this.particles) {
+      if (p.homed) {
+        p.x = p.tx;
+        p.y = p.ty;
+      }
+      p.alpha = p.homed ? p.baseAlpha * 2.2 : p.baseAlpha;
+    }
+    // colorBgFade is a translucent fade meant to accumulate over many
+    // animated frames - for a single static frame that would leave a
+    // dim, half-cleared canvas, so clear to fully transparent instead.
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    for (const p of this.particles) {
+      p.draw(this.ctx);
+    }
+    this.ctx.globalAlpha = 1;
   }
 
   private loop(): void {
@@ -258,7 +287,15 @@ export class ParticleField {
 
     await document.fonts.ready;
     if (this.destroyed) return;
-    this.handleResize();
+    this.applyResize();
+
+    if (this.reducedMotion) {
+      // applyResize() already calls settleAndDrawStatic() when
+      // reducedMotion is true - no rAF loop started at all for these
+      // users, so there's zero ongoing cost, not just reduced motion.
+      return;
+    }
+
     this.running = true;
     this.loop();
   }
@@ -267,6 +304,7 @@ export class ParticleField {
     this.destroyed = true;
     this.running = false;
     cancelAnimationFrame(this.rafId);
+    window.clearTimeout(this.resizeDebounceId);
     window.removeEventListener("resize", this.handleResize);
     window.removeEventListener("mousemove", this.handleMouseMove);
     window.removeEventListener("touchmove", this.handleTouchMove);

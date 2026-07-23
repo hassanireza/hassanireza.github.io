@@ -225,14 +225,31 @@ export function useDepthScrollPhysics({
     let frameCount = 0;
     let lastWrittenScale = -1;
 
+    let settled = false;
+
     const tick = () => {
       frameCount += 1;
+
+      const delta = virtualTarget.current - current.current;
+
+      // Nothing is moving and hasn't for at least one settle frame - skip
+      // the DOM write and the progress-store write (which re-renders
+      // every component subscribed to useProgress) entirely. New wheel/
+      // touch/keyboard input changes virtualTarget elsewhere in this
+      // hook, which makes delta non-negligible again on the very next
+      // tick and wakes this back up automatically - no separate
+      // "resume" logic needed.
+      if (Math.abs(delta) < 0.05 && Math.abs(velocity.current) < 0.05) {
+        if (settled) return;
+        settled = true;
+      } else {
+        settled = false;
+      }
 
       const depth = depthOf(current.current);
       const damping = gsap.utils.interpolate(SURFACE_DAMPING, ABYSS_DAMPING, depth);
       const maxStep = gsap.utils.interpolate(SURFACE_MAX_STEP, ABYSS_MAX_STEP, depth);
 
-      const delta = virtualTarget.current - current.current;
       const step = Math.max(-maxStep, Math.min(maxStep, delta * damping));
       current.current += step;
       velocity.current = step;
