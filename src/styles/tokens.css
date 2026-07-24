@@ -17,7 +17,7 @@
 
   --text: #e6e3da;
   --text-2: #9aa3a8;
-  --text-3: #565f64;
+  --text-3: #7f8589; /* WCAG AA: >=4.86:1 against every bg shade used on this site (was #565f64, as low as 2.78:1) */
 
   --accent: #7c8891;
   --accent-dim: rgba(124, 136, 145, 0.13);
