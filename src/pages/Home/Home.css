@@ -83,7 +83,7 @@ body.home-fullscreen #root {
 
 .summary {
   font-family: var(--font-body);
-  font-weight: 200;
+  font-weight: 300;
   font-size: 0.78rem;
   color: var(--text-2);
   max-width: 34ch;

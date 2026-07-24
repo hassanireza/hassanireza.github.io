@@ -345,10 +345,14 @@
   transition: background 0.3s var(--ease);
 }
 
-.swatch:hover,
+.swatch:hover {
+  background: var(--bg-2);
+}
+
 .swatch:focus-visible {
   background: var(--bg-2);
-  outline: none;
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 2px;
 }
 
 .swatch .chip {
@@ -779,7 +783,7 @@
   transition: border-color 0.35s var(--ease);
 }
 .demo-field::placeholder { color: var(--text-3); }
-.demo-field:focus { outline: none; border-color: var(--border-hover); }
+.demo-field:focus-visible { outline: 2px solid var(--accent-bright); outline-offset: 2px; border-color: var(--border-hover); }
 
 .demo-info-card { display: flex; width: 100%; }
 .demo-info-cell {
