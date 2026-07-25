@@ -1,0 +1,116 @@
+/* Portfolio Admin - page-specific rules only. Shared gate/button/card/
+   form chrome lives in src/lib/admin/admin-shared.css (imported by
+   Admin.tsx alongside this file). */
+
+/* ---- dropzone ---- */
+
+.admin-dropzone {
+  position: relative;
+  border: 1px dashed var(--border-hover);
+  border-radius: var(--radius-card);
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
+  background: var(--bg);
+}
+.admin-dropzone:hover,
+.admin-dropzone.drag-over {
+  border-color: var(--accent-bright);
+  background: var(--accent-dim);
+}
+
+.admin-dropzone-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin-dropzone-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--text-3);
+}
+.admin-dropzone-empty svg { width: 22px; height: 22px; fill: var(--text-3); }
+.admin-dropzone-empty p { font-size: 0.85rem; color: var(--text-2); margin: 0; }
+.admin-dropzone-empty .admin-hint { margin-top: -0.2rem; }
+
+.admin-dropzone-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 9, 11, 0.75);
+  color: var(--text);
+  font-size: 0.85rem;
+}
+
+/* ---- project list ---- */
+
+.admin-project-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.admin-project-row {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 0.9rem;
+  align-items: center;
+  padding: 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+}
+
+.admin-project-thumb {
+  width: 64px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-img);
+  background: var(--bg);
+}
+
+.admin-project-title { font-size: 0.92rem; color: var(--text); }
+.admin-project-desc { font-size: 0.78rem; color: var(--text-2); margin: 0.15rem 0 0.35rem; }
+.admin-project-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  border: 1px solid var(--border-hover);
+  border-radius: 99px;
+  padding: 0.15rem 0.55rem;
+}
+
+.admin-project-actions { display: flex; gap: 0.4rem; }
+
+/* ---- settings preview ---- */
+
+.admin-preview-box {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 1.2rem 1.4rem;
+  background: var(--bg);
+}
+.admin-preview-box h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.4rem;
+  color: var(--text);
+  margin-bottom: 0.4rem;
+}
+.admin-preview-box h3 em { font-style: italic; color: var(--accent-bright); }
+.admin-preview-box p { font-size: 0.85rem; color: var(--text-2); }
