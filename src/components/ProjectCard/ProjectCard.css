@@ -1,0 +1,239 @@
+.tilt {
+  --rx: 0;
+  --ry: 0;
+  --mx: 50%;
+  --my: 50%;
+  --depth: 1;
+  perspective: 1200px;
+}
+
+.card {
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--rx) * 1deg)) rotateY(calc(var(--ry) * 1deg));
+  transition: background 0.5s var(--ease), transform 0.5s var(--ease-out);
+  will-change: transform;
+}
+
+.tilt.is-tilting .card {
+  transition: background 0.5s var(--ease), transform 0.08s linear;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(ellipse 90% 70% at 50% 0%, rgba(230, 227, 218, 0.05), transparent 65%);
+  transition: opacity 0.5s var(--ease);
+}
+
+.card:hover {
+  background: var(--bg-2);
+}
+
+.card:hover::after {
+  opacity: 1;
+}
+
+/* Pointer-following spotlight, only meaningful once tilting starts */
+.card-spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    circle at var(--mx) var(--my),
+    rgba(230, 227, 218, 0.09),
+    transparent 45%
+  );
+  transition: opacity 0.4s var(--ease);
+}
+
+.tilt.is-tilting .card-spotlight {
+  opacity: 1;
+}
+
+.card::before {
+  counter-increment: card;
+  content: counter(card, decimal-leading-zero);
+  position: absolute;
+  top: 1.4rem;
+  right: 1.4rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--text-3);
+  z-index: 2;
+  pointer-events: none;
+  transform: translateZ(calc(38px * var(--depth)));
+  transition: color 0.4s var(--ease);
+}
+
+.card:hover::before {
+  color: var(--accent);
+}
+
+/* Layered depth: each layer sits further "off the page" as the card tilts */
+.depth-1 {
+  transform: translateZ(calc(22px * var(--depth)));
+}
+
+.depth-2 {
+  transform: translateZ(calc(8px * var(--depth)));
+}
+
+.card h4 {
+  padding: 1.6rem 1.6rem 0;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.card-desc {
+  padding: 0.55rem 1.6rem 0;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: var(--text-3);
+  line-height: 1.55;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.Portfolio-images {
+  padding: 0.9rem 1.6rem 1.6rem;
+}
+
+.media-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-img);
+  cursor: pointer;
+  background: var(--bg-2);
+  aspect-ratio: 16 / 9;
+}
+
+.media-item a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.media-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.media-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(8, 9, 11, 0.15) 0%, transparent 35%, rgba(8, 9, 11, 0.35) 100%);
+}
+
+.media-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 1.1s var(--ease-liturgy), filter 0.6s var(--ease);
+  filter: grayscale(0.55) saturate(0.7) brightness(0.82) contrast(1.05);
+  transform: scale(1) translate(calc(var(--rx) * -0.6px), calc(var(--ry) * 0.6px));
+}
+
+.media-item:hover .media-frame img {
+  transform: scale(1.06) translate(calc(var(--rx) * -0.6px), calc(var(--ry) * 0.6px));
+  filter: grayscale(0.2) saturate(0.85) brightness(0.92) contrast(1.05);
+}
+
+.media-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.12) 48%,
+    transparent 60%
+  );
+  background-size: 250% 250%;
+  background-position: calc(var(--mx) * 1.4) calc(var(--my) * 1.4);
+  transition: opacity 0.4s var(--ease);
+}
+
+.tilt.is-tilting .media-sheen {
+  opacity: 1;
+}
+
+.glass {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease);
+  background: rgba(8, 9, 11, 0.62);
+}
+
+.media-item:hover .glass {
+  opacity: 1;
+}
+
+.glass span {
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--text);
+  padding: 0.7rem 1.4rem;
+  border: 1px solid rgba(230, 227, 218, 0.2);
+  border-radius: 1px;
+  background: rgba(8, 9, 11, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transform: translateZ(calc(30px * var(--depth)));
+  transition: border-color 0.3s, background 0.3s, letter-spacing 0.4s var(--ease);
+}
+
+.media-item:hover .glass span {
+  border-color: rgba(230, 227, 218, 0.4);
+  background: rgba(8, 9, 11, 0.55);
+  letter-spacing: 0.3em;
+}
+
+@media (max-width: 640px) {
+  .card h4 {
+    font-size: 1.1rem;
+    padding: 1.15rem 1.15rem 0;
+  }
+
+  .Portfolio-images {
+    padding: 0.85rem 1.15rem 1.15rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .media-frame img {
+    transition: none;
+  }
+}
