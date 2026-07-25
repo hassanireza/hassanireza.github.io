@@ -1,0 +1,70 @@
+<svg viewBox="0 0 900 340" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg     { fill: #050506; }
+      .stage  { fill: #0b0c10; stroke: rgba(233,228,218,0.16); stroke-width: 1; }
+      .title  { fill: #e9e4da; font-family: 'Fraunces', 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; }
+      .sub    { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.02em; }
+      .num    { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+      .edge   { stroke: rgba(233,228,218,0.3); stroke-width: 1.2; fill: none; marker-end: url(#arrow); }
+      .kicker { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; }
+      .band   { fill: rgba(60,75,70,0.12); stroke: rgba(60,75,70,0.5); stroke-dasharray: 1 5; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6d727b" />
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="900" height="340" />
+  <text class="kicker" x="30" y="34">CI / CD Pipeline — .github/workflows/ci.yml</text>
+
+  <rect class="band" x="30" y="60" width="490" height="120" rx="3" />
+  <text class="sub" x="42" y="76">build job</text>
+
+  <rect class="band" x="540" y="60" width="330" height="120" rx="3" />
+  <text class="sub" x="552" y="76">deploy job, main only</text>
+
+  <!-- Stage 1 -->
+  <rect class="stage" x="50" y="90" width="130" height="60" rx="3" />
+  <text class="num" x="62" y="106">01</text>
+  <text class="title" x="115" y="122" text-anchor="middle">Checkout</text>
+  <text class="sub" x="115" y="138" text-anchor="middle">+ Node 22, npm cache</text>
+
+  <!-- Stage 2 -->
+  <rect class="stage" x="200" y="90" width="130" height="60" rx="3" />
+  <text class="num" x="212" y="106">02</text>
+  <text class="title" x="265" y="122" text-anchor="middle">npm ci</text>
+  <text class="sub" x="265" y="138" text-anchor="middle">Reproducible install</text>
+
+  <!-- Stage 3 -->
+  <rect class="stage" x="350" y="90" width="150" height="60" rx="3" />
+  <text class="num" x="362" y="106">03</text>
+  <text class="title" x="425" y="122" text-anchor="middle">Lint + Build</text>
+  <text class="sub" x="425" y="138" text-anchor="middle">oxlint, tsc -b, vite</text>
+
+  <!-- Stage 4 -->
+  <rect class="stage" x="560" y="90" width="140" height="60" rx="3" />
+  <text class="num" x="572" y="106">04</text>
+  <text class="title" x="630" y="122" text-anchor="middle">Upload</text>
+  <text class="sub" x="630" y="138" text-anchor="middle">dist/ as Pages artifact</text>
+
+  <!-- Stage 5 -->
+  <rect class="stage" x="730" y="90" width="120" height="60" rx="3" />
+  <text class="num" x="742" y="106">05</text>
+  <text class="title" x="790" y="122" text-anchor="middle">Deploy</text>
+  <text class="sub" x="790" y="138" text-anchor="middle">actions/deploy-pages</text>
+
+  <line class="edge" x1="180" y1="120" x2="198" y2="120" />
+  <line class="edge" x1="330" y1="120" x2="348" y2="120" />
+  <line class="edge" x1="500" y1="120" x2="558" y2="120" />
+  <line class="edge" x1="700" y1="120" x2="728" y2="120" />
+
+  <!-- Guard note -->
+  <rect class="stage" x="50" y="200" width="620" height="46" rx="3" />
+  <text class="sub" x="66" y="228">Guard, fails early with a clear message if package-lock.json is missing</text>
+
+  <line class="edge" x1="115" y1="150" x2="115" y2="200" />
+
+  <text class="kicker" x="30" y="300">Result</text>
+  <text class="sub" x="30" y="320">Live in minutes, zero manual build steps, zero manual upload</text>
+</svg>

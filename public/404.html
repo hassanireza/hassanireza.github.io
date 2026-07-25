@@ -1,0 +1,26 @@
+<!doctype html>
+<!--
+  GitHub Pages has no server-side routing, so a hard refresh/deep link on
+  /portfolio or /contact returns 404. This file redirects any unknown path
+  back to index.html, preserving the intended path in a query string that
+  main.tsx / the SPA fallback script below restores via history.replaceState.
+  Pattern: https://github.com/rafgraph/spa-github-pages
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Reza Hassani</title>
+    <script>
+      var segmentCount = 0; // root user page (hassanireza.github.io) has no repo-name segment
+      var l = window.location;
+      l.replace(
+        l.protocol + "//" + l.hostname + (l.port ? ":" + l.port : "") +
+        l.pathname.split("/").slice(0, 1 + segmentCount).join("/") + "/?p=" +
+        l.pathname.slice(1).split("/").slice(segmentCount).join("/").replace(/&/g, "~and~") +
+        (l.search ? "&q=" + l.search.slice(1).replace(/&/g, "~and~") : "") +
+        l.hash
+      );
+    </script>
+  </head>
+  <body></body>
+</html>

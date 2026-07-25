@@ -1,0 +1,68 @@
+<svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg     { fill: #050506; }
+      .ring   { stroke: rgba(233,228,218,0.16); fill: none; }
+      .ring-b { stroke: rgba(60,75,70,0.6); fill: none; }
+      .core   { fill: #0b0c10; stroke: rgba(233,228,218,0.4); stroke-width: 1; }
+      .node   { fill: #0b0c10; stroke: rgba(233,228,218,0.18); stroke-width: 1; }
+      .title  { fill: #e9e4da; font-family: 'Fraunces', 'Cormorant Garamond', serif; font-style: italic; font-size: 14px; }
+      .sub    { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; }
+      .kicker { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; }
+      .spoke  { stroke: rgba(233,228,218,0.16); stroke-width: 1; }
+    </style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="900" height="460" />
+  <text class="kicker" x="30" y="34">Stack Map</text>
+
+  <circle class="ring" cx="450" cy="250" r="185" />
+  <circle class="ring-b" cx="450" cy="250" r="130" stroke-dasharray="1 6" />
+  <circle class="ring" cx="450" cy="250" r="70" />
+
+  <circle class="core" cx="450" cy="250" r="66" />
+  <text class="title" x="450" y="245" text-anchor="middle">React 19</text>
+  <text class="sub" x="450" y="262" text-anchor="middle">TypeScript, strict</text>
+
+  <!-- Nodes around -->
+  <g>
+    <line class="spoke" x1="450" y1="184" x2="450" y2="120" />
+    <rect class="node" x="380" y="70" width="140" height="50" rx="3" />
+    <text class="title" x="450" y="92" text-anchor="middle" font-size="13">Vite 8</text>
+    <text class="sub" x="450" y="108" text-anchor="middle">Dev server + bundler</text>
+  </g>
+
+  <g>
+    <line class="spoke" x1="507" y1="278" x2="600" y2="330" />
+    <rect class="node" x="600" y="305" width="150" height="50" rx="3" />
+    <text class="title" x="675" y="327" text-anchor="middle" font-size="13">React Router 7</text>
+    <text class="sub" x="675" y="343" text-anchor="middle">Client side routing</text>
+  </g>
+
+  <g>
+    <line class="spoke" x1="393" y1="278" x2="300" y2="330" />
+    <rect class="node" x="150" y="305" width="150" height="50" rx="3" />
+    <text class="title" x="225" y="327" text-anchor="middle" font-size="13">Plain CSS</text>
+    <text class="sub" x="225" y="343" text-anchor="middle">Tokens, no CSS in JS</text>
+  </g>
+
+  <g>
+    <line class="spoke" x1="516" y1="220" x2="620" y2="180" />
+    <rect class="node" x="620" y="155" width="160" height="50" rx="3" />
+    <text class="title" x="700" y="177" text-anchor="middle" font-size="13">oxlint</text>
+    <text class="sub" x="700" y="193" text-anchor="middle">Lint in CI</text>
+  </g>
+
+  <g>
+    <line class="spoke" x1="384" y1="220" x2="280" y2="180" />
+    <rect class="node" x="120" y="155" width="160" height="50" rx="3" />
+    <text class="title" x="200" y="177" text-anchor="middle" font-size="13">Turnstile</text>
+    <text class="sub" x="200" y="193" text-anchor="middle">Bot resistant forms</text>
+  </g>
+
+  <g>
+    <line class="spoke" x1="450" y1="316" x2="450" y2="390" />
+    <rect class="node" x="380" y="390" width="140" height="50" rx="3" />
+    <text class="title" x="450" y="412" text-anchor="middle" font-size="13">Formspree</text>
+    <text class="sub" x="450" y="428" text-anchor="middle">Form submission backend</text>
+  </g>
+</svg>

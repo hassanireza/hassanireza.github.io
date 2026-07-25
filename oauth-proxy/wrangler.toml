@@ -1,0 +1,8 @@
+name = "portfolio-admin-oauth-proxy"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+# Set the two secrets after creating the GitHub OAuth App (see README.md
+# in this folder), with:
+#   wrangler secret put GITHUB_CLIENT_ID
+#   wrangler secret put GITHUB_CLIENT_SECRET

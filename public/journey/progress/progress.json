@@ -1,0 +1,11 @@
+{
+  "meta": {
+    "track": "Full-Stack Python Developer",
+    "owner": "Reza Hassani",
+    "totalPhases": 11,
+    "lastUpdated": "2026-06-18",
+    "note": "This file is the source of truth for your public progress. The app reads it on first load. To make new progress permanent on GitHub, click 'Export progress.json' in the app, replace this file with the download, then commit and push."
+  },
+  "completedPhases": [0],
+  "currentPhase": 1
+}
