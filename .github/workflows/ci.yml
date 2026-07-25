@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Lint & Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Verify lockfile is present
+        run: |
+          if [ ! -f package-lock.json ]; then
+            echo "::error::package-lock.json is missing from this checkout. Run 'git add package-lock.json && git commit && git push' locally, then re-run this workflow."
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check & build
+        env:
+          VITE_GITHUB_OAUTH_CLIENT_ID: ${{ secrets.VITE_GITHUB_OAUTH_CLIENT_ID }}
+          VITE_OAUTH_PROXY_URL: ${{ secrets.VITE_OAUTH_PROXY_URL }}
+        run: npm run build
+
+      - name: Upload build output (CI artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+
+      - name: Upload build output (Pages artifact)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy to GitHub Pages
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  lighthouse:
+    name: Lighthouse (informational)
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      statuses: write
+    steps:
+      # Purely informational - this never fails the workflow. It exists
+      # so a performance/accessibility/SEO regression shows up in the
+      # Actions log on every deploy, instead of only being noticed
+      # later by someone manually running Lighthouse and screenshotting
+      # a surprise drop. Results are pushed to Lighthouse's own
+      # temporary public viewer (a link printed in this job's log) -
+      # no server or account needed for a personal site this size.
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Wait for Pages CDN to catch up
+        run: sleep 30
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        continue-on-error: true
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          urls: |
+            https://hassanireza.github.io/
+            https://hassanireza.github.io/portfolio
+            https://hassanireza.github.io/descent
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          runs: 1
