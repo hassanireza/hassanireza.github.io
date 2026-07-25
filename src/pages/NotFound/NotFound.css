@@ -74,7 +74,28 @@
 }
 
 .not-found .back-link {
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   margin-bottom: 0;
+  transition: color 0.35s var(--ease), letter-spacing 0.35s var(--ease);
+}
+
+.not-found .back-link svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+
+.not-found .back-link:hover {
+  color: var(--accent-bright);
+  letter-spacing: 0.3em;
 }
 
 .not-found-secondary {
