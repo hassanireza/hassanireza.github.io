@@ -1,0 +1,76 @@
+.cheatsheet-detail {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.detail-topbar {
+  position: sticky;
+  top: 64px;
+  z-index: 5;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-topbar-inner {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+}
+
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: "JetBrains Mono", var(--font-body);
+  font-size: 0.7rem;
+  color: var(--text-3);
+  transition: color 0.3s var(--ease);
+  flex-shrink: 0;
+}
+
+.detail-back svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+
+.detail-back:hover {
+  color: var(--text-2);
+}
+
+.detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 0;
+  flex: 1;
+  justify-content: center;
+}
+
+.detail-meta strong {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.94rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detail-topbar-spacer {
+  flex-shrink: 0;
+  width: 108px;
+}
+
+@media (max-width: 640px) {
+  .detail-meta {
+    display: none;
+  }
+  .detail-topbar-spacer {
+    width: 0;
+  }
+}

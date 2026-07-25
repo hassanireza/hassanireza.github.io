@@ -1,0 +1,240 @@
+.journey-page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+  color: var(--text);
+}
+
+.journey-page .container {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.journey-page .section {
+  padding: 4.4rem 0;
+}
+
+.journey-page .section-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 2.4rem;
+  max-width: 640px;
+}
+
+.journey-page .eyebrow {
+  font-family: "JetBrains Mono", var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.journey-page .section-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+.journey-page .section-subtitle {
+  font-size: 0.94rem;
+  line-height: 1.7;
+  color: var(--text-2);
+}
+
+.journey-page .badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: "JetBrains Mono", var(--font-body);
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  background: var(--surface);
+}
+
+.journey-page .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.85rem 1.5rem;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-2);
+  transition: border-color 0.3s var(--ease), color 0.3s var(--ease), background 0.3s var(--ease);
+  white-space: nowrap;
+}
+
+.journey-page .btn:hover {
+  border-color: var(--border-hover);
+  color: var(--text);
+  background: var(--surface);
+}
+
+.journey-page .btn-primary {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+
+.journey-page .btn-primary:hover {
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+  color: var(--bg);
+}
+
+.journey-page .btn-ghost {
+  background: transparent;
+  border-color: transparent;
+}
+
+.journey-page .btn.danger:hover {
+  border-color: rgba(180, 90, 90, 0.4);
+  color: #c98f8f;
+}
+
+/* Topbar */
+
+.journey-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(8, 9, 11, 0.86);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.journey-topbar-inner {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+}
+
+.journey-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: "JetBrains Mono", var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  transition: color 0.3s var(--ease);
+  flex-shrink: 0;
+}
+
+.journey-back svg {
+  width: 13px;
+  height: 13px;
+  fill: currentColor;
+}
+
+.journey-back:hover {
+  color: var(--text-2);
+}
+
+.journey-tabs {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.journey-tab {
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  color: var(--text-2);
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-card);
+  transition: color 0.3s var(--ease), background 0.3s var(--ease);
+}
+
+.journey-tab:hover {
+  color: var(--text);
+}
+
+.journey-tab.active {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.journey-main {
+  flex: 1;
+  width: 100%;
+}
+
+/* Footer */
+
+.journey-footer {
+  border-top: 1px solid var(--border);
+}
+
+.journey-footer-inner {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 2.2rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.journey-footer-inner p {
+  font-size: 0.8rem;
+  color: var(--text-3);
+  margin: 0;
+}
+
+.journey-footer-meta {
+  font-family: "JetBrains Mono", var(--font-body);
+  font-size: 0.66rem !important;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .journey-page .container {
+    padding: 0 1.4rem;
+  }
+  .journey-topbar-inner {
+    padding: 0 1.4rem;
+    flex-wrap: wrap;
+    height: auto;
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+    gap: 0.8rem;
+  }
+  .journey-tabs {
+    gap: 0.2rem;
+  }
+  .journey-tab {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.78rem;
+  }
+  .journey-footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

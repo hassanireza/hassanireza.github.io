@@ -1,0 +1,106 @@
+.achievements-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 1.6rem;
+  height: fit-content;
+  position: sticky;
+  top: 88px;
+}
+
+.panel-title {
+  font-family: "JetBrains Mono", var(--font-body);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 1.1rem;
+}
+
+.ach-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.ach-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.2rem 0.8rem;
+  opacity: 0.4;
+}
+
+.ach-item.earned {
+  opacity: 1;
+}
+
+.ach-icon {
+  grid-row: span 2;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-3);
+}
+
+.ach-item.earned .ach-icon {
+  color: var(--text-2);
+  border-color: var(--border-hover);
+}
+
+.ach-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.ach-name {
+  font-size: 0.86rem;
+  color: var(--text);
+  align-self: end;
+}
+
+.ach-desc {
+  font-size: 0.72rem;
+  color: var(--text-3);
+}
+
+.milestone-block {
+  border-top: 1px solid var(--border);
+  padding-top: 1.6rem;
+}
+
+.milestone-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.5rem 0;
+  font-size: 0.8rem;
+  color: var(--text-3);
+}
+
+.milestone-item.hit {
+  color: var(--text-2);
+}
+
+.ms-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--border-hover);
+  flex-shrink: 0;
+}
+
+.milestone-item.hit .ms-dot {
+  background: var(--text);
+}
+
+@media (max-width: 900px) {
+  .achievements-panel {
+    position: static;
+  }
+}

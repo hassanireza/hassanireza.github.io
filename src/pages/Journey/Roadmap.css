@@ -1,0 +1,24 @@
+.roadmap-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2.4rem;
+  align-items: start;
+}
+
+.roadmap-footer-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 2.4rem;
+}
+
+.roadmap-source-note {
+  font-size: 0.76rem;
+  color: var(--text-3);
+  margin-top: 1rem;
+}
+
+@media (max-width: 900px) {
+  .roadmap-layout {
+    grid-template-columns: 1fr;
+  }
+}
