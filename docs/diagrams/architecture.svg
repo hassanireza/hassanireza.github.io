@@ -1,11 +1,11 @@
-<svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 1300 620" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <style>
       .bg        { fill: #050506; }
       .card      { fill: #0b0c10; stroke: rgba(233,228,218,0.16); stroke-width: 1; }
       .card-root { stroke: rgba(233,228,218,0.4); }
-      .title     { fill: #e9e4da; font-family: 'Fraunces', 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 17px; }
-      .sub       { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.03em; }
+      .title     { fill: #e9e4da; font-family: 'Fraunces', 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 16px; }
+      .sub       { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.03em; }
       .edge      { stroke: rgba(233,228,218,0.28); stroke-width: 1.2; fill: none; }
       .edge-acc  { stroke: #3c4b46; stroke-width: 1.4; }
       .kicker    { fill: #6d727b; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; }
@@ -13,71 +13,97 @@
     </style>
   </defs>
 
-  <rect class="bg" x="0" y="0" width="900" height="480" />
+  <rect class="bg" x="0" y="0" width="1300" height="620" />
 
   <g opacity="0.5">
-    <circle cx="450" cy="240" r="210" stroke="#e9e4da" stroke-opacity="0.05" fill="none"/>
-    <circle cx="450" cy="240" r="150" stroke="#e9e4da" stroke-opacity="0.045" fill="none"/>
-    <circle cx="450" cy="240" r="90" stroke="#e9e4da" stroke-opacity="0.04" fill="none"/>
+    <circle cx="650" cy="300" r="280" stroke="#e9e4da" stroke-opacity="0.05" fill="none"/>
+    <circle cx="650" cy="300" r="190" stroke="#e9e4da" stroke-opacity="0.045" fill="none"/>
+    <circle cx="650" cy="300" r="110" stroke="#e9e4da" stroke-opacity="0.04" fill="none"/>
   </g>
 
   <text class="kicker" x="30" y="34">Component &amp; Route Architecture</text>
 
-  <rect class="card card-root" x="368" y="54" width="164" height="54" rx="3" />
-  <text class="title" x="450" y="78" text-anchor="middle">main.tsx</text>
-  <text class="sub" x="450" y="96" text-anchor="middle">BrowserRouter root</text>
+  <!-- Root -->
+  <rect class="card card-root" x="568" y="54" width="164" height="54" rx="3" />
+  <text class="title" x="650" y="78" text-anchor="middle">main.tsx</text>
+  <text class="sub" x="650" y="96" text-anchor="middle">BrowserRouter root</text>
 
-  <rect class="card card-root" x="368" y="140" width="164" height="54" rx="3" />
-  <text class="title" x="450" y="164" text-anchor="middle">App.tsx</text>
-  <text class="sub" x="450" y="182" text-anchor="middle">Route table</text>
+  <rect class="card card-root" x="568" y="140" width="164" height="54" rx="3" />
+  <text class="title" x="650" y="164" text-anchor="middle">App.tsx</text>
+  <text class="sub" x="650" y="182" text-anchor="middle">Route table, lazy per route</text>
 
-  <line class="edge" x1="450" y1="108" x2="450" y2="140" />
-  <circle class="dot" cx="450" cy="124" r="2" />
+  <line class="edge" x1="650" y1="108" x2="650" y2="140" />
+  <circle class="dot" cx="650" cy="124" r="2" />
 
-  <line class="edge" x1="450" y1="194" x2="130" y2="248" />
-  <line class="edge" x1="450" y1="194" x2="370" y2="248" />
-  <line class="edge" x1="450" y1="194" x2="590" y2="248" />
-  <line class="edge edge-acc" x1="450" y1="194" x2="800" y2="248" />
+  <!-- Tier 2: top-level routes (7 cards, centers computed to be evenly spaced) -->
+  <!-- centers: 116, 294, 472, 650, 828, 1006, 1184 -->
+  <line class="edge" x1="650" y1="194" x2="116" y2="248" />
+  <line class="edge" x1="650" y1="194" x2="294" y2="248" />
+  <line class="edge" x1="650" y1="194" x2="472" y2="248" />
+  <line class="edge" x1="650" y1="194" x2="650" y2="248" />
+  <line class="edge" x1="650" y1="194" x2="828" y2="248" />
+  <line class="edge" x1="650" y1="194" x2="1006" y2="248" />
+  <line class="edge edge-acc" x1="650" y1="194" x2="1184" y2="248" />
 
-  <rect class="card" x="50" y="248" width="160" height="52" rx="3" />
-  <text class="title" x="130" y="271" text-anchor="middle">Home</text>
-  <text class="sub" x="130" y="288" text-anchor="middle">/</text>
+  <rect class="card" x="40" y="248" width="152" height="52" rx="3" />
+  <text class="title" x="116" y="271" text-anchor="middle">Home</text>
+  <text class="sub" x="116" y="288" text-anchor="middle">/</text>
 
-  <rect class="card" x="290" y="248" width="160" height="52" rx="3" />
-  <text class="title" x="370" y="271" text-anchor="middle">Portfolio</text>
-  <text class="sub" x="370" y="288" text-anchor="middle">/portfolio</text>
+  <rect class="card" x="218" y="248" width="152" height="52" rx="3" />
+  <text class="title" x="294" y="271" text-anchor="middle">Portfolio</text>
+  <text class="sub" x="294" y="288" text-anchor="middle">/portfolio</text>
 
-  <rect class="card" x="510" y="248" width="160" height="52" rx="3" />
-  <text class="title" x="590" y="271" text-anchor="middle">Contact</text>
-  <text class="sub" x="590" y="288" text-anchor="middle">/contact</text>
+  <rect class="card" x="396" y="248" width="152" height="52" rx="3" />
+  <text class="title" x="472" y="271" text-anchor="middle">Contact</text>
+  <text class="sub" x="472" y="288" text-anchor="middle">/contact</text>
 
-  <rect class="card" x="720" y="248" width="160" height="52" rx="3" />
-  <text class="title" x="800" y="271" text-anchor="middle">NotFound</text>
-  <text class="sub" x="800" y="288" text-anchor="middle">*</text>
+  <rect class="card" x="574" y="248" width="152" height="52" rx="3" />
+  <text class="title" x="650" y="271" text-anchor="middle">Branding</text>
+  <text class="sub" x="650" y="288" text-anchor="middle">/branding</text>
 
-  <line class="edge" x1="130" y1="300" x2="130" y2="336" />
-  <line class="edge" x1="370" y1="300" x2="330" y2="336" />
-  <line class="edge" x1="370" y1="300" x2="410" y2="336" />
-  <line class="edge" x1="590" y1="300" x2="590" y2="336" />
+  <rect class="card" x="752" y="248" width="152" height="52" rx="3" />
+  <text class="title" x="828" y="271" text-anchor="middle">Descent</text>
+  <text class="sub" x="828" y="288" text-anchor="middle">/descent</text>
 
-  <rect class="card" x="50" y="336" width="160" height="44" rx="3" />
-  <text class="title" x="130" y="358" text-anchor="middle" font-size="14">ParticleField</text>
-  <text class="sub" x="130" y="373" text-anchor="middle">Canvas particle engine</text>
+  <rect class="card" x="930" y="248" width="152" height="52" rx="3" />
+  <text class="title" x="1006" y="271" text-anchor="middle">Journey</text>
+  <text class="sub" x="1006" y="288" text-anchor="middle">/journey/*</text>
 
-  <rect class="card" x="250" y="336" width="160" height="44" rx="3" />
-  <text class="title" x="330" y="358" text-anchor="middle" font-size="14">ProjectGrid</text>
-  <text class="sub" x="330" y="373" text-anchor="middle">Section + card layout</text>
+  <rect class="card" x="1108" y="248" width="152" height="52" rx="3" />
+  <text class="title" x="1184" y="271" text-anchor="middle">NotFound</text>
+  <text class="sub" x="1184" y="288" text-anchor="middle">*</text>
 
-  <rect class="card" x="330" y="392" width="160" height="44" rx="3" />
-  <text class="title" x="410" y="414" text-anchor="middle" font-size="14">ProjectCard</text>
-  <text class="sub" x="410" y="429" text-anchor="middle">Link out or video open</text>
+  <!-- Tier 3: Home -> ParticleField -->
+  <line class="edge" x1="116" y1="300" x2="116" y2="336" />
+  <rect class="card" x="40" y="336" width="152" height="44" rx="3" />
+  <text class="title" x="116" y="358" text-anchor="middle" font-size="14">ParticleField</text>
+  <text class="sub" x="116" y="373" text-anchor="middle">Canvas particle engine</text>
 
-  <rect class="card" x="510" y="336" width="160" height="44" rx="3" />
-  <text class="title" x="590" y="358" text-anchor="middle" font-size="14">VideoModal</text>
-  <text class="sub" x="590" y="373" text-anchor="middle">Full screen lightbox</text>
+  <!-- Tier 3: Portfolio -> ProjectGrid -> ProjectCard, Portfolio -> VideoModal -->
+  <line class="edge" x1="294" y1="300" x2="255" y2="336" />
+  <line class="edge" x1="294" y1="300" x2="365" y2="336" />
 
-  <line class="edge" x1="330" y1="380" x2="410" y2="392" />
+  <rect class="card" x="179" y="336" width="152" height="44" rx="3" />
+  <text class="title" x="255" y="358" text-anchor="middle" font-size="14">ProjectGrid</text>
+  <text class="sub" x="255" y="373" text-anchor="middle">Section + card layout</text>
 
-  <line x1="30" y1="452" x2="60" y2="452" class="edge-acc" />
-  <text class="sub" x="68" y="456">Wildcard, catch all route</text>
+  <rect class="card" x="289" y="392" width="152" height="44" rx="3" />
+  <text class="title" x="365" y="414" text-anchor="middle" font-size="14">ProjectCard</text>
+  <text class="sub" x="365" y="429" text-anchor="middle">Link out or video open</text>
+
+  <line class="edge" x1="255" y1="380" x2="365" y2="392" />
+
+  <rect class="card" x="367" y="336" width="152" height="44" rx="3" />
+  <text class="title" x="443" y="358" text-anchor="middle" font-size="14">VideoModal</text>
+  <text class="sub" x="443" y="373" text-anchor="middle">Full screen lightbox</text>
+
+  <!-- Tier 3: Journey -> nested layout routes -->
+  <line class="edge" x1="1006" y1="300" x2="1006" y2="336" />
+  <rect class="card" x="900" y="336" width="212" height="60" rx="3" />
+  <text class="title" x="1006" y="358" text-anchor="middle" font-size="13">JourneyLayout</text>
+  <text class="sub" x="1006" y="374" text-anchor="middle">index, roadmap,</text>
+  <text class="sub" x="1006" y="387" text-anchor="middle">cheatsheets, cheatsheets/:slug</text>
+
+  <line x1="30" y1="580" x2="60" y2="580" class="edge-acc" />
+  <text class="sub" x="68" y="584">Wildcard, catch all route</text>
 </svg>
