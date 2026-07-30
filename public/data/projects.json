@@ -65,11 +65,11 @@
   },
   {
     "id": "nexus-store",
-    "title": "Nexus Store",
-    "desc": "Premium tech, from phones to cameras.",
+    "title": "Lumen",
+    "desc": "Single-page storefront concept for smartphones",
     "img": "nexusStore.webp",
     "category": "frontend-development",
-    "href": "https://nexusstore.up.railway.app/"
+    "href": "https://hassanireza.github.io/lumen/"
   },
   {
     "id": "js-course",
