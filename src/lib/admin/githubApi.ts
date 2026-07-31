@@ -48,7 +48,29 @@ export async function getFile(token: string, path: string): Promise<GetFileResul
   return { content, sha: data.sha };
 }
 
-/** Writes (creates or updates) a text file, committing directly to BRANCH. */
+/**
+ * Looks up just the sha of a file without trying to decode its content as
+ * UTF-8 text - safe to call on binary files (images), unlike getFile().
+ * Returns null if the file doesn't exist yet, so callers can tell "create"
+ * apart from "update" and avoid a 422 ("path already exists") or a 409
+ * (stale sha) when overwriting an image at the same deterministic path.
+ */
+export async function getFileSha(token: string, path: string): Promise<string | null> {
+  const res = await fetch(`${API_ROOT}/contents/${path}?ref=${BRANCH}`, { headers: authHeaders(token) });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new GitHubApiError(`Failed to check ${path}`, res.status);
+  const data = await res.json();
+  return data.sha ?? null;
+}
+
+/**
+ * Writes (creates or updates) a text file, committing directly to BRANCH.
+ * A 409 means our in-memory sha is stale (a previous save actually landed
+ * on GitHub even though the response was lost to a network hiccup, or
+ * another save happened in between) - we refetch the current sha and
+ * retry exactly once with it, instead of surfacing a confusing "save
+ * failed" for something that's really just a stale local copy.
+ */
 export async function putTextFile(
   token: string,
   path: string,
@@ -57,28 +79,44 @@ export async function putTextFile(
   sha?: string,
 ): Promise<void> {
   const encoded = btoa(unescape(encodeURIComponent(content)));
-  const res = await fetch(`${API_ROOT}/contents/${path}`, {
-    method: "PUT",
-    headers: { ...authHeaders(token), "Content-Type": "application/json" },
-    body: JSON.stringify({ message, content: encoded, branch: BRANCH, sha }),
-  });
+  const write = (withSha?: string) =>
+    fetch(`${API_ROOT}/contents/${path}`, {
+      method: "PUT",
+      headers: { ...authHeaders(token), "Content-Type": "application/json" },
+      body: JSON.stringify({ message, content: encoded, branch: BRANCH, sha: withSha }),
+    });
+
+  let res = await write(sha);
+
+  if (res.status === 409) {
+    const freshSha = await getFileSha(token, path);
+    res = await write(freshSha ?? undefined);
+  }
+
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
     throw new GitHubApiError(body.message || `Failed to write ${path}`, res.status);
   }
 }
 
-/** Writes a binary file (an uploaded/converted image) from a base64 payload (no data: prefix). */
+/**
+ * Writes a binary file (an uploaded/converted image) from a base64 payload
+ * (no data: prefix). Pass `sha` when overwriting an existing file at this
+ * exact path (e.g. replacing a project's image, which reuses the same
+ * deterministic filename) - without it GitHub rejects the write with a 422
+ * because the path already exists.
+ */
 export async function putBinaryFile(
   token: string,
   path: string,
   base64Content: string,
   message: string,
+  sha?: string,
 ): Promise<void> {
   const res = await fetch(`${API_ROOT}/contents/${path}`, {
     method: "PUT",
     headers: { ...authHeaders(token), "Content-Type": "application/json" },
-    body: JSON.stringify({ message, content: base64Content, branch: BRANCH }),
+    body: JSON.stringify({ message, content: base64Content, branch: BRANCH, sha }),
   });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));

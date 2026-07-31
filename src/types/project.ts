@@ -2,9 +2,10 @@
  * Shared typing for every portfolio entry, as stored in and fetched from
  * /public/data/projects.json at runtime.
  *
- * `img` paths are relative to /public/assets/images/ for existing
- * projects, or /public/portfolio-uploads/ for anything added through the
- * admin dashboard. `video` is only present on animation-category entries
+ * `img` is a bare filename resolved under /public/assets/images/ - true
+ * for existing projects and for anything added through the admin
+ * dashboard, which uploads to that same folder using the project's id as
+ * the filename. `video` is only present on animation-category entries
  * (those open the video lightbox instead of linking out).
  */
 export interface Project {

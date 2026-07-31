@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState, type DragEvent, type FormEvent } from "react";
 import { useGitHubAuth } from "../../../lib/admin/useGitHubAuth";
-import { putBinaryFile } from "../../../lib/admin/githubApi";
+import { GitHubApiError, getFileSha, putBinaryFile } from "../../../lib/admin/githubApi";
 import { convertToWebp, slugifyFilename, slugifyId, type ConvertedImage } from "./imageToWebp";
 import type { Category, Project } from "../../../types/project";
 
 const DESC_LIMIT = 50;
-const UPLOAD_DIR = "public/portfolio-uploads";
+// Same folder legacy/seed images already live in, so every project's image
+// (old or new) is resolved the exact same way by AssetResolver - no more
+// separate "portfolio-uploads" folder with its own path convention.
+const UPLOAD_DIR = "public/assets/images";
 
 interface ProjectFormProps {
   categories: Category[];
@@ -92,15 +95,28 @@ export default function ProjectForm({ categories, editing, onCancelEdit, onSubmi
 
     setSaving(true);
     try {
-      let imgPath = existingImg ?? "";
+      // The id (and therefore the image filename) is derived from the
+      // title once, at creation, and never changes again - so renaming a
+      // project later doesn't orphan its image or need a rename dance.
+      const id = editing?.id ?? slugifyId(title);
+      const filename = `${slugifyFilename(id)}.webp`;
+      let imgPath = existingImg ?? filename;
 
       if (image) {
-        const filename = `${slugifyFilename(title)}.webp`;
-        imgPath = `portfolio-uploads/${filename}`;
-        await putBinaryFile(token, `${UPLOAD_DIR}/${filename}`, image.base64, `Upload image for project: ${title}`);
+        // Look up whether this exact path already exists so we send the
+        // sha GitHub requires to overwrite it - otherwise a second upload
+        // for the same project (a replace, or a retry after a failed
+        // save) is rejected instead of cleanly replacing the old image.
+        const currentSha = await getFileSha(token, `${UPLOAD_DIR}/${filename}`).catch(() => null);
+        await putBinaryFile(
+          token,
+          `${UPLOAD_DIR}/${filename}`,
+          image.base64,
+          `Upload image for project: ${title}`,
+          currentSha ?? undefined,
+        );
+        imgPath = filename;
       }
-
-      const id = editing?.id ?? slugifyId(title);
 
       const project: Project = {
         id,
@@ -119,8 +135,9 @@ export default function ProjectForm({ categories, editing, onCancelEdit, onSubmi
         setImage(null);
         setExistingImg(null);
       }
-    } catch {
-      setError("Save failed - check your connection and try again.");
+    } catch (err) {
+      const message = err instanceof GitHubApiError ? err.message : null;
+      setError(message ? `Save failed: ${message}` : "Save failed - check your connection and try again.");
     } finally {
       setSaving(false);
     }

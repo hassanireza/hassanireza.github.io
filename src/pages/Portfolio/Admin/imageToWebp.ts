@@ -32,8 +32,14 @@ export function slugifyId(title: string): string {
   );
 }
 
+/**
+ * Deterministic on purpose: no timestamp/random suffix. The image for a
+ * project always lives at the same path as its slug, so uploading a new
+ * image for the same project overwrites the old file instead of leaving
+ * an orphaned copy behind with a random name.
+ */
 export function slugifyFilename(title: string): string {
-  return `${slugifyId(title)}-${Date.now().toString(36)}`;
+  return slugifyId(title);
 }
 
 export async function convertToWebp(file: File): Promise<ConvertedImage> {

@@ -9,9 +9,16 @@
 .admin-gate,
 .admin-shell {
   min-height: 100vh;
-  max-width: 900px;
+  max-width: 1360px;
   margin: 0 auto;
-  padding: 4rem 1.6rem 6rem;
+  padding: 3rem 2rem 6rem;
+}
+
+@media (max-width: 900px) {
+  .admin-gate,
+  .admin-shell {
+    padding: 2.5rem 1.4rem 5rem;
+  }
 }
 
 .admin-gate {
@@ -183,12 +190,12 @@
 
 .admin-grid {
   display: grid;
-  grid-template-columns: minmax(320px, 420px) 1fr;
-  gap: 1.5rem;
+  grid-template-columns: minmax(340px, 440px) minmax(0, 1fr);
+  gap: 2rem;
   align-items: start;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
   .admin-grid { grid-template-columns: 1fr; }
 }
 
@@ -196,7 +203,11 @@
   background: var(--bg-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
-  padding: 1.6rem;
+  padding: 1.8rem 2rem;
+}
+
+@media (max-width: 560px) {
+  .admin-card { padding: 1.4rem; }
 }
 
 .admin-card-head {
@@ -223,7 +234,7 @@
 
 /* ---- form ---- */
 
-.admin-form { display: flex; flex-direction: column; gap: 1.1rem; }
+.admin-form { display: flex; flex-direction: column; gap: 1.35rem; }
 
 .admin-field { display: flex; flex-direction: column; gap: 0.45rem; }
 
