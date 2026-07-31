@@ -212,5 +212,13 @@
     "img": "undertow.webp",
     "category": "frontend-development",
     "href": "https://hassanireza.github.io/undertow/"
+  },
+  {
+    "id": "pyxis",
+    "title": "Pyxis",
+    "desc": "A Python only computational notebook.",
+    "img": "pyxis.webp",
+    "category": "vibe-coding",
+    "href": "https://hassanireza.github.io/Pyxis/"
   }
 ]
