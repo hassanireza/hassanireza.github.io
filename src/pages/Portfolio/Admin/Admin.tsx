@@ -243,9 +243,12 @@ export default function Admin() {
                   await saveProjects(
                     (current) => {
                       const alreadyThere = current.some((p) => p.id === project.id);
+                      // New projects go to the front so they show up at the
+                      // top of their category section, not buried at the
+                      // bottom behind everything else already there.
                       return alreadyThere
                         ? current.map((p) => (p.id === project.id ? project : p))
-                        : [...current, project];
+                        : [project, ...current];
                     },
                     exists ? `Update project: ${project.title}` : `Add project: ${project.title}`,
                   );
