@@ -55,14 +55,52 @@
 
 /* ---- project list ---- */
 
+.admin-project-sections {
+  max-height: 78vh;
+  overflow-y: auto;
+  padding-right: 0.3rem;
+}
+
+.admin-project-section + .admin-project-section { margin-top: 1.8rem; }
+
+.admin-project-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.7rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.admin-project-section-head h3 {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
 .admin-project-list {
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
-  max-height: 78vh;
-  overflow-y: auto;
-  padding-right: 0.3rem;
+  border-radius: var(--radius-card);
+  transition: background 0.2s var(--ease), outline-color 0.2s var(--ease);
+  min-height: 8px;
+}
+
+.admin-project-list.is-section-drag-over {
+  background: var(--accent-dim);
+  outline: 1px dashed var(--accent-bright);
+  outline-offset: 4px;
+}
+
+.admin-project-empty {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-card);
+  padding: 0.9rem 1rem;
+  text-align: center;
 }
 
 .admin-project-row {

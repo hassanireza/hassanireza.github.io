@@ -8,9 +8,18 @@ interface ProjectListProps {
   onDelete: (id: string) => Promise<void>;
   onMove: (id: string, direction: "up" | "down") => Promise<void>;
   onMoveToCategory: (id: string, categoryId: string) => Promise<void>;
-  onReorder: (id: string, beforeId: string | null) => Promise<void>;
+  onReorder: (id: string, targetCategoryId: string, beforeId: string | null) => Promise<void>;
 }
 
+/**
+ * Grouped by category, in the same order categories appear in
+ * categories.json - the same grouping the live portfolio page uses for its
+ * sections. This is what makes "where did my new/reordered project end up"
+ * legible: a project always renders under its actual section heading, not
+ * wherever its raw index in projects.json happens to place it in a flat
+ * list. Dragging is scoped to a section's own drop zone; dropping into a
+ * *different* section's zone both reorders and re-categorizes.
+ */
 export default function ProjectList({
   projects,
   categories,
@@ -25,6 +34,7 @@ export default function ProjectList({
   const [busy, setBusy] = useState<string | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOverId, setDragOverId] = useState<string | null>(null);
+  const [dragOverSection, setDragOverSection] = useState<string | null>(null);
 
   async function handleDelete(id: string) {
     setDeleting(id);
@@ -61,38 +71,51 @@ export default function ProjectList({
     e.dataTransfer.setData("text/plain", id);
   }
 
-  function handleDragOver(e: DragEvent<HTMLLIElement>, id: string) {
+  function clearDragState() {
+    setDraggingId(null);
+    setDragOverId(null);
+    setDragOverSection(null);
+  }
+
+  function handleRowDragOver(e: DragEvent<HTMLLIElement>, id: string) {
     e.preventDefault();
+    e.stopPropagation();
     if (id !== draggingId) setDragOverId(id);
   }
 
-  function handleDragLeave(id: string) {
+  function handleRowDragLeave(id: string) {
     setDragOverId((current) => (current === id ? null : current));
   }
 
-  async function handleDrop(e: DragEvent<HTMLLIElement>, targetId: string) {
+  async function handleRowDrop(e: DragEvent<HTMLLIElement>, targetId: string, categoryId: string) {
     e.preventDefault();
+    e.stopPropagation();
     const id = draggingId;
-    setDraggingId(null);
-    setDragOverId(null);
+    clearDragState();
     if (!id || id === targetId) return;
     setBusy(id);
     try {
-      await onReorder(id, targetId);
+      await onReorder(id, categoryId, targetId);
     } finally {
       setBusy(null);
     }
   }
 
-  async function handleDropAtEnd(e: DragEvent<HTMLUListElement>) {
+  function handleSectionDragOver(e: DragEvent<HTMLUListElement>, categoryId: string) {
+    e.preventDefault();
+    setDragOverSection(categoryId);
+  }
+
+  async function handleSectionDrop(e: DragEvent<HTMLUListElement>, categoryId: string) {
     e.preventDefault();
     const id = draggingId;
-    setDraggingId(null);
-    setDragOverId(null);
+    clearDragState();
     if (!id) return;
     setBusy(id);
     try {
-      await onReorder(id, null);
+      // Dropped on the section body itself (not on a specific row) - send
+      // to the end of that category's group.
+      await onReorder(id, categoryId, null);
     } finally {
       setBusy(null);
     }
@@ -107,108 +130,127 @@ export default function ProjectList({
 
       {projects.length === 0 && <p className="admin-hint">No projects yet.</p>}
 
-      <ul className="admin-project-list" onDragOver={(e) => e.preventDefault()} onDrop={handleDropAtEnd}>
-        {projects.map((p, index) => (
-          <li
-            key={p.id}
-            className={[
-              "admin-project-row",
-              draggingId === p.id ? "is-dragging" : "",
-              dragOverId === p.id ? "is-drag-over" : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            onDragOver={(e) => handleDragOver(e, p.id)}
-            onDragLeave={() => handleDragLeave(p.id)}
-            onDrop={(e) => handleDrop(e, p.id)}
-          >
-            <div
-              className="admin-drag-handle"
-              draggable
-              onDragStart={(e) => handleDragStart(e, p.id)}
-              onDragEnd={() => {
-                setDraggingId(null);
-                setDragOverId(null);
-              }}
-              role="button"
-              tabIndex={-1}
-              aria-label={`Drag to reorder ${p.title}`}
-              title="Drag to reorder"
+      <div className="admin-project-sections">
+        {categories.map((cat) => {
+        const inCategory = projects.filter((p) => p.category === cat.id);
+        return (
+          <div className="admin-project-section" key={cat.id}>
+            <div className="admin-project-section-head">
+              <h3>{cat.label}</h3>
+              <span className="admin-hint">{inCategory.length}</span>
+            </div>
+
+            <ul
+              className={`admin-project-list${dragOverSection === cat.id ? " is-section-drag-over" : ""}`}
+              onDragOver={(e) => handleSectionDragOver(e, cat.id)}
+              onDragLeave={() => setDragOverSection((current) => (current === cat.id ? null : current))}
+              onDrop={(e) => handleSectionDrop(e, cat.id)}
             >
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d="M5 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM5 6.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM5 10a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
-              </svg>
-            </div>
-
-            <img src={resolveImg(p.img)} alt="" className="admin-project-thumb" />
-
-            <div className="admin-project-meta">
-              <p className="admin-project-title">{p.title}</p>
-              <p className="admin-project-desc">{p.desc}</p>
-              <select
-                className="admin-project-category-select"
-                value={p.category}
-                disabled={busy === p.id}
-                onChange={(e) => handleCategoryChange(p.id, e.target.value)}
-                aria-label={`Change category for ${p.title}`}
-              >
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="admin-project-order">
-              <button
-                type="button"
-                className="admin-btn admin-btn-ghost admin-btn-icon"
-                onClick={() => handleMove(p.id, "up")}
-                disabled={busy === p.id || index === 0}
-                aria-label={`Move ${p.title} up`}
-                title="Move up"
-              >
-                <svg viewBox="0 0 16 16" aria-hidden="true">
-                  <path d="M8 3.5a.75.75 0 0 1 .53.22l4 4a.75.75 0 1 1-1.06 1.06L8.75 6.06V12a.75.75 0 0 1-1.5 0V6.06L4.53 8.78a.75.75 0 0 1-1.06-1.06l4-4A.75.75 0 0 1 8 3.5Z" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                className="admin-btn admin-btn-ghost admin-btn-icon"
-                onClick={() => handleMove(p.id, "down")}
-                disabled={busy === p.id || index === projects.length - 1}
-                aria-label={`Move ${p.title} down`}
-                title="Move down"
-              >
-                <svg viewBox="0 0 16 16" aria-hidden="true">
-                  <path d="M8 12.5a.75.75 0 0 1-.53-.22l-4-4a.75.75 0 1 1 1.06-1.06l2.72 2.72V3.94a.75.75 0 0 1 1.5 0v5.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-4 4a.75.75 0 0 1-.53.22Z" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="admin-project-actions">
-              <button type="button" className="admin-btn admin-btn-ghost admin-btn-sm" onClick={() => onEdit(p)}>
-                Edit
-              </button>
-              {confirming === p.id ? (
-                <button
-                  type="button"
-                  className="admin-btn admin-btn-danger admin-btn-sm"
-                  onClick={() => handleDelete(p.id)}
-                  disabled={deleting === p.id}
-                >
-                  {deleting === p.id ? "\u2026" : "Confirm"}
-                </button>
-              ) : (
-                <button type="button" className="admin-btn admin-btn-ghost admin-btn-sm" onClick={() => setConfirming(p.id)}>
-                  Delete
-                </button>
+              {inCategory.length === 0 && (
+                <li className="admin-project-empty admin-hint">Drag a project here to move it into this category.</li>
               )}
-            </div>
-          </li>
-        ))}
-      </ul>
+              {inCategory.map((p, index) => (
+                <li
+                  key={p.id}
+                  className={[
+                    "admin-project-row",
+                    draggingId === p.id ? "is-dragging" : "",
+                    dragOverId === p.id ? "is-drag-over" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  onDragOver={(e) => handleRowDragOver(e, p.id)}
+                  onDragLeave={() => handleRowDragLeave(p.id)}
+                  onDrop={(e) => handleRowDrop(e, p.id, cat.id)}
+                >
+                  <div
+                    className="admin-drag-handle"
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, p.id)}
+                    onDragEnd={clearDragState}
+                    role="button"
+                    tabIndex={-1}
+                    aria-label={`Drag to reorder ${p.title}`}
+                    title="Drag to reorder or drop into another section"
+                  >
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M5 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM5 6.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM5 10a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
+                    </svg>
+                  </div>
+
+                  <img src={resolveImg(p.img)} alt="" className="admin-project-thumb" />
+
+                  <div className="admin-project-meta">
+                    <p className="admin-project-title">{p.title}</p>
+                    <p className="admin-project-desc">{p.desc}</p>
+                    <select
+                      className="admin-project-category-select"
+                      value={p.category}
+                      disabled={busy === p.id}
+                      onChange={(e) => handleCategoryChange(p.id, e.target.value)}
+                      aria-label={`Change category for ${p.title}`}
+                    >
+                      {categories.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="admin-project-order">
+                    <button
+                      type="button"
+                      className="admin-btn admin-btn-ghost admin-btn-icon"
+                      onClick={() => handleMove(p.id, "up")}
+                      disabled={busy === p.id || index === 0}
+                      aria-label={`Move ${p.title} up`}
+                      title="Move up"
+                    >
+                      <svg viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M8 3.5a.75.75 0 0 1 .53.22l4 4a.75.75 0 1 1-1.06 1.06L8.75 6.06V12a.75.75 0 0 1-1.5 0V6.06L4.53 8.78a.75.75 0 0 1-1.06-1.06l4-4A.75.75 0 0 1 8 3.5Z" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      className="admin-btn admin-btn-ghost admin-btn-icon"
+                      onClick={() => handleMove(p.id, "down")}
+                      disabled={busy === p.id || index === inCategory.length - 1}
+                      aria-label={`Move ${p.title} down`}
+                      title="Move down"
+                    >
+                      <svg viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M8 12.5a.75.75 0 0 1-.53-.22l-4-4a.75.75 0 1 1 1.06-1.06l2.72 2.72V3.94a.75.75 0 0 1 1.5 0v5.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-4 4a.75.75 0 0 1-.53.22Z" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div className="admin-project-actions">
+                    <button type="button" className="admin-btn admin-btn-ghost admin-btn-sm" onClick={() => onEdit(p)}>
+                      Edit
+                    </button>
+                    {confirming === p.id ? (
+                      <button
+                        type="button"
+                        className="admin-btn admin-btn-danger admin-btn-sm"
+                        onClick={() => handleDelete(p.id)}
+                        disabled={deleting === p.id}
+                      >
+                        {deleting === p.id ? "\u2026" : "Confirm"}
+                      </button>
+                    ) : (
+                      <button type="button" className="admin-btn admin-btn-ghost admin-btn-sm" onClick={() => setConfirming(p.id)}>
+                        Delete
+                      </button>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
+      </div>
     </div>
   );
 }

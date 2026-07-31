@@ -123,13 +123,19 @@ export default function Admin() {
     await saveProjects((current) => current.filter((p) => p.id !== id), `Remove project: ${id}`);
   }
 
-  /** Moves a project up/down within the flat list (this is also its display order within its category). */
+  /** Moves a project up/down among its own category's projects (i.e. within its section on the live site). */
   async function moveProject(id: string, direction: "up" | "down") {
     await saveProjects((current) => {
       const index = current.findIndex((p) => p.id === id);
       if (index === -1) return current;
-      const swapWith = direction === "up" ? index - 1 : index + 1;
-      if (swapWith < 0 || swapWith >= current.length) return current;
+      const category = current[index].category;
+      const sameCategoryIndices = current
+        .map((p, i) => (p.category === category ? i : -1))
+        .filter((i) => i !== -1);
+      const posInGroup = sameCategoryIndices.indexOf(index);
+      const swapPos = direction === "up" ? posInGroup - 1 : posInGroup + 1;
+      if (swapPos < 0 || swapPos >= sameCategoryIndices.length) return current;
+      const swapWith = sameCategoryIndices[swapPos];
       const next = [...current];
       [next[index], next[swapWith]] = [next[swapWith], next[index]];
       return next;
@@ -144,22 +150,40 @@ export default function Admin() {
     );
   }
 
-  /** Drops a project at a new position in the flat list, e.g. from drag-and-drop. */
-  async function reorderProject(id: string, beforeId: string | null) {
+  /**
+   * Drops a project into a specific category group at a new position, e.g.
+   * from drag-and-drop. If dropped into a different section than it
+   * started in, this also re-categorizes it - one commit instead of two.
+   */
+  async function reorderProject(id: string, targetCategoryId: string, beforeId: string | null) {
     await saveProjects((current) => {
       const index = current.findIndex((p) => p.id === id);
       if (index === -1) return current;
       const next = [...current];
       const [moved] = next.splice(index, 1);
-      if (!beforeId) {
-        next.push(moved);
+      const updated = { ...moved, category: targetCategoryId };
+
+      if (beforeId) {
+        const targetIndex = next.findIndex((p) => p.id === beforeId);
+        if (targetIndex === -1) {
+          next.push(updated);
+        } else {
+          next.splice(targetIndex, 0, updated);
+        }
         return next;
       }
-      const targetIndex = next.findIndex((p) => p.id === beforeId);
-      if (targetIndex === -1) {
-        next.push(moved);
+
+      // No "before" target: dropped at the end of this category's section.
+      // Insert right after the last existing project in that category so it
+      // doesn't jump in front of/behind unrelated categories.
+      let lastIndexInCategory = -1;
+      next.forEach((p, i) => {
+        if (p.category === targetCategoryId) lastIndexInCategory = i;
+      });
+      if (lastIndexInCategory === -1) {
+        next.push(updated);
       } else {
-        next.splice(targetIndex, 0, moved);
+        next.splice(lastIndexInCategory + 1, 0, updated);
       }
       return next;
     }, `Reorder project: ${id}`);
