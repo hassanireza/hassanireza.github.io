@@ -40,6 +40,14 @@
     "href": "https://hassanireza.github.io/aetherosCosmos/"
   },
   {
+    "id": "undertow",
+    "title": "Undertow",
+    "desc": "Restraint is a design choice.",
+    "img": "undertow.webp",
+    "category": "frontend-development",
+    "href": "https://hassanireza.github.io/undertow/"
+  },
+  {
     "id": "verso",
     "title": "Verso",
     "desc": "Short-form posts, 160 characters.",
@@ -204,14 +212,6 @@
     "category": "animations",
     "video": "boxes.mp4",
     "alt": "Logo Reveal"
-  },
-  {
-    "id": "undertow",
-    "title": "Undertow",
-    "desc": "Restraint is a design choice.",
-    "img": "undertow.webp",
-    "category": "frontend-development",
-    "href": "https://hassanireza.github.io/undertow/"
   },
   {
     "id": "pyxis",
