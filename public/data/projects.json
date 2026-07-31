@@ -66,7 +66,7 @@
   {
     "id": "nexus-store",
     "title": "Lumen",
-    "desc": "Single-page storefront concept for smartphones",
+    "desc": "Single-page storefront concept for smartphones.",
     "img": "nexusStore.webp",
     "category": "frontend-development",
     "href": "https://hassanireza.github.io/lumen/"
