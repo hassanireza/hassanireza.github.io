@@ -188,15 +188,6 @@
     "alt": "Guitar Girl"
   },
   {
-    "id": "reach",
-    "title": "Reach",
-    "desc": "A hand rig, animated with sliders.",
-    "img": "handRig.webp",
-    "category": "animations",
-    "video": "handRig.mp4",
-    "alt": "Hand Rig"
-  },
-  {
     "id": "pass-it",
     "title": "Pass It",
     "desc": "A simple 2D bounce animation.",
@@ -204,6 +195,15 @@
     "category": "animations",
     "video": "boxes.mp4",
     "alt": "Logo Reveal"
+  },
+  {
+    "id": "reach",
+    "title": "Reach",
+    "desc": "A hand rig, animated with sliders.",
+    "img": "handRig.webp",
+    "category": "animations",
+    "video": "handRig.mp4",
+    "alt": "Hand Rig"
   },
   {
     "id": "undertow",
