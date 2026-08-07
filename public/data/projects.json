@@ -1,5 +1,13 @@
 [
   {
+    "id": "friendfeed-farsi-archive",
+    "title": "FriendFeed Farsi Archive",
+    "desc": "A nostalgic, unofficial archive of FriendFeed.",
+    "img": "friendfeed-farsi-archive.webp",
+    "category": "vibe-coding",
+    "href": "https://hassanireza.github.io/friendfeed/"
+  },
+  {
     "id": "abyssal-liturgy",
     "title": "Abyssal Liturgy",
     "desc": "A scroll-synced coffee brewing guide.",
