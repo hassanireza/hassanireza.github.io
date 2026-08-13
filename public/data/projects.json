@@ -1,5 +1,13 @@
 [
   {
+    "id": "abyssal-liturgy-code-editor",
+    "title": "Abyssal liturgy code editor",
+    "desc": "A VS Code-inspired, fully browser-based.",
+    "img": "abyssal-liturgy-code-editor.webp",
+    "category": "vibe-coding",
+    "href": "https://github.com/hassanireza/codeEditor"
+  },
+  {
     "id": "video-forge",
     "title": "Video Forge",
     "desc": "Local, privacy-first desktop video editor.",
