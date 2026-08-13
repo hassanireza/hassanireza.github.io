@@ -16,6 +16,14 @@
     "href": "https://friendfeed.github.io/"
   },
   {
+    "id": "pyxis",
+    "title": "Pyxis",
+    "desc": "A Python only computational notebook.",
+    "img": "pyxis.webp",
+    "category": "vibe-coding",
+    "href": "https://hassanireza.github.io/Pyxis/"
+  },
+  {
     "id": "abyssal-liturgy",
     "title": "Abyssal Liturgy",
     "desc": "A scroll-synced coffee brewing guide.",
@@ -228,13 +236,5 @@
     "category": "animations",
     "video": "boxes.mp4",
     "alt": "Logo Reveal"
-  },
-  {
-    "id": "pyxis",
-    "title": "Pyxis",
-    "desc": "A Python only computational notebook.",
-    "img": "pyxis.webp",
-    "category": "vibe-coding",
-    "href": "https://hassanireza.github.io/Pyxis/"
   }
 ]
