@@ -14,8 +14,6 @@ interface Point {
 
 const MAX_DEVICE_PIXEL_RATIO = 2;
 
-const MOBILE_BREAKPOINT = 640;
-
 class Particle {
   x = 0;
   y = 0;
@@ -160,13 +158,6 @@ export class ParticleField {
     this.loop = this.loop.bind(this);
   }
 
-  private static viewportScale(width: number): number {
-    if (width >= MOBILE_BREAKPOINT) return 1;
-    const floor = 0.55;
-    const t = Math.max(width, 320) / MOBILE_BREAKPOINT;
-    return floor + (1 - floor) * t;
-  }
-
   private buildMask(w: number, h: number): Point[] {
     const off = document.createElement("canvas");
     off.width = w;
@@ -190,7 +181,7 @@ export class ParticleField {
 
     const data = g.getImageData(0, 0, w, h).data;
     const pts: Point[] = [];
-    const step = w < 420 ? 1.5 : w < MOBILE_BREAKPOINT ? 2 : 3;
+    const step = 3;
     for (let y = 0; y < h; y += step) {
       for (let x = 0; x < w; x += step) {
         const i = (Math.floor(y) * w + Math.floor(x)) * 4;
@@ -217,13 +208,11 @@ export class ParticleField {
     this.canvas.height = Math.round(this.height * this.dpr);
     this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
 
-    const scale = ParticleField.viewportScale(this.width);
     const pts = this.buildMask(this.width, this.height);
-    const count = Math.round(this.particleCount * (0.6 + 0.4 * scale));
 
     this.particles = [];
-    for (let i = 0; i < count; i++) {
-      const p = new Particle(i, this.width, this.height, this.colorText, this.colorAccent, scale);
+    for (let i = 0; i < this.particleCount; i++) {
+      const p = new Particle(i, this.width, this.height, this.colorText, this.colorAccent, 1);
       if (i < pts.length) p.assignTarget(pts);
       this.particles.push(p);
     }
@@ -285,7 +274,14 @@ export class ParticleField {
     window.addEventListener("touchmove", this.handleTouchMove, { passive: true });
     window.addEventListener("mouseleave", this.handleMouseLeave);
 
-    await document.fonts.ready;
+    // Explicitly request the exact family/weight used in buildMask().
+    // document.fonts.ready only waits for loads already in flight - a
+    // canvas measureText() call is itself what first triggers a font
+    // load, so without this, applyResize() below can race that load
+    // and measure against the Georgia fallback instead on a cold
+    // cache. That made the particle-formed label come out a different
+    // size on some page loads/back-forward navigations than others.
+    await Promise.all([document.fonts.load("300 16px 'Cormorant Garamond'"), document.fonts.ready]);
     if (this.destroyed) return;
     this.applyResize();
 
