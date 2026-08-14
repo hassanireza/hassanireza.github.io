@@ -30,8 +30,8 @@ One design language, several distinct experiences, all in one app.
 | `/portfolio` | Portfolio work, grouped by category |
 | `/branding` | The Abyssal Liturgy brand system, published in full |
 | `/contact` | Contact form, Cloudflare Turnstile verified |
-| `/descent` | The Descent — an immersive, scroll-driven career retrospective |
-| `/journey` | My Journey — a self-graded skill tree and progress tracker |
+| `/descent` | The Descent, an immersive, scroll-driven career retrospective |
+| `/journey` | My Journey, a self-graded skill tree and progress tracker |
 | `/journey/roadmap` | The full phase-by-phase roadmap and achievements |
 | `/journey/cheatsheets` | A catalog of long-form reference guides |
 | `/journey/cheatsheets/:slug` | An individual reference guide |
@@ -43,9 +43,9 @@ One design language, several distinct experiences, all in one app.
 
 ---
 
-## Brand system — Abyssal Liturgy
+## Brand system: Abyssal Liturgy
 
-Every surface across every route draws from a single named system: **Abyssal Liturgy**. Near-monochrome, restrained, one light source per surface — everything else is allowed to stay dark. The full brandbook — palette, type scale, logo marks, motion language, and usage guidance — is published at [hassanireza.github.io/branding](https://hassanireza.github.io/branding); the tokens that implement it in code live in `src/styles/tokens.css`.
+Every surface across every route draws from a single named system: **Abyssal Liturgy**. Near-monochrome, restrained, one light source per surface; everything else is allowed to stay dark. The full brandbook (palette, type scale, logo marks, motion language, and usage guidance) is published at [hassanireza.github.io/branding](https://hassanireza.github.io/branding); the tokens that implement it in code live in `src/styles/tokens.css`.
 
 <div align="center">
   <img src="docs/diagrams/palette.svg" alt="Abyssal Liturgy core palette, from void to bone" width="100%" />
@@ -77,16 +77,16 @@ Type follows the same restraint: **Cormorant Garamond**, italic, for display; **
 - **Vite**, for both development and the production build
 - **GSAP**, driving the scroll physics and motion inside The Descent
 - **oxlint** for linting
-- Plain CSS per component and page — no CSS-in-JS, no utility framework, a single shared token file
+- Plain CSS per component and page: no CSS-in-JS, no utility framework, a single shared token file
 - **Cloudflare Turnstile** for bot-resistant form verification, submitted through **Formspree**
 
-No global state library. State is local to each page — `useState` and `useEffect` — which is enough for a site of this scope. That's a decision, not an omission.
+No global state library. State is local to each page (`useState` and `useEffect`), which is enough for a site of this scope. That's a decision, not an omission.
 
 ---
 
 ## Routing on a static host
 
-GitHub Pages has no server-side routing, so a direct link or hard refresh on a nested path like `/journey/roadmap` would 404 on a naive static deploy. This site handles that with the established `rafgraph/spa-github-pages` pattern: a small redirect shim encodes the intended path into a query string, and an inline script restores it with `history.replaceState` before React Router ever mounts. From the outside, it's instant and invisible — the only page a visitor actually sees for a broken link is the branded 404 itself.
+GitHub Pages has no server-side routing, so a direct link or hard refresh on a nested path like `/journey/roadmap` would 404 on a naive static deploy. This site handles that with the established `rafgraph/spa-github-pages` pattern: a small redirect shim encodes the intended path into a query string, and an inline script restores it with `history.replaceState` before React Router ever mounts. From the outside, it's instant and invisible; the only page a visitor actually sees for a broken link is the branded 404 itself.
 
 <div align="center">
   <img src="docs/diagrams/spa-routing.svg" alt="Sequence diagram, direct visit to a nested path served a 404, redirected through a query string, restored and matched by React Router" width="100%" />
