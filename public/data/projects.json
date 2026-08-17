@@ -1,19 +1,19 @@
 [
   {
-    "id": "video-forge",
-    "title": "Video Forge",
-    "desc": "Local, privacy-first desktop video editor.",
-    "img": "video-forge.webp",
-    "category": "vibe-coding",
-    "href": "https://github.com/hassanireza/videoForge"
-  },
-  {
     "id": "pyxis",
     "title": "Pyxis",
     "desc": "A Python only computational notebook.",
     "img": "pyxis.webp",
     "category": "vibe-coding",
     "href": "https://hassanireza.github.io/Pyxis/"
+  },
+  {
+    "id": "video-forge",
+    "title": "Video Forge",
+    "desc": "Local, privacy-first desktop video editor.",
+    "img": "video-forge.webp",
+    "category": "vibe-coding",
+    "href": "https://github.com/hassanireza/videoForge"
   },
   {
     "id": "abyssal-liturgy-code-editor",
