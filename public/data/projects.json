@@ -1,5 +1,13 @@
 [
   {
+    "id": "dota-2-knowledge-base",
+    "title": "Dota 2 Knowledge Base",
+    "desc": "Dota 2 shop and neutral item reference site.",
+    "img": "dota-2-knowledge-base.webp",
+    "category": "vibe-coding",
+    "href": "https://2dota.github.io/"
+  },
+  {
     "id": "woodland-chess",
     "title": "Woodland Chess",
     "desc": "Mobile-first chess app with Stockfish WASM engine.",
