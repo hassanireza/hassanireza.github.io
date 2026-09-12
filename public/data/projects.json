@@ -1,5 +1,13 @@
 [
   {
+    "id": "woodland-chess",
+    "title": "Woodland Chess",
+    "desc": "Mobile-first chess app with Stockfish WASM engine.",
+    "img": "woodland-chess.webp",
+    "category": "vibe-coding",
+    "href": "https://woodlandchess.github.io/"
+  },
+  {
     "id": "pyxis",
     "title": "Pyxis",
     "desc": "A Python only computational notebook.",
