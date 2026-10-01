@@ -99,6 +99,42 @@ export default function Admin() {
     }
   }
 
+  /**
+   * Moves a category to a new position. Category order in categories.json is
+   * the section order on the live portfolio page. Like saveProjects, this
+   * re-fetches the live file first so a stale local copy cannot overwrite it.
+   */
+  async function moveCategory(id: string, target: "top" | "up" | "down" | "bottom") {
+    const token = getToken();
+    if (!token) return;
+    setSaveError(null);
+    try {
+      const latest = await getFile(token, "public/data/categories.json");
+      const current: Category[] = latest ? JSON.parse(latest.content) : categoriesFile?.data ?? [];
+      const sha = latest?.sha ?? categoriesFile?.sha;
+      const from = current.findIndex((c) => c.id === id);
+      if (from === -1) return;
+      const to =
+        target === "top" ? 0 : target === "bottom" ? current.length - 1 : target === "up" ? from - 1 : from + 1;
+      if (to < 0 || to >= current.length || to === from) return;
+      const next = [...current];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
+      await putTextFile(
+        token,
+        "public/data/categories.json",
+        JSON.stringify(next, null, 2),
+        `Reorder category: ${moved.label}`,
+        sha,
+      );
+      await loadData();
+    } catch (err) {
+      const message = err instanceof GitHubApiError ? err.message : "Check your connection and try again.";
+      setSaveError(`Save failed: ${message}`);
+      throw err;
+    }
+  }
+
   async function saveConfig(next: SiteConfig) {
     const token = getToken();
     if (!token || !configFile) return;
@@ -266,6 +302,7 @@ export default function Admin() {
                 onMove={moveProject}
                 onMoveToCategory={moveProjectToCategory}
                 onReorder={reorderProject}
+                onMoveCategory={moveCategory}
               />
             </div>
           ) : (
