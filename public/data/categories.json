@@ -1,5 +1,10 @@
 [
   {
+    "id": "game-design",
+    "label": "Game Design",
+    "icon": "layout"
+  },
+  {
     "id": "vibe-coding",
     "label": "Vibe Coding",
     "icon": "code"
@@ -13,10 +18,5 @@
     "id": "animations",
     "label": "Animations",
     "icon": "play"
-  },
-  {
-    "id": "game-design",
-    "label": "Game Design",
-    "icon": "layout"
   }
 ]
