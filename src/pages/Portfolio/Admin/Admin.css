@@ -72,6 +72,13 @@
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--border);
 }
+.admin-project-section-head { align-items: center; }
+.admin-category-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.admin-category-controls .admin-hint { margin-right: 0.3rem; }
 .admin-project-section-head h3 {
   font-family: var(--font-display);
   font-style: italic;
