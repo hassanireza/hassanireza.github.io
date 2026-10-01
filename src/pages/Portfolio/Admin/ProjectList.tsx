@@ -9,6 +9,7 @@ interface ProjectListProps {
   onMove: (id: string, direction: "up" | "down") => Promise<void>;
   onMoveToCategory: (id: string, categoryId: string) => Promise<void>;
   onReorder: (id: string, targetCategoryId: string, beforeId: string | null) => Promise<void>;
+  onMoveCategory: (id: string, target: "top" | "up" | "down" | "bottom") => Promise<void>;
 }
 
 interface DropTarget {
@@ -43,7 +44,21 @@ export default function ProjectList({
   onMove,
   onMoveToCategory,
   onReorder,
+  onMoveCategory,
 }: ProjectListProps) {
+  const [busyCategory, setBusyCategory] = useState<string | null>(null);
+
+  async function handleCategoryMove(id: string, target: "top" | "up" | "down" | "bottom") {
+    setBusyCategory(id);
+    try {
+      await onMoveCategory(id, target);
+    } catch {
+      // The error message is shown by the dashboard.
+    } finally {
+      setBusyCategory(null);
+    }
+  }
+
   const [confirming, setConfirming] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -167,19 +182,69 @@ export default function ProjectList({
     <div className="admin-card admin-list">
       <div className="admin-card-head">
         <h2>Live Projects</h2>
-        <span className="admin-hint">{projects.length} total &middot; drag the handle to reorder</span>
+        <span className="admin-hint">{projects.length} total &middot; drag the handle to reorder projects, use the section arrows to reorder categories</span>
       </div>
 
       {projects.length === 0 && <p className="admin-hint">No projects yet.</p>}
 
       <div className="admin-project-sections" ref={scrollRef}>
-        {categories.map((cat) => {
+        {categories.map((cat, catIndex) => {
           const inCategory = projects.filter((p) => p.category === cat.id);
           return (
             <div className="admin-project-section" key={cat.id}>
               <div className="admin-project-section-head">
                 <h3>{cat.label}</h3>
-                <span className="admin-hint">{inCategory.length}</span>
+                <div className="admin-category-controls">
+                  <span className="admin-hint">{inCategory.length}</span>
+                  <button
+                    type="button"
+                    className="admin-btn admin-btn-ghost admin-btn-icon"
+                    onClick={() => handleCategoryMove(cat.id, "top")}
+                    disabled={busyCategory !== null || catIndex === 0}
+                    aria-label={`Move ${cat.label} section to the top`}
+                    title="Move section to top"
+                  >
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M3 2.75A.75.75 0 0 1 3.75 2h8.5a.75.75 0 0 1 0 1.5h-8.5A.75.75 0 0 1 3 2.75ZM8 5a.75.75 0 0 1 .53.22l3.5 3.5a.75.75 0 1 1-1.06 1.06L8.75 7.56V13.5a.75.75 0 0 1-1.5 0V7.56L5.03 9.78a.75.75 0 0 1-1.06-1.06l3.5-3.5A.75.75 0 0 1 8 5Z" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    className="admin-btn admin-btn-ghost admin-btn-icon"
+                    onClick={() => handleCategoryMove(cat.id, "up")}
+                    disabled={busyCategory !== null || catIndex === 0}
+                    aria-label={`Move ${cat.label} section up`}
+                    title="Move section up"
+                  >
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M8 3.5a.75.75 0 0 1 .53.22l4 4a.75.75 0 1 1-1.06 1.06L8.75 6.06V12a.75.75 0 0 1-1.5 0V6.06L4.53 8.78a.75.75 0 0 1-1.06-1.06l4-4A.75.75 0 0 1 8 3.5Z" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    className="admin-btn admin-btn-ghost admin-btn-icon"
+                    onClick={() => handleCategoryMove(cat.id, "down")}
+                    disabled={busyCategory !== null || catIndex === categories.length - 1}
+                    aria-label={`Move ${cat.label} section down`}
+                    title="Move section down"
+                  >
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M8 12.5a.75.75 0 0 1-.53-.22l-4-4a.75.75 0 1 1 1.06-1.06l2.72 2.72V3.94a.75.75 0 0 1 1.5 0v5.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-4 4a.75.75 0 0 1-.53.22Z" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    className="admin-btn admin-btn-ghost admin-btn-icon"
+                    onClick={() => handleCategoryMove(cat.id, "bottom")}
+                    disabled={busyCategory !== null || catIndex === categories.length - 1}
+                    aria-label={`Move ${cat.label} section to the bottom`}
+                    title="Move section to bottom"
+                  >
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M3 13.25a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1-.75-.75ZM8 11a.75.75 0 0 1-.53-.22l-3.5-3.5a.75.75 0 0 1 1.06-1.06l2.22 2.22V2.5a.75.75 0 0 1 1.5 0v5.94l2.22-2.22a.75.75 0 1 1 1.06 1.06l-3.5 3.5A.75.75 0 0 1 8 11Z" />
+                    </svg>
+                  </button>
+                </div>
               </div>
 
               <ul
