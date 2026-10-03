@@ -1,5 +1,13 @@
 [
   {
+    "id": "istanbul-navigator",
+    "title": "Istanbul Navigator",
+    "desc": "Istanbul map & transit navigator.",
+    "img": "istanbul-navigator.webp",
+    "category": "frontend-development",
+    "href": "https://istanbulmap.github.io/"
+  },
+  {
     "id": "woodland-chess",
     "title": "Woodland Chess",
     "desc": "Mobile-first chess app with Stockfish WASM engine.",
