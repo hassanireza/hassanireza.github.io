@@ -96,6 +96,14 @@
     "href": "https://hassanireza.github.io/undertow/"
   },
   {
+    "id": "meridian-health",
+    "title": "Meridian Health",
+    "desc": "Smarter symptom checking, simplified.",
+    "img": "meridianHealth.webp",
+    "category": "frontend-development",
+    "href": "https://hassanireza.github.io/meridianHealth/"
+  },
+  {
     "id": "verso",
     "title": "Verso",
     "desc": "Short-form posts, 160 characters.",
@@ -110,14 +118,6 @@
     "img": "lexera.webp",
     "category": "frontend-development",
     "href": "https://lexerate.up.railway.app/"
-  },
-  {
-    "id": "meridian-health",
-    "title": "Meridian Health",
-    "desc": "Smarter symptom checking, simplified.",
-    "img": "meridianHealth.webp",
-    "category": "frontend-development",
-    "href": "https://hassanireza.github.io/meridianHealth/"
   },
   {
     "id": "nexus-store",
