@@ -56,14 +56,6 @@
     "href": "https://hassanireza.github.io/abyssalLiturgy/"
   },
   {
-    "id": "black-magic",
-    "title": "Black Magic",
-    "desc": "A dark, atmospheric UI experiment.",
-    "img": "black-magic.webp",
-    "category": "frontend-development",
-    "href": "https://hassanireza.github.io/blackMagic/"
-  },
-  {
     "id": "supercar-showcase",
     "title": "Supercar Showcase",
     "desc": "A scroll-driven, frame-by-frame supercar showcase.",
@@ -102,6 +94,14 @@
     "img": "meridianHealth.webp",
     "category": "frontend-development",
     "href": "https://hassanireza.github.io/meridianHealth/"
+  },
+  {
+    "id": "black-magic",
+    "title": "Black Magic",
+    "desc": "A dark, atmospheric UI experiment.",
+    "img": "black-magic.webp",
+    "category": "frontend-development",
+    "href": "https://hassanireza.github.io/blackMagic/"
   },
   {
     "id": "verso",
