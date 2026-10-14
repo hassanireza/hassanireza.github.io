@@ -96,6 +96,14 @@
     "href": "https://hassanireza.github.io/meridianHealth/"
   },
   {
+    "id": "viber",
+    "title": "Viber",
+    "desc": "A messaging interface, reimagined.",
+    "img": "viber.webp",
+    "category": "frontend-development",
+    "href": "https://hassanireza.github.io/viber/"
+  },
+  {
     "id": "black-magic",
     "title": "Black Magic",
     "desc": "A dark, atmospheric UI experiment.",
@@ -182,14 +190,6 @@
     "img": "bookStore.webp",
     "category": "frontend-development",
     "href": "https://hassanireza.github.io/bookStore/"
-  },
-  {
-    "id": "viber",
-    "title": "Viber",
-    "desc": "A messaging interface, reimagined.",
-    "img": "viber.webp",
-    "category": "frontend-development",
-    "href": "https://hassanireza.github.io/viber/"
   },
   {
     "id": "laser-frame",
