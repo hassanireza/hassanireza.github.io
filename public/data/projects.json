@@ -112,6 +112,14 @@
     "href": "https://hassanireza.github.io/blackMagic/"
   },
   {
+    "id": "atelier-aura",
+    "title": "Atelier Aura",
+    "desc": "Web design, refined and modern.",
+    "img": "atelierAura.webp",
+    "category": "frontend-development",
+    "href": "https://atelieraura.up.railway.app/"
+  },
+  {
     "id": "verso",
     "title": "Verso",
     "desc": "Short-form posts, 160 characters.",
@@ -198,14 +206,6 @@
     "img": "laserFrame.webp",
     "category": "frontend-development",
     "href": "https://hassanireza.github.io/laserFrame/"
-  },
-  {
-    "id": "atelier-aura",
-    "title": "Atelier Aura",
-    "desc": "Web design, refined and modern.",
-    "img": "atelierAura.webp",
-    "category": "frontend-development",
-    "href": "https://atelieraura.up.railway.app/"
   },
   {
     "id": "idea",
