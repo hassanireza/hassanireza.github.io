@@ -1,13 +1,5 @@
 [
   {
-    "id": "python-in-30-days",
-    "title": "Python in 30 Days",
-    "desc": "Learn JavaScript in 30 days.",
-    "img": "python-in-30-days.webp",
-    "category": "frontend-development",
-    "href": "https://hassanireza.github.io/learnPython/"
-  },
-  {
     "id": "istanbul-navigator",
     "title": "Istanbul Navigator",
     "desc": "Istanbul map & transit navigator.",
@@ -150,6 +142,14 @@
     "img": "lumen.webp",
     "category": "frontend-development",
     "href": "https://hassanireza.github.io/lumen/"
+  },
+  {
+    "id": "python-in-30-days",
+    "title": "Python in 30 Days",
+    "desc": "Learn JavaScript in 30 days.",
+    "img": "python-in-30-days.webp",
+    "category": "frontend-development",
+    "href": "https://hassanireza.github.io/learnPython/"
   },
   {
     "id": "js-course",
