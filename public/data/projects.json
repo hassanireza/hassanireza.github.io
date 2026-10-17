@@ -153,9 +153,9 @@
   },
   {
     "id": "js-course",
-    "title": "JS Course",
+    "title": "Python in 30 Days",
     "desc": "Learn JavaScript in 30 days.",
-    "img": "jslearn.webp",
+    "img": "js-course.webp",
     "category": "frontend-development",
     "href": "https://hassanireza.github.io/learnJavascript/"
   },
