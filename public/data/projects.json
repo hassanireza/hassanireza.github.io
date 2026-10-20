@@ -17,11 +17,11 @@
   },
   {
     "id": "dota-2-knowledge-base",
-    "title": "Dota 2 Knowledge Base",
-    "desc": "Dota 2 shop and neutral item reference site.",
+    "title": "vespers",
+    "desc": "curated library of instant play, browser games.",
     "img": "dota-2-knowledge-base.webp",
     "category": "game-design",
-    "href": "https://2dota.github.io/"
+    "href": "https://hassanireza.github.io/vespers/"
   },
   {
     "id": "pyxis",
