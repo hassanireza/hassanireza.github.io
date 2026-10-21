@@ -40,6 +40,14 @@
     "href": "https://hassanireza.github.io/Pyxis/"
   },
   {
+    "id": "aetheros-cosmos",
+    "title": "Aetheros Cosmos",
+    "desc": "Scroll through an interactive cosmos.",
+    "img": "aetheros-cosmos.webp",
+    "category": "vibe-coding",
+    "href": "https://hassanireza.github.io/aetherosCosmos/"
+  },
+  {
     "id": "abyssal-liturgy-code-editor",
     "title": "Abyssal liturgy code editor",
     "desc": "A VS Code-inspired, fully browser-based.",
@@ -62,14 +70,6 @@
     "img": "obsidian-game-store.webp",
     "category": "game-design",
     "href": "https://hassanireza.github.io/obsidian/"
-  },
-  {
-    "id": "aetheros-cosmos",
-    "title": "Aetheros Cosmos",
-    "desc": "Scroll through an interactive cosmos.",
-    "img": "aetheros-cosmos.webp",
-    "category": "vibe-coding",
-    "href": "https://hassanireza.github.io/aetherosCosmos/"
   },
   {
     "id": "video-forge",
