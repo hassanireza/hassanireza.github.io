@@ -24,6 +24,14 @@
     "href": "https://hassanireza.github.io/vespers/"
   },
   {
+    "id": "supercar-showcase",
+    "title": "Supercar Showcase",
+    "desc": "A scroll-driven, frame-by-frame supercar showcase.",
+    "img": "supercar-showcase.webp",
+    "category": "vibe-coding",
+    "href": "https://hassanireza.github.io/supercarShowcase/"
+  },
+  {
     "id": "pyxis",
     "title": "Pyxis",
     "desc": "A Python only computational notebook.",
@@ -54,14 +62,6 @@
     "img": "abyssalLiturgy.webp",
     "category": "vibe-coding",
     "href": "https://hassanireza.github.io/abyssalLiturgy/"
-  },
-  {
-    "id": "supercar-showcase",
-    "title": "Supercar Showcase",
-    "desc": "A scroll-driven, frame-by-frame supercar showcase.",
-    "img": "supercar-showcase.webp",
-    "category": "vibe-coding",
-    "href": "https://hassanireza.github.io/supercarShowcase/"
   },
   {
     "id": "obsidian-game-store",
