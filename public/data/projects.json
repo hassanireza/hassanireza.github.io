@@ -1,5 +1,13 @@
 [
   {
+    "id": "vespers",
+    "title": "Vespers",
+    "desc": "Curated library of instant play, browser games.",
+    "img": "vespers.webp",
+    "category": "game-design",
+    "href": "https://github.com/hassanireza/vespers"
+  },
+  {
     "id": "istanbul-navigator",
     "title": "Istanbul Navigator",
     "desc": "Istanbul map & transit navigator.",
