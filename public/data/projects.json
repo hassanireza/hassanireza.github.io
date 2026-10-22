@@ -1,13 +1,5 @@
 [
   {
-    "id": "vespers",
-    "title": "Vespers",
-    "desc": "Curated library of instant play, browser games.",
-    "img": "vespers.webp",
-    "category": "game-design",
-    "href": "https://github.com/hassanireza/vespers"
-  },
-  {
     "id": "istanbul-navigator",
     "title": "Istanbul Navigator",
     "desc": "Istanbul map & transit navigator.",
@@ -22,6 +14,14 @@
     "img": "woodland-chess.webp",
     "category": "game-design",
     "href": "https://woodlandchess.github.io/"
+  },
+  {
+    "id": "vespers",
+    "title": "Vespers",
+    "desc": "Curated library of instant play, browser games.",
+    "img": "vespers.webp",
+    "category": "game-design",
+    "href": "https://github.com/hassanireza/vespers"
   },
   {
     "id": "dota-2-knowledge-base",
