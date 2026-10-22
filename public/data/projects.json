@@ -25,11 +25,11 @@
   },
   {
     "id": "dota-2-knowledge-base",
-    "title": "Vespers",
-    "desc": "Curated library of instant play, browser games.",
+    "title": "Dota 2 knowledge base",
+    "desc": "A reference site covering every Dota 2 shop item.",
     "img": "dota-2-knowledge-base.webp",
     "category": "game-design",
-    "href": "https://hassanireza.github.io/vespers/"
+    "href": "https://2dota.github.io/"
   },
   {
     "id": "supercar-showcase",
