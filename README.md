@@ -27,7 +27,7 @@ One design language, several distinct experiences, all in one app.
 | Route | Purpose |
 |---|---|
 | `/` | Landing page, canvas-based particle field |
-| `/portfolio` | Portfolio work, grouped by category |
+| `/portfolio` | Portfolio work, an editorial index grouped by discipline; rows always fill the grid for any project count |
 | `/branding` | The Abyssal Liturgy brand system, published in full |
 | `/contact` | Contact form, Cloudflare Turnstile verified |
 | `/descent` | The Descent, an immersive, scroll-driven career retrospective |

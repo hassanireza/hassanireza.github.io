@@ -44,7 +44,7 @@
     "title": "Supercar Showcase",
     "desc": "A scroll-driven, frame-by-frame supercar showcase.",
     "img": "supercar-showcase.webp",
-    "category": "vibe-coding",
+    "category": "software-design",
     "href": "https://hassanireza.github.io/supercarShowcase/"
   },
   {
@@ -52,7 +52,7 @@
     "title": "Pyxis",
     "desc": "A Python only computational notebook.",
     "img": "pyxis.webp",
-    "category": "vibe-coding",
+    "category": "software-design",
     "href": "https://hassanireza.github.io/Pyxis/"
   },
   {
@@ -60,7 +60,7 @@
     "title": "Aetheros Cosmos",
     "desc": "Scroll through an interactive cosmos.",
     "img": "aetheros-cosmos.webp",
-    "category": "vibe-coding",
+    "category": "software-design",
     "href": "https://hassanireza.github.io/aetherosCosmos/"
   },
   {
@@ -68,7 +68,7 @@
     "title": "Abyssal liturgy code editor",
     "desc": "A VS Code-inspired, fully browser-based.",
     "img": "abyssal-liturgy-code-editor.webp",
-    "category": "vibe-coding",
+    "category": "software-design",
     "href": "https://github.com/hassanireza/codeEditor"
   },
   {
@@ -76,7 +76,7 @@
     "title": "Abyssal Liturgy",
     "desc": "A scroll-synced coffee brewing guide.",
     "img": "abyssalLiturgy.webp",
-    "category": "vibe-coding",
+    "category": "software-design",
     "href": "https://hassanireza.github.io/abyssalLiturgy/"
   },
   {
@@ -92,7 +92,7 @@
     "title": "Video Forge",
     "desc": "Local, privacy-first desktop video editor.",
     "img": "video-forge.webp",
-    "category": "vibe-coding",
+    "category": "software-design",
     "href": "https://github.com/hassanireza/videoForge"
   },
   {

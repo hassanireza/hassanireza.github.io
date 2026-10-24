@@ -1,189 +1,455 @@
-.container {
-  width: min(1160px, 90%);
-  margin: 0 auto;
-  padding: 7rem 0 9rem;
+/* Portfolio page shell and hero. All selectors are namespaced pf- so they
+   cannot collide with the other routes' .container / .hero / .back-link. */
+
+.pf-page {
+  --pf-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   position: relative;
   z-index: 1;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 6.5rem clamp(1.25rem, 5vw, 2.5rem) 8rem;
 }
 
-.back-link {
+/* ---------- back link + eyebrow ---------- */
+
+.pf-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  margin-bottom: 2.4rem;
   font-family: var(--font-body);
   font-size: 0.66rem;
   font-weight: 400;
   letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--text-3);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  margin-bottom: 3.5rem;
   transition: color 0.35s var(--ease), letter-spacing 0.35s var(--ease);
 }
 
-.back-link svg {
+.pf-back svg {
   width: 12px;
   height: 12px;
   fill: currentColor;
 }
 
-.back-link:hover {
+.pf-back:hover {
   color: var(--accent-bright);
   letter-spacing: 0.3em;
 }
 
-.hero {
-  text-align: left;
-  margin-bottom: 5rem;
-  padding-bottom: 4rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.hero-eyebrow {
+.pf-eyebrow {
   display: block;
-  font-family: var(--font-body);
+  font-family: var(--pf-mono);
   font-size: 0.62rem;
-  font-weight: 400;
   letter-spacing: 0.34em;
   text-transform: uppercase;
   color: var(--text-3);
-  margin-bottom: 2.2rem;
 }
 
-.hero h1 {
+/* ---------- hero ---------- */
+
+.pf-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 3rem clamp(2.5rem, 6vw, 6rem);
+  margin-bottom: clamp(5rem, 9vw, 8rem);
+  padding-bottom: clamp(3rem, 5vw, 4.5rem);
+  border-bottom: 1px solid var(--border);
+}
+
+.pf-hero-copy .pf-eyebrow {
+  margin-bottom: 2rem;
+}
+
+.pf-hero-title {
   font-family: var(--font-display);
-  font-size: clamp(3.2rem, 8.5vw, 6.5rem);
   font-weight: 300;
-  letter-spacing: -0.015em;
-  line-height: 0.95;
+  font-size: clamp(3.1rem, 7.6vw, 6.6rem);
+  line-height: 0.93;
+  letter-spacing: -0.025em;
   color: var(--text);
-  margin-bottom: 1.6rem;
-  perspective: 800px;
+  margin-bottom: 1.8rem;
 }
 
-.hero-title-line {
-  display: inline-block;
+.pf-hero-line {
+  display: block;
 }
 
-.hero h1 em {
+.pf-hero-line-em {
   font-style: italic;
   color: var(--text-2);
 }
 
-.hero-sub {
+.pf-hero-sub {
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   font-weight: 300;
-  color: var(--text-3);
-  letter-spacing: 0.02em;
-  line-height: 1.75;
-  max-width: 38ch;
-  margin-bottom: 1.8rem;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+  color: var(--text-2);
+  max-width: 42ch;
+  margin-bottom: 2.4rem;
+  text-wrap: pretty;
 }
 
-.hero-meta {
+.pf-stats {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   flex-wrap: wrap;
-  gap: 0.7rem;
-  font-family: var(--font-body);
-  font-size: 0.66rem;
+  gap: 1.6rem 2.6rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--border);
+  max-width: 34rem;
+}
+
+.pf-stats > div,
+.pf-stats-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pf-stats strong {
+  font-family: var(--font-display);
+  font-style: italic;
   font-weight: 400;
-  letter-spacing: 0.16em;
+  font-size: 1.9rem;
+  line-height: 1;
+  color: var(--text);
+}
+
+.pf-stats span {
+  font-family: var(--pf-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-3);
 }
 
-.hero-meta a {
+.pf-stats-link {
+  margin-left: auto;
+  text-align: right;
+  align-items: flex-end;
+  transition: color 0.3s var(--ease);
+}
+
+.pf-stats-link span {
   color: var(--accent);
   transition: color 0.3s var(--ease);
 }
 
-.hero-meta a:hover {
-  color: var(--accent-bright);
-}
-
-.hero-meta .dot {
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: var(--text-3);
-  display: inline-block;
-}
-
-.site-footer {
-  margin-top: 2rem;
-  padding-top: 3rem;
-  border-top: 1px solid var(--border);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-}
-
-.footer-line {
+.pf-stats-link em {
   font-family: var(--font-display);
-  font-style: italic;
-  font-size: 0.95rem;
-  font-weight: 400;
+  font-size: 1.05rem;
   color: var(--text-2);
 }
 
-.footer-links {
-  display: flex;
-  gap: 2.2rem;
+.pf-stats-link:hover span {
+  color: var(--accent-bright);
 }
 
-.footer-links a {
+/* ---------- index (table of contents) ---------- */
+
+.pf-index {
+  min-width: 0;
+}
+
+.pf-index-head {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--border-hover);
+  font-family: var(--pf-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.pf-index ol {
+  list-style: none;
+}
+
+.pf-index-row {
+  all: unset;
+  box-sizing: border-box;
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr) auto 1rem;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  min-height: 3.7rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.4s var(--ease), padding 0.5s var(--ease-liturgy);
+}
+
+.pf-index-row:focus-visible {
+  outline: 1px solid var(--accent-bright);
+  outline-offset: -1px;
+}
+
+.pf-index-num {
+  font-family: var(--pf-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+}
+
+.pf-index-label {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.3rem, 1.4vw + 0.8rem, 1.65rem);
+  line-height: 1.1;
+  color: var(--text);
+  transition: transform 0.6s var(--ease-liturgy);
+}
+
+.pf-index-count {
+  font-family: var(--pf-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  color: var(--text-3);
+}
+
+.pf-index-row svg {
+  width: 11px;
+  height: 11px;
+  fill: var(--text-3);
+  transition: transform 0.5s var(--ease-liturgy), fill 0.3s var(--ease);
+}
+
+.pf-index-skeleton span {
+  display: block;
+  height: 3.7rem;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(90deg, transparent, rgba(214, 219, 222, 0.04), transparent) 0 0 / 220% 100%;
+  animation: pf-shimmer 1.8s ease-in-out infinite;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pf-index-row:hover {
+    background: var(--surface);
+  }
+
+  .pf-index-row:hover .pf-index-label {
+    transform: translateX(6px);
+  }
+
+  .pf-index-row:hover svg {
+    fill: var(--accent-bright);
+    transform: translateY(3px);
+  }
+}
+
+.pf-index-row:active {
+  background: var(--surface);
+}
+
+/* ---------- loading and empty states ---------- */
+
+.pf-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  margin-bottom: 6rem;
+}
+
+.pf-skeleton-card {
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-img);
+  background: linear-gradient(90deg, var(--bg-2), var(--bg-3), var(--bg-2)) 0 0 / 220% 100%;
+  animation: pf-shimmer 1.8s ease-in-out infinite;
+}
+
+.pf-empty {
+  padding: 4rem 0 6rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.5rem;
+  color: var(--text-2);
+}
+
+@keyframes pf-shimmer {
+  from {
+    background-position: 120% 0;
+  }
+  to {
+    background-position: -120% 0;
+  }
+}
+
+/* ---------- footer ---------- */
+
+.pf-footer {
+  margin-top: clamp(1rem, 3vw, 2rem);
+  padding-top: clamp(3rem, 6vw, 5rem);
+  border-top: 1px solid var(--border);
+}
+
+.pf-footer-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.4rem;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.pf-footer-line {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+.pf-footer-line em {
+  color: var(--text-2);
+}
+
+.pf-footer-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 48px;
+  padding: 0 1.6rem;
+  border: 1px solid var(--border-hover);
+  border-radius: 99px;
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text);
+  transition: background 0.4s var(--ease), color 0.4s var(--ease), border-color 0.4s var(--ease), gap 0.5s var(--ease-liturgy);
+}
+
+.pf-footer-button svg {
+  width: 11px;
+  height: 11px;
+  fill: currentColor;
+}
+
+.pf-footer-button:hover,
+.pf-footer-button:focus-visible {
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+  color: var(--bg);
+  gap: 1.1rem;
+}
+
+.pf-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2.2rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--border);
+}
+
+.pf-footer-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
   font-family: var(--font-body);
   font-size: 0.68rem;
-  font-weight: 400;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--text-3);
   transition: color 0.3s var(--ease);
 }
 
-.footer-links a:hover {
+.pf-footer-links a:hover {
   color: var(--accent-bright);
 }
 
-@media (max-width: 900px) {
-  .container {
-    padding: 5rem 0 7rem;
+/* ---------- responsive ---------- */
+
+@media (max-width: 960px) {
+  .pf-hero {
+    grid-template-columns: 1fr;
+    gap: 3rem;
   }
 
-  .hero {
-    margin-bottom: 3.5rem;
-    padding-bottom: 3rem;
+  .pf-stats {
+    max-width: none;
+  }
+
+  .pf-skeleton-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 640px) {
-  .container {
-    width: 95%;
-    padding: 4rem 0 8rem;
+  .pf-page {
+    padding-top: 4.5rem;
+    /* clears the fixed bottom rail */
+    padding-bottom: 9rem;
   }
 
-  .hero {
-    margin-bottom: 3rem;
-    padding-bottom: 2.5rem;
+  .pf-back {
+    margin-bottom: 1.8rem;
   }
 
-  .hero h1 {
-    font-size: 2.8rem;
-    letter-spacing: -0.01em;
-  }
-
-  .hero-sub {
-    font-size: 0.85rem;
-  }
-
-  /* leave room for the fixed bottom tab bar */
-  .site-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+  .pf-hero {
+    gap: 2.4rem;
     margin-bottom: 4.5rem;
+  }
+
+  .pf-hero-copy .pf-eyebrow {
+    margin-bottom: 1.5rem;
+  }
+
+  .pf-hero-title {
+    font-size: clamp(2.9rem, 14.5vw, 3.9rem);
+    margin-bottom: 1.4rem;
+  }
+
+  .pf-hero-sub {
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+
+  .pf-stats strong {
+    font-size: 1.7rem;
+  }
+
+  .pf-stats-link {
+    margin-left: 0;
+    flex-basis: 100%;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    text-align: left;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .pf-index-row {
+    min-height: 3.9rem;
+  }
+
+  .pf-skeleton-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .pf-footer-links {
+    gap: 0.25rem 1.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-index-skeleton span,
+  .pf-skeleton-card {
+    animation: none;
   }
 }

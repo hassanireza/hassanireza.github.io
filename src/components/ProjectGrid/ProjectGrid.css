@@ -1,79 +1,154 @@
-.section {
-  margin-bottom: 6rem;
-  counter-reset: card;
+.pf-section {
+  --pf-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  margin-bottom: clamp(5rem, 9vw, 8rem);
   scroll-margin-top: 6rem;
 }
 
-.section h3 {
-  font-family: var(--font-body);
-  font-size: 0.6rem;
-  font-weight: 400;
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
-  color: var(--text-3);
-  margin-bottom: 2.6rem;
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
+/* ---------- chapter header ---------- */
+
+.pf-section-head {
+  margin-bottom: clamp(2rem, 4vw, 3.2rem);
+  opacity: 0;
+  transform: translateY(18px);
+  filter: blur(4px);
+  transition:
+    opacity 1s var(--ease-liturgy),
+    transform 1s var(--ease-liturgy),
+    filter 1s var(--ease-liturgy);
 }
 
-.section-index {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 0.85rem;
-  letter-spacing: 0.02em;
+.pf-section-head.is-visible {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+.pf-section-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+  font-family: var(--pf-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.pf-section-index {
   color: var(--accent);
 }
 
-.section-rule {
-  content: "";
+.pf-section-rule {
+  position: relative;
   flex: 1;
   height: 1px;
   background: var(--border);
-  transform-origin: 0 50%;
-  position: relative;
-}
-
-.section-rule::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--accent-bright);
-  opacity: 0.5;
-  transform-origin: 0 50%;
-}
-
-.service-box {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-card);
   overflow: hidden;
 }
 
-@media (max-width: 900px) {
-  .service-box {
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+.pf-section-rule::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--accent-bright), transparent 70%);
+  opacity: 0.5;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 1.4s var(--ease-liturgy) 0.15s;
+}
+
+.pf-section-head.is-visible .pf-section-rule::after {
+  transform: scaleX(1);
+}
+
+.pf-section-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 1.5rem 3rem;
+}
+
+.pf-section-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(2.3rem, 4.6vw, 3.9rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.pf-section-blurb {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.86rem;
+  line-height: 1.75;
+  color: var(--text-2);
+  max-width: 40ch;
+  justify-self: end;
+  text-wrap: pretty;
+}
+
+/* ---------- grid ---------- */
+
+.pf-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--pf-tracks, 6), minmax(0, 1fr));
+  column-gap: clamp(1.25rem, 2.4vw, 2.25rem);
+  row-gap: clamp(2.6rem, 4.5vw, 4rem);
+}
+
+.pf-cell {
+  min-width: 0;
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 820px) {
+  .pf-section-body {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .pf-section-blurb {
+    justify-self: start;
   }
 }
 
 @media (max-width: 640px) {
-  .section {
-    margin-bottom: 4.5rem;
+  .pf-section {
     scroll-margin-top: 1.5rem;
   }
 
-  .service-box {
-    grid-template-columns: 1fr;
-    gap: 1px;
+  .pf-section-meta {
+    margin-bottom: 1.1rem;
+  }
+
+  .pf-section-title {
+    font-size: clamp(2.2rem, 11vw, 2.8rem);
+  }
+
+  .pf-section-blurb {
+    font-size: 0.88rem;
+  }
+
+  .pf-grid {
+    row-gap: 2.5rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tilt {
-    opacity: 1 !important;
-    transform: none !important;
+  .pf-section-head {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+
+  .pf-section-rule::after {
+    transform: scaleX(1);
+    transition: none;
   }
 }
