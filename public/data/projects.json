@@ -1,13 +1,5 @@
 [
   {
-    "id": "noctiluca",
-    "title": "Noctiluca",
-    "desc": "A mobile-first Python puzzle game.",
-    "img": "noctiluca.webp",
-    "category": "game-design",
-    "href": "https://hassanireza.github.io/noctiluca/"
-  },
-  {
     "id": "istanbul-navigator",
     "title": "Istanbul Navigator",
     "desc": "Istanbul map & transit navigator.",
