@@ -80,14 +80,6 @@
     "href": "https://github.com/hassanireza/videoForge"
   },
   {
-    "id": "undertow",
-    "title": "Undertow",
-    "desc": "Restraint is a design choice.",
-    "img": "undertow.webp",
-    "category": "frontend-development",
-    "href": "https://hassanireza.github.io/undertow/"
-  },
-  {
     "id": "meridian-health",
     "title": "Meridian Health",
     "desc": "Smarter symptom checking, simplified.",
@@ -110,6 +102,14 @@
     "img": "black-magic.webp",
     "category": "frontend-development",
     "href": "https://hassanireza.github.io/blackMagic/"
+  },
+  {
+    "id": "undertow",
+    "title": "Undertow",
+    "desc": "Restraint is a design choice.",
+    "img": "undertow.webp",
+    "category": "frontend-development",
+    "href": "https://hassanireza.github.io/undertow/"
   },
   {
     "id": "atelier-aura",
