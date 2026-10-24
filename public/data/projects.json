@@ -1,5 +1,13 @@
 [
   {
+    "id": "lumenari-system",
+    "title": "Lumenari System",
+    "desc": "Six coding worlds, one cosmic learning adventure.",
+    "img": "lumenari-system.webp",
+    "category": "game-design",
+    "href": "https://github.com/hassanireza/lumenari-system"
+  },
+  {
     "id": "istanbul-navigator",
     "title": "Istanbul Navigator",
     "desc": "Istanbul map & transit navigator.",
