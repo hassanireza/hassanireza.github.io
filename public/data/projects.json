@@ -64,14 +64,6 @@
     "href": "https://github.com/hassanireza/codeEditor"
   },
   {
-    "id": "abyssal-liturgy",
-    "title": "Abyssal Liturgy",
-    "desc": "A scroll-synced coffee brewing guide.",
-    "img": "abyssalLiturgy.webp",
-    "category": "software-design",
-    "href": "https://hassanireza.github.io/abyssalLiturgy/"
-  },
-  {
     "id": "obsidian-game-store",
     "title": "Obsidian Game Store",
     "desc": "Instant browser games, no downloads.",
@@ -238,6 +230,14 @@
     "img": "aetheros-cosmos.webp",
     "category": "frontend-development",
     "href": "https://hassanireza.github.io/aetherosCosmos/"
+  },
+  {
+    "id": "abyssal-liturgy",
+    "title": "Abyssal Liturgy",
+    "desc": "A scroll-synced coffee brewing guide.",
+    "img": "abyssalLiturgy.webp",
+    "category": "frontend-development",
+    "href": "https://hassanireza.github.io/abyssalLiturgy/"
   },
   {
     "id": "idea",
