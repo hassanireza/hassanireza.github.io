@@ -123,3 +123,24 @@ export async function putBinaryFile(
     throw new GitHubApiError(body.message || `Failed to upload ${path}`, res.status);
   }
 }
+
+/**
+ * Deletes a file from BRANCH (a real commit). Resolves to false when the
+ * file is already gone (404), so callers can treat "already deleted" as
+ * success. GitHub requires the blob sha of the file being removed.
+ */
+export async function deleteFile(token: string, path: string, message: string): Promise<boolean> {
+  const sha = await getFileSha(token, path);
+  if (!sha) return false;
+  const res = await fetch(`${API_ROOT}/contents/${path}`, {
+    method: "DELETE",
+    headers: { ...authHeaders(token), "Content-Type": "application/json" },
+    body: JSON.stringify({ message, sha, branch: BRANCH }),
+  });
+  if (res.status === 404) return false;
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new GitHubApiError(body.message || `Failed to delete ${path}`, res.status);
+  }
+  return true;
+}

@@ -2,21 +2,25 @@
   {
     "id": "game-design",
     "label": "Game Design",
-    "icon": "layout"
+    "icon": "layout",
+    "blurb": "Browser games, puzzle apps and reference tools, designed around the loop of play."
   },
   {
     "id": "frontend-development",
     "label": "Frontend Development",
-    "icon": "layout"
+    "icon": "layout",
+    "blurb": "Interfaces built from the ground up, from product concepts to complete web apps."
   },
   {
-    "id": "vibe-coding",
-    "label": "Vibe Coding",
-    "icon": "code"
+    "id": "software-design",
+    "label": "Software Design",
+    "icon": "code",
+    "blurb": "Software shaped as a product: editors, notebooks and immersive showcases."
   },
   {
     "id": "animations",
     "label": "Animations",
-    "icon": "play"
+    "icon": "play",
+    "blurb": "Hand-animated motion pieces, rigged, lit and timed frame by frame."
   }
 ]

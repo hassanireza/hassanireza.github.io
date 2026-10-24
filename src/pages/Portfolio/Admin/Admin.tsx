@@ -6,6 +6,7 @@ import AdminAuthGate from "../../../lib/admin/AdminAuthGate";
 import ProjectList from "./ProjectList";
 import ProjectForm from "./ProjectForm";
 import SiteSettingsForm from "./SiteSettingsForm";
+import { removeOrphanedAssets } from "../../../lib/admin/projectAssets";
 import type { Category, Project, SiteConfig } from "../../../types/project";
 import "../../../lib/admin/admin-shared.css";
 import "./Admin.css";
@@ -50,6 +51,7 @@ export default function Admin() {
   }, [getToken]);
 
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   useEffect(() => {
     if (state.status === "signed-in") loadData();
@@ -155,8 +157,46 @@ export default function Admin() {
     }
   }
 
+  /**
+   * Reports the outcome of an asset cleanup. A failed cleanup is not a failed
+   * save: the project is already gone from projects.json, so the site is
+   * consistent; there is just a stray file left to remove by hand.
+   */
+  function reportCleanup(removed: string[], failed: string[]) {
+    if (failed.length > 0) {
+      setSaveError(`Saved, but could not delete ${failed.join(", ")} from the repo. Remove it manually.`);
+    }
+    if (removed.length > 0) {
+      setNotice(`Also removed from the repo: ${removed.join(", ")}`);
+    }
+  }
+
+  /**
+   * Deleting a project also deletes its thumbnail (and motion video, if any)
+   * from public/assets/images, unless another project still uses the file.
+   * Order matters: projects.json is saved first, so the live site never
+   * points at a file that is already gone.
+   */
   async function deleteProject(id: string) {
-    await saveProjects((current) => current.filter((p) => p.id !== id), `Remove project: ${id}`);
+    const token = getToken();
+    setNotice(null);
+    let removedProject: Project | undefined;
+    let remaining: Project[] = [];
+    await saveProjects((current) => {
+      removedProject = current.find((p) => p.id === id);
+      remaining = current.filter((p) => p.id !== id);
+      return remaining;
+    }, `Remove project: ${id}`);
+
+    if (token && removedProject) {
+      const { removed, failed } = await removeOrphanedAssets(
+        token,
+        [removedProject.img, removedProject.video],
+        remaining,
+        `project ${id} deleted`,
+      );
+      reportCleanup(removed, failed);
+    }
   }
 
   /** Moves a project up/down among its own category's projects (i.e. within its section on the live site). */
@@ -260,6 +300,7 @@ export default function Admin() {
 
           {loadError && <p className="admin-error">{loadError}</p>}
           {saveError && <p className="admin-error">{saveError}</p>}
+          {notice && <p className="admin-success" role="status">{notice}</p>}
 
           {loading && !projectsFile ? (
             <p className="admin-status">Loading repo data&hellip;</p>
@@ -275,7 +316,9 @@ export default function Admin() {
                   await saveCategories(next, `Add category: ${cat.label}`);
                 }}
                 onSubmit={async (project) => {
-                  const exists = (projectsFile?.data ?? []).some((p) => p.id === project.id);
+                  setNotice(null);
+                  const previous = (projectsFile?.data ?? []).find((p) => p.id === project.id);
+                  const exists = previous !== undefined;
                   await saveProjects(
                     (current) => {
                       const alreadyThere = current.some((p) => p.id === project.id);
@@ -288,6 +331,18 @@ export default function Admin() {
                     },
                     exists ? `Update project: ${project.title}` : `Add project: ${project.title}`,
                   );
+                  // Replacing a legacy image uploads under a new filename, which
+                  // would strand the old file in the repo. Clean it up.
+                  const token = getToken();
+                  if (token && previous && previous.img !== project.img) {
+                    const { removed, failed } = await removeOrphanedAssets(
+                      token,
+                      [previous.img],
+                      [...(projectsFile?.data ?? []).filter((p) => p.id !== project.id), project],
+                      `image replaced for ${project.id}`,
+                    );
+                    reportCleanup(removed, failed);
+                  }
                   setEditing(null);
                 }}
               />

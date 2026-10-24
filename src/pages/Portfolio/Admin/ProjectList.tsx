@@ -342,6 +342,7 @@ export default function ProjectList({
                           className="admin-btn admin-btn-danger admin-btn-sm"
                           onClick={() => handleDelete(p.id)}
                           disabled={deleting === p.id}
+                          title="Deletes the project and its thumbnail from the repo"
                         >
                           {deleting === p.id ? "\u2026" : "Confirm"}
                         </button>

@@ -22,6 +22,8 @@ export interface Project {
 export interface Category {
   id: string;
   label: string;
+  /** Optional one-line description shown under the section title on /portfolio. */
+  blurb?: string;
   icon: "code" | "layout" | "play" | "manifesto" | "palette" | "type" | "marks" | "discipline";
 }
 
