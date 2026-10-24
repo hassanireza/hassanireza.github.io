@@ -1,5 +1,13 @@
 [
   {
+    "id": "kalyxis",
+    "title": "Kalyxis",
+    "desc": "Code on the go, built for mobile.",
+    "img": "kalyxis.webp",
+    "category": "software-design",
+    "href": "https://kalyxis.github.io/"
+  },
+  {
     "id": "lumenari-system",
     "title": "Lumenari System",
     "desc": "Six coding worlds, one cosmic learning adventure.",
