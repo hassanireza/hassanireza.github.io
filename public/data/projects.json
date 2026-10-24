@@ -40,14 +40,6 @@
     "href": "https://2dota.github.io/"
   },
   {
-    "id": "supercar-showcase",
-    "title": "Supercar Showcase",
-    "desc": "A scroll-driven, frame-by-frame supercar showcase.",
-    "img": "supercar-showcase.webp",
-    "category": "software-design",
-    "href": "https://hassanireza.github.io/supercarShowcase/"
-  },
-  {
     "id": "pyxis",
     "title": "Pyxis",
     "desc": "A Python only computational notebook.",
@@ -230,6 +222,14 @@
     "img": "laserFrame.webp",
     "category": "frontend-development",
     "href": "https://hassanireza.github.io/laserFrame/"
+  },
+  {
+    "id": "supercar-showcase",
+    "title": "Supercar Showcase",
+    "desc": "A scroll-driven, frame-by-frame supercar showcase.",
+    "img": "supercar-showcase.webp",
+    "category": "frontend-development",
+    "href": "https://hassanireza.github.io/supercarShowcase/"
   },
   {
     "id": "idea",
