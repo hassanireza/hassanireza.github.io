@@ -32,6 +32,14 @@
     "href": "https://woodlandchess.github.io/"
   },
   {
+    "id": "obsidian-game-store",
+    "title": "Obsidian Game Store",
+    "desc": "Instant browser games, no downloads.",
+    "img": "obsidian-game-store.webp",
+    "category": "game-design",
+    "href": "https://hassanireza.github.io/obsidian/"
+  },
+  {
     "id": "vespers",
     "title": "Vespers",
     "desc": "Curated library of instant play, browser games.",
@@ -62,14 +70,6 @@
     "img": "abyssal-liturgy-code-editor.webp",
     "category": "software-design",
     "href": "https://github.com/hassanireza/codeEditor"
-  },
-  {
-    "id": "obsidian-game-store",
-    "title": "Obsidian Game Store",
-    "desc": "Instant browser games, no downloads.",
-    "img": "obsidian-game-store.webp",
-    "category": "game-design",
-    "href": "https://hassanireza.github.io/obsidian/"
   },
   {
     "id": "video-forge",
