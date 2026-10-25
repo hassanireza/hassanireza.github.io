@@ -8,14 +8,6 @@
     "href": "https://kalyxis.github.io/"
   },
   {
-    "id": "lumenari-system",
-    "title": "Lumenari System",
-    "desc": "Six coding worlds, one cosmic learning adventure.",
-    "img": "lumenari-system.webp",
-    "category": "game-design",
-    "href": "https://hassanireza.github.io/lumenari-system/"
-  },
-  {
     "id": "istanbul-navigator",
     "title": "Istanbul Navigator",
     "desc": "Istanbul map & transit navigator.",
@@ -38,6 +30,14 @@
     "img": "obsidian-game-store.webp",
     "category": "game-design",
     "href": "https://hassanireza.github.io/obsidian/"
+  },
+  {
+    "id": "lumenari-system",
+    "title": "Lumenari System",
+    "desc": "Six coding worlds, one cosmic learning adventure.",
+    "img": "lumenari-system.webp",
+    "category": "game-design",
+    "href": "https://hassanireza.github.io/lumenari-system/"
   },
   {
     "id": "vespers",
