@@ -242,7 +242,7 @@
   {
     "id": "atramenth",
     "title": "Atramenth",
-    "desc": "A quiet, mobile-first reader for the Qur’ān in Eng",
+    "desc": "A quiet, mobile-first reader for the Qur’ān.",
     "img": "atramenth.webp",
     "category": "frontend-development",
     "href": "https://atramenth.github.io/"
