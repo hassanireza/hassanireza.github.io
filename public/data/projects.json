@@ -1,13 +1,5 @@
 [
   {
-    "id": "atramenth",
-    "title": "Atramenth",
-    "desc": "A quiet, mobile-first reader for the Qur’ān in Eng",
-    "img": "atramenth.webp",
-    "category": "frontend-development",
-    "href": "https://atramenth.github.io/"
-  },
-  {
     "id": "kalyxis",
     "title": "Kalyxis",
     "desc": "Code on the go, built for mobile.",
@@ -246,6 +238,14 @@
     "img": "abyssalLiturgy.webp",
     "category": "frontend-development",
     "href": "https://hassanireza.github.io/abyssalLiturgy/"
+  },
+  {
+    "id": "atramenth",
+    "title": "Atramenth",
+    "desc": "A quiet, mobile-first reader for the Qur’ān in Eng",
+    "img": "atramenth.webp",
+    "category": "frontend-development",
+    "href": "https://atramenth.github.io/"
   },
   {
     "id": "idea",
