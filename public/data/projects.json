@@ -32,6 +32,14 @@
     "href": "https://hassanireza.github.io/obsidian/"
   },
   {
+    "id": "lexera",
+    "title": "Lexera",
+    "desc": "Learn Turkish through play.",
+    "img": "lexera.webp",
+    "category": "game-design",
+    "href": "https://hassanireza.github.io/lexera/"
+  },
+  {
     "id": "lumenari-system",
     "title": "Lumenari System",
     "desc": "Six coding worlds, one cosmic learning adventure.",
@@ -126,14 +134,6 @@
     "img": "verso.webp",
     "category": "frontend-development",
     "href": "https://github.com/hassanireza/verso"
-  },
-  {
-    "id": "lexera",
-    "title": "Lexera",
-    "desc": "Learn Turkish through play.",
-    "img": "lexera.webp",
-    "category": "game-design",
-    "href": "https://hassanireza.github.io/lexera/"
   },
   {
     "id": "nexus-store",
