@@ -130,10 +130,10 @@
   {
     "id": "lexera",
     "title": "Lexera",
-    "desc": "Learn vocabulary through play.",
+    "desc": "Learn Turkish through play.",
     "img": "lexera.webp",
     "category": "frontend-development",
-    "href": "https://lexerate.up.railway.app/"
+    "href": "https://hassanireza.github.io/lexera/"
   },
   {
     "id": "nexus-store",
