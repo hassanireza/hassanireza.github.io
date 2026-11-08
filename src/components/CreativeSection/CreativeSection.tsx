@@ -94,22 +94,21 @@ function SquareRun({ items, onOpen }: { items: RunItem[]; onOpen: (w: CreativeWo
 }
 
 /**
- * The Creative Coding chapter. Works keep their order; consecutive works of
- * the same cover style share a grid, so wide and square covers can be mixed
- * freely. Tiles open the studio (video plus source) instead of linking out.
+ * The Creative Coding chapter. Works keep their order and share one grid,
+ * so wide and square covers can be mixed freely. Tiles open the studio (video plus source) instead of linking out.
  */
 export default function CreativeSection({ index, title, blurb, works, onOpen }: CreativeSectionProps) {
   const { ref: headRef, visible } = useReveal<HTMLElement>(0.3);
   const count = String(works.length).padStart(2, "0");
 
+  // One flow. A set of only wide covers uses the 3-column wide plan; as soon
+  // as square covers are present, every work shares one compact grid (up to 5
+  // across) so a handful of mixed works sit together in a single row instead
+  // of each style forming its own row.
   const runs = useMemo(() => {
-    const out: Run[] = [];
-    works.forEach((work, n) => {
-      const cover = coverOf(work);
-      const last = out[out.length - 1];
-      if (last && last.cover === cover) last.items.push({ work, n });
-      else out.push({ cover, items: [{ work, n }] });
-    });
+    const items = works.map((work, n) => ({ work, n }));
+    const allWide = works.every((w) => coverOf(w) === "wide");
+    const out: Run[] = items.length ? [{ cover: allWide ? "wide" : "square", items }] : [];
     return out;
   }, [works]);
 
