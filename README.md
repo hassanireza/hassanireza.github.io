@@ -85,6 +85,8 @@ Type follows the same restraint: **Cormorant Garamond**, italic, for display; **
 
 The Creative Coding chapter on `/portfolio` is data-driven. Put the media and source under `public/assets/creative/<id>/` (an H.264 `.mp4`, a small silent preview loop, a poster image, and the source file), then add one entry to `works` in `public/data/creative-coding.json`. Set `width` and `height` to the video's pixel size: any aspect ratio fits without cropping. Set `cover` to `"wide"` (16:9 tile, 3 per row) or `"square"` (1:1 tile, up to 5 per row); if omitted, near-square videos get `square`. A piece can be linked directly with `/portfolio#creative-coding/<id>`.
 
+The same thing can be done without touching files: open `/portfolio/admin`, choose the **Creative Coding** tab, and upload the video, pick a poster frame, and paste or open the source code. Each save is a commit, like the Projects tab.
+
 No global state library. State is local to each page (`useState` and `useEffect`), which is enough for a site of this scope. That's a decision, not an omission.
 
 ---
