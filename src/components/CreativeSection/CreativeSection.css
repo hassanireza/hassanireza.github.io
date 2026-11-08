@@ -71,70 +71,75 @@
   margin-top: clamp(2.6rem, 4.5vw, 4rem);
 }
 
-.cc-squares {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: clamp(0.9rem, 2vw, 1.6rem);
-  row-gap: clamp(1.8rem, 3vw, 2.6rem);
-}
-
-@media (min-width: 640px) {
-  .cc-squares {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 900px) {
-  .cc-squares {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1240px) {
-  .cc-squares {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-}
-
 .cc-card.is-square .pf-frame {
   aspect-ratio: 1 / 1;
 }
 
-.cc-card.is-square .pf-caption {
-  padding-top: 0.8rem;
+/* Each square cell is a size container, so a tile compacts according to the
+   width it actually gets (5 across, or 2 across on a phone) and relaxes to
+   the full caption when it has room (2 or 3 across, or a lone feature). */
+.cc-squares {
+  display: flex;
+  flex-direction: column;
+  row-gap: clamp(2.6rem, 4.5vw, 4rem);
 }
 
-.cc-card.is-square .pf-title {
-  font-size: clamp(1.15rem, 0.6vw + 1rem, 1.35rem);
+.cc-row {
+  display: grid;
+  column-gap: clamp(1.25rem, 2.4vw, 2.25rem);
 }
 
-.cc-card.is-square .pf-desc {
-  margin-top: 0.35rem;
-  font-size: 0.78rem;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.cc-cell {
+  min-width: 0;
+  container-type: inline-size;
 }
 
-.cc-card.is-square .cc-tags {
-  display: none;
+/* A lone square is the feature: the cover beside a larger caption. */
+.cc-card.is-square.is-feature .pf-link {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
 }
 
-.cc-card.is-square .pf-go {
-  width: 26px;
-  height: 26px;
+.cc-card.is-square.is-feature .pf-frame {
+  max-width: 560px;
 }
 
-.cc-card.is-square .pf-badge {
-  left: 8px;
-  bottom: 8px;
-  padding: 0.32rem 0.6rem 0.32rem 0.5rem;
-  font-size: 0.5rem;
-  letter-spacing: 0.16em;
-}
+@container (max-width: 330px) {
+  .cc-card.is-square .pf-caption {
+    padding-top: 0.8rem;
+  }
 
-.cc-card.is-square .pf-corners {
-  inset: 8px;
+  .cc-card.is-square .pf-title {
+    font-size: clamp(1.15rem, 0.6vw + 1rem, 1.35rem);
+  }
+
+  .cc-card.is-square .pf-desc {
+    margin-top: 0.35rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .cc-card.is-square .cc-tags {
+    display: none;
+  }
+
+  .cc-card.is-square .pf-go {
+    width: 26px;
+    height: 26px;
+  }
+
+  .cc-card.is-square .pf-badge {
+    left: 8px;
+    bottom: 8px;
+    padding: 0.32rem 0.6rem 0.32rem 0.5rem;
+    font-size: 0.5rem;
+    letter-spacing: 0.16em;
+  }
+
+  .cc-card.is-square .pf-corners {
+    inset: 8px;
+  }
 }

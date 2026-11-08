@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import CreativeCard from "./CreativeCard";
 import { useGridColumns } from "../../hooks/useGridColumns";
 import { useReveal } from "../../hooks/useReveal";
+import { useSquareColumns } from "../../hooks/useSquareColumns";
+import { planSquareRows } from "../../lib/creativeLayout";
 import { GRID_TRACKS, planCells } from "../../lib/portfolioLayout";
 import { coverOf, CREATIVE_SECTION_ID, type CreativeCover, type CreativeWork } from "../../types/creative";
 import "../ProjectGrid/ProjectGrid.css";
@@ -51,12 +53,41 @@ function WideRun({ items, onOpen }: { items: RunItem[]; onOpen: (w: CreativeWork
   );
 }
 
-/** 1:1 covers: a denser grid, 2 / 3 / 4 / 5 per row as the screen widens. */
+/** 1:1 covers: up to 5 per row, with the same count-aware plan as the wide grid. */
 function SquareRun({ items, onOpen }: { items: RunItem[]; onOpen: (w: CreativeWork) => void }) {
+  const columns = useSquareColumns();
+  const rows = useMemo(() => {
+    const out: RunItem[][] = [];
+    let at = 0;
+    for (const size of planSquareRows(items.length, columns)) {
+      out.push(items.slice(at, at + size));
+      at += size;
+    }
+    return out;
+  }, [items, columns]);
+
   return (
     <div className="cc-squares cc-run">
-      {items.map(({ work, n }, i) => (
-        <CreativeCard key={work.id} work={work} number={num(n)} cover="square" stagger={i % 5} onOpen={onOpen} />
+      {rows.map((row, r) => (
+        <div
+          className="cc-row"
+          key={row[0].work.id}
+          style={{ gridTemplateColumns: `repeat(${row.length}, minmax(0, 1fr))` }}
+          data-row-size={row.length}
+        >
+          {row.map(({ work, n }, col) => (
+            <div className="cc-cell" key={work.id}>
+              <CreativeCard
+                work={work}
+                number={num(n)}
+                cover="square"
+                feature={row.length === 1}
+                stagger={col + (r % 2)}
+                onOpen={onOpen}
+              />
+            </div>
+          ))}
+        </div>
       ))}
     </div>
   );
