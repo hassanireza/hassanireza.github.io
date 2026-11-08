@@ -10,6 +10,7 @@
       "poster": "assets/creative/scrying-basin/poster.webp",
       "video": "assets/creative/scrying-basin/scrying-basin.mp4",
       "preview": "assets/creative/scrying-basin/scrying-basin-preview.mp4",
+      "cover": "square",
       "width": 1080,
       "height": 1080,
       "tags": ["Python", "NumPy", "Generative", "Seamless loop"],

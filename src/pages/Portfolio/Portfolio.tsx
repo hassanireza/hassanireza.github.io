@@ -110,22 +110,24 @@ export default function Portfolio() {
   const creativeWorks = useMemo<CreativeWork[]>(() => creative?.works ?? [], [creative]);
 
   /**
-   * Every chapter the page shows, in order: the project categories, then
-   * Creative Coding. The hero index, the floating rail, the scroll-spy and
+   * Every chapter the page shows, in order: Creative Coding first, then the
+   * project categories. The hero index, the floating rail, the scroll-spy and
    * the map all read from this one list, so they can never disagree.
    */
   const chapters = useMemo(() => {
-    const list = sections.map((s) => ({ id: s.id, index: s.index, title: s.title, count: s.projects.length }));
+    const list: { id: string; title: string; count: number }[] = [];
     if (creativeWorks.length > 0) {
       list.push({
         id: CREATIVE_SECTION_ID,
-        index: pad(list.length + 1),
         title: creative?.title || FALLBACK_CREATIVE.title,
         count: creativeWorks.length,
       });
     }
-    return list;
+    sections.forEach((s) => list.push({ id: s.id, title: s.title, count: s.projects.length }));
+    return list.map((c, i) => ({ ...c, index: pad(i + 1) }));
   }, [sections, creativeWorks, creative]);
+
+  const creativeChapter = chapters.find((c) => c.id === CREATIVE_SECTION_ID);
 
   const total = chapters.reduce((sum, c) => sum + c.count, 0);
 
@@ -374,27 +376,27 @@ export default function Portfolio() {
           <p className="pf-empty">New work is on its way. Check back soon.</p>
         )}
 
+        {creativeChapter && (
+          <CreativeSection
+            index={creativeChapter.index}
+            title={creativeChapter.title}
+            blurb={creative?.blurb}
+            works={creativeWorks}
+            onOpen={openWork}
+          />
+        )}
+
         {sections.map((section) => (
           <ProjectGrid
             key={section.id}
             id={section.id}
-            index={section.index}
+            index={chapters.find((c) => c.id === section.id)?.index ?? section.index}
             title={section.title}
             blurb={section.blurb}
             projects={section.projects}
             onPlay={setPlaying}
           />
         ))}
-
-        {creativeWorks.length > 0 && (
-          <CreativeSection
-            index={chapters[chapters.length - 1].index}
-            title={chapters[chapters.length - 1].title}
-            blurb={creative?.blurb}
-            works={creativeWorks}
-            onOpen={openWork}
-          />
-        )}
 
         <footer className="pf-footer">
           <div className="pf-footer-cta">

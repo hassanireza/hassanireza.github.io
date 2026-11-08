@@ -3,12 +3,12 @@ import CreativeCard from "./CreativeCard";
 import { useGridColumns } from "../../hooks/useGridColumns";
 import { useReveal } from "../../hooks/useReveal";
 import { GRID_TRACKS, planCells } from "../../lib/portfolioLayout";
-import { CREATIVE_SECTION_ID, type CreativeWork } from "../../types/creative";
+import { coverOf, CREATIVE_SECTION_ID, type CreativeCover, type CreativeWork } from "../../types/creative";
 import "../ProjectGrid/ProjectGrid.css";
 import "./CreativeSection.css";
 
 interface CreativeSectionProps {
-  /** Two digit chapter number, e.g. "05". */
+  /** Two digit chapter number, e.g. "01". */
   index: string;
   title: string;
   blurb?: string;
@@ -16,17 +16,71 @@ interface CreativeSectionProps {
   onOpen: (work: CreativeWork) => void;
 }
 
+interface RunItem {
+  work: CreativeWork;
+  /** Position in the whole section, for the two digit number. */
+  n: number;
+}
+
+interface Run {
+  cover: CreativeCover;
+  items: RunItem[];
+}
+
+const num = (n: number) => String(n + 1).padStart(2, "0");
+
+/** 16:9 covers: the same count-aware row plan as every other chapter. */
+function WideRun({ items, onOpen }: { items: RunItem[]; onOpen: (w: CreativeWork) => void }) {
+  const columns = useGridColumns();
+  const cells = useMemo(() => planCells(items.length, columns), [items.length, columns]);
+  return (
+    <div className="pf-grid cc-run" style={{ ["--pf-tracks" as string]: GRID_TRACKS }}>
+      {items.map(({ work, n }, i) => (
+        <div className="pf-cell" key={work.id} style={{ gridColumn: `span ${cells[i].span}` }}>
+          <CreativeCard
+            work={work}
+            number={num(n)}
+            cover="wide"
+            feature={cells[i].feature}
+            stagger={cells[i].col}
+            onOpen={onOpen}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** 1:1 covers: a denser grid, 2 / 3 / 4 / 5 per row as the screen widens. */
+function SquareRun({ items, onOpen }: { items: RunItem[]; onOpen: (w: CreativeWork) => void }) {
+  return (
+    <div className="cc-squares cc-run">
+      {items.map(({ work, n }, i) => (
+        <CreativeCard key={work.id} work={work} number={num(n)} cover="square" stagger={i % 5} onOpen={onOpen} />
+      ))}
+    </div>
+  );
+}
+
 /**
- * The Creative Coding chapter. Same editorial header and count-aware row
- * plan as every other chapter, so it reads as part of the page; the tiles
- * differ in that they open the studio (video plus source) instead of
- * linking out.
+ * The Creative Coding chapter. Works keep their order; consecutive works of
+ * the same cover style share a grid, so wide and square covers can be mixed
+ * freely. Tiles open the studio (video plus source) instead of linking out.
  */
 export default function CreativeSection({ index, title, blurb, works, onOpen }: CreativeSectionProps) {
-  const columns = useGridColumns();
-  const cells = useMemo(() => planCells(works.length, columns), [works.length, columns]);
   const { ref: headRef, visible } = useReveal<HTMLElement>(0.3);
   const count = String(works.length).padStart(2, "0");
+
+  const runs = useMemo(() => {
+    const out: Run[] = [];
+    works.forEach((work, n) => {
+      const cover = coverOf(work);
+      const last = out[out.length - 1];
+      if (last && last.cover === cover) last.items.push({ work, n });
+      else out.push({ cover, items: [{ work, n }] });
+    });
+    return out;
+  }, [works]);
 
   return (
     <section className="pf-section cc-section" id={CREATIVE_SECTION_ID} aria-labelledby={`${CREATIVE_SECTION_ID}-title`}>
@@ -46,22 +100,13 @@ export default function CreativeSection({ index, title, blurb, works, onOpen }: 
         </div>
       </header>
 
-      <div className="pf-grid" style={{ ["--pf-tracks" as string]: GRID_TRACKS }}>
-        {works.map((work, i) => {
-          const cell = cells[i];
-          return (
-            <div className="pf-cell" key={work.id} style={{ gridColumn: `span ${cell.span}` }} data-row-size={cell.rowSize}>
-              <CreativeCard
-                work={work}
-                number={String(i + 1).padStart(2, "0")}
-                feature={cell.feature}
-                stagger={cell.col}
-                onOpen={onOpen}
-              />
-            </div>
-          );
-        })}
-      </div>
+      {runs.map((run, i) =>
+        run.cover === "square" ? (
+          <SquareRun key={i} items={run.items} onOpen={onOpen} />
+        ) : (
+          <WideRun key={i} items={run.items} onOpen={onOpen} />
+        ),
+      )}
     </section>
   );
 }

@@ -2,13 +2,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { AssetResolver } from "../../lib/asset";
 import { useReveal } from "../../hooks/useReveal";
 import { useTilt } from "../../hooks/useTilt";
-import type { CreativeWork } from "../../types/creative";
+import type { CreativeCover, CreativeWork } from "../../types/creative";
 
 interface CreativeCardProps {
   work: CreativeWork;
   /** Two digit position inside the section, e.g. "01". */
   number: string;
   feature?: boolean;
+  /** Cover style: 16:9 "wide" or compact 1:1 "square". */
+  cover?: CreativeCover;
   stagger?: number;
   onOpen: (work: CreativeWork) => void;
 }
@@ -32,7 +34,7 @@ const PlayGlyph = () => (
  * keyboard focus, or, on touch screens, while the tile is mostly on screen;
  * it is never fetched until then, and never plays under reduced motion.
  */
-export default function CreativeCard({ work, number, feature = false, stagger = 0, onOpen }: CreativeCardProps) {
+export default function CreativeCard({ work, number, feature = false, cover = "wide", stagger = 0, onOpen }: CreativeCardProps) {
   const { ref: revealRef, visible } = useReveal<HTMLElement>(0.1);
   const tiltRef = useTilt<HTMLDivElement>({ max: 2.5 });
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -79,7 +81,7 @@ export default function CreativeCard({ work, number, feature = false, stagger = 
     <article
       ref={revealRef}
       id={`work-${work.id}`}
-      className={`pf-card cc-card${feature ? " is-feature" : ""}${visible ? " is-visible" : ""}`}
+      className={`pf-card cc-card${cover === "square" ? " is-square" : ""}${feature ? " is-feature" : ""}${visible ? " is-visible" : ""}`}
       style={{ ["--pf-stagger" as string]: stagger }}
     >
       <button
