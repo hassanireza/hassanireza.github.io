@@ -1,0 +1,66 @@
+/**
+ * Creative Coding works. Stored in /public/data/creative-coding.json and
+ * fetched at runtime, the same way projects.json is, so adding a piece is a
+ * data change: drop the media and source file under public/assets/creative/
+ * and add one entry to "works".
+ *
+ * Media can be any aspect ratio. `width` and `height` are the pixel size of
+ * `video`; the grid tile and the studio player both letterbox to that ratio
+ * instead of cropping.
+ */
+export interface CreativeCode {
+  /** Path under the site root, e.g. "assets/creative/<id>/<file>.py". */
+  src: string;
+  /** Name shown in the editor toolbar and used for the download. */
+  filename: string;
+  /** Monaco language id, e.g. "python", "javascript", "glsl". */
+  language: string;
+}
+
+export interface CreativeSpec {
+  label: string;
+  value: string;
+}
+
+export interface CreativeWork {
+  id: string;
+  title: string;
+  desc: string;
+  year?: number;
+  poster: string;
+  video: string;
+  /** Small, silent loop used by the grid tile. Falls back to `video`. */
+  preview?: string;
+  width: number;
+  height: number;
+  tags?: string[];
+  about?: string[];
+  specs?: CreativeSpec[];
+  /** One-line command shown with a copy button, e.g. how to run the piece. */
+  run?: string;
+  code: CreativeCode;
+}
+
+export interface CreativeCollection {
+  title: string;
+  blurb?: string;
+  works: CreativeWork[];
+}
+
+export const CREATIVE_SECTION_ID = "creative-coding";
+
+export const FALLBACK_CREATIVE: CreativeCollection = {
+  title: "Creative Coding",
+  blurb: "Motion and image made from code alone. Watch the output, then open the source behind it.",
+  works: [],
+};
+
+/** "#creative-coding/<id>" -> "<id>", anything else -> null. */
+export function workIdFromHash(hash: string): string | null {
+  const match = hash.match(new RegExp(`^#${CREATIVE_SECTION_ID}/([\\w-]+)$`));
+  return match ? match[1] : null;
+}
+
+export function workHash(id: string): string {
+  return `#${CREATIVE_SECTION_ID}/${id}`;
+}

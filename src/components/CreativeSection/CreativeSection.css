@@ -1,0 +1,66 @@
+/* Creative Coding tiles. Builds on the shared pf-card styles; only what is
+   different about a letterboxed, video-capable frame lives here. */
+
+/* Any aspect ratio fits: the poster is contained over a blurred copy of itself. */
+.cc-frame .cc-bleed {
+  position: absolute;
+  inset: -12%;
+  background-position: center;
+  background-size: cover;
+  filter: blur(26px) saturate(1.1) brightness(0.55);
+  transform: scale(1.1);
+}
+
+.cc-frame img.cc-poster {
+  object-fit: contain;
+}
+
+.cc-frame .cc-preview {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  filter: grayscale(0.1) saturate(0.95) brightness(0.95) contrast(1.05);
+  transition: opacity 0.5s var(--ease);
+}
+
+.cc-frame .cc-preview.is-playing {
+  opacity: 1;
+}
+
+/* The tile reads as a lit screen: a touch brighter than static thumbnails. */
+.cc-card .pf-frame img.cc-poster {
+  filter: grayscale(0.35) saturate(0.85) brightness(0.9) contrast(1.05);
+}
+
+.cc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.85rem;
+  list-style: none;
+}
+
+.cc-tags li {
+  padding: 0.22rem 0.6rem;
+  border: 1px solid var(--border-hover);
+  border-radius: 99px;
+  font-family: var(--pf-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.cc-card.pf-card.is-feature .cc-tags {
+  margin-top: 1.2rem;
+}
+
+@media (hover: none) {
+  .cc-card .pf-frame img.cc-poster {
+    filter: grayscale(0.18) saturate(0.9) brightness(0.9) contrast(1.04);
+  }
+}

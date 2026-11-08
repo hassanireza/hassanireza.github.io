@@ -1,0 +1,181 @@
+/* Read-only code viewer. Fills whatever box its parent gives it. */
+
+.cv {
+  --cv-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  background: #0b0d10;
+}
+
+.cv-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex: 0 0 auto;
+  min-height: 48px;
+  padding: 0 0.6rem 0 1.1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-2);
+}
+
+.cv-file {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+  font-family: var(--cv-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+
+.cv-dot {
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #9fcfae;
+  box-shadow: 0 0 10px rgba(159, 207, 174, 0.55);
+}
+
+.cv-name {
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cv-lines {
+  flex: 0 0 auto;
+  color: var(--text-3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.56rem;
+}
+
+.cv-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 0.2rem;
+}
+
+.cv-btn {
+  min-height: 40px;
+  min-width: 44px;
+  padding: 0 0.85rem;
+  border: 0;
+  border-radius: 99px;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  font-family: var(--cv-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: color 0.3s var(--ease), background 0.3s var(--ease);
+}
+
+.cv-btn:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.cv-btn:focus-visible {
+  outline: 1px solid var(--accent-bright);
+  outline-offset: -2px;
+}
+
+.cv-btn.is-on {
+  color: var(--bg);
+  background: var(--accent-bright);
+}
+
+.cv-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.cv-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.cv-host {
+  position: absolute;
+  inset: 0;
+}
+
+.cv-host[hidden] {
+  display: none;
+}
+
+.cv-plain {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 1rem 1.2rem 2rem;
+  overflow: auto;
+  font-family: var(--cv-mono);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  tab-size: 4;
+  color: var(--text-2);
+}
+
+.cv-status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  background: #0b0d10;
+  font-family: var(--cv-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.cv-status.is-error {
+  color: #e0a3a3;
+}
+
+.cv-spinner {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--border-hover);
+  border-top-color: var(--accent-bright);
+  border-radius: 50%;
+  animation: cv-spin 0.9s linear infinite;
+}
+
+@keyframes cv-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .cv-bar {
+    padding-left: 0.9rem;
+  }
+
+  .cv-lines {
+    display: none;
+  }
+
+  .cv-btn {
+    padding: 0 0.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cv-spinner {
+    animation-duration: 3s;
+  }
+}
