@@ -33,12 +33,26 @@ export interface CreativeWork {
   preview?: string;
   width: number;
   height: number;
+  /**
+   * Tile style in the grid. "wide" is the 16:9 cover (3 per row on desktop),
+   * "square" is the compact 1:1 cover (4 or 5 per row). When omitted it is
+   * chosen from the video's shape: near-square pieces get "square".
+   */
+  cover?: CreativeCover;
   tags?: string[];
   about?: string[];
   specs?: CreativeSpec[];
   /** One-line command shown with a copy button, e.g. how to run the piece. */
   run?: string;
   code: CreativeCode;
+}
+
+export type CreativeCover = "wide" | "square";
+
+export function coverOf(work: CreativeWork): CreativeCover {
+  if (work.cover) return work.cover;
+  const ratio = work.width / work.height;
+  return ratio >= 0.8 && ratio <= 1.25 ? "square" : "wide";
 }
 
 export interface CreativeCollection {
