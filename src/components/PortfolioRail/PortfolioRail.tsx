@@ -13,6 +13,8 @@ interface PortfolioRailProps {
   /** Rail slides in once the hero's own index has scrolled out of view. */
   visible: boolean;
   onSelect: (id: string) => void;
+  /** Opens the searchable map of every chapter and work. */
+  onOpenMap?: () => void;
 }
 
 /**
@@ -22,7 +24,7 @@ interface PortfolioRailProps {
  * disciplines with similar subject matter stay distinguishable. On narrow
  * screens the row scrolls horizontally and keeps the active chip centered.
  */
-export default function PortfolioRail({ items, activeId, visible, onSelect }: PortfolioRailProps) {
+export default function PortfolioRail({ items, activeId, visible, onSelect, onOpenMap }: PortfolioRailProps) {
   const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -38,22 +40,39 @@ export default function PortfolioRail({ items, activeId, visible, onSelect }: Po
 
   return (
     <nav className={`pf-rail${visible ? " is-visible" : ""}`} aria-label="Portfolio chapters" aria-hidden={!visible}>
-      <ul ref={listRef}>
-        {items.map((item) => (
-          <li key={item.id}>
-            <button
-              type="button"
-              className={`pf-rail-item${activeId === item.id ? " is-active" : ""}`}
-              onClick={() => onSelect(item.id)}
-              tabIndex={visible ? 0 : -1}
-              aria-current={activeId === item.id ? "true" : undefined}
-            >
-              <span className="pf-rail-index">{item.index}</span>
-              <span className="pf-rail-label">{item.label}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div className="pf-rail-row">
+        <ul ref={listRef}>
+          {items.map((item) => (
+            <li key={item.id}>
+              <button
+                type="button"
+                className={`pf-rail-item${activeId === item.id ? " is-active" : ""}`}
+                onClick={() => onSelect(item.id)}
+                tabIndex={visible ? 0 : -1}
+                aria-current={activeId === item.id ? "true" : undefined}
+              >
+                <span className="pf-rail-index">{item.index}</span>
+                <span className="pf-rail-label">{item.label}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+        {onOpenMap && (
+          <button
+            type="button"
+            className="pf-rail-map"
+            onClick={onOpenMap}
+            tabIndex={visible ? 0 : -1}
+            aria-label="Open portfolio map"
+            aria-haspopup="dialog"
+          >
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M2 2.5A.5.5 0 0 1 2.5 2h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-4Zm7 0a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-4ZM2 9.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-4Zm7 0a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-4Z" />
+            </svg>
+            <span>Map</span>
+          </button>
+        )}
+      </div>
     </nav>
   );
 }

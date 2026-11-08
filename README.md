@@ -76,9 +76,14 @@ Type follows the same restraint: **Cormorant Garamond**, italic, for display; **
 - **React Router 7**, including nested routes for The Descent and My Journey
 - **Vite**, for both development and the production build
 - **GSAP**, driving the scroll physics and motion inside The Descent
+- **Monaco Editor**, trimmed to a read-only Python viewer and loaded on demand when a Creative Coding piece's code is opened
 - **oxlint** for linting
 - Plain CSS per component and page: no CSS-in-JS, no utility framework, a single shared token file
 - **Cloudflare Turnstile** for bot-resistant form verification, submitted through **Formspree**
+
+### Adding a Creative Coding piece
+
+The Creative Coding chapter on `/portfolio` is data-driven. Put the media and source under `public/assets/creative/<id>/` (an H.264 `.mp4`, a small silent preview loop, a poster image, and the source file), then add one entry to `works` in `public/data/creative-coding.json`. Set `width` and `height` to the video's pixel size: any aspect ratio fits without cropping. A piece can be linked directly with `/portfolio#creative-coding/<id>`.
 
 No global state library. State is local to each page (`useState` and `useEffect`), which is enough for a site of this scope. That's a decision, not an omission.
 
