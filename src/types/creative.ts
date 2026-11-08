@@ -88,6 +88,18 @@ export function workIdFromHash(hash: string): string | null {
   return match ? match[1] : null;
 }
 
-export function workHash(id: string): string {
-  return `#${CREATIVE_SECTION_ID}/${id}`;
+/** Path of a work's own page, e.g. "/portfolio/creative-coding/scrying-basin". */
+export function workPath(id: string): string {
+  return `/portfolio/${CREATIVE_SECTION_ID}/${id}`;
+}
+
+/** "/portfolio/creative-coding/<id>" -> "<id>", anything else -> null. */
+export function workIdFromPath(pathname: string): string | null {
+  const match = pathname.match(new RegExp(`^/portfolio/${CREATIVE_SECTION_ID}/([\\w-]+)/?$`));
+  return match ? match[1] : null;
+}
+
+/** True on "/portfolio/creative-coding" and any work page beneath it. */
+export function isCreativePath(pathname: string): boolean {
+  return pathname === `/portfolio/${CREATIVE_SECTION_ID}` || pathname.startsWith(`/portfolio/${CREATIVE_SECTION_ID}/`);
 }
