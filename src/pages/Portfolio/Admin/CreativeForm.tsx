@@ -35,6 +35,24 @@ function specsToText(work: CreativeWork): string {
   return (work.specs ?? []).map((s) => `${s.label}: ${s.value}`).join("\n");
 }
 
+function equationsToText(work: CreativeWork): string {
+  return (work.equations ?? []).map((e) => `${e.label} | ${e.tex}`).join("\n");
+}
+
+function parseEquations(text: string) {
+  return text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const i = line.indexOf("|");
+      return i === -1
+        ? { label: "Equation", tex: line }
+        : { label: line.slice(0, i).trim() || "Equation", tex: line.slice(i + 1).trim() };
+    })
+    .filter((e) => e.tex);
+}
+
 function parseSpecs(text: string) {
   return text
     .split("\n")
@@ -66,6 +84,7 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
   const [cover, setCover] = useState<CoverChoice>("auto");
   const [about, setAbout] = useState("");
   const [specs, setSpecs] = useState("");
+  const [equations, setEquations] = useState("");
   const [run, setRun] = useState("");
 
   const [video, setVideo] = useState<VideoProbe | null>(null);
@@ -100,6 +119,7 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
     setCover("auto");
     setAbout("");
     setSpecs("");
+    setEquations("");
     setRun("");
     setVideo(null);
     setExistingVideo(null);
@@ -127,6 +147,7 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
     setCover(editing.cover ?? "auto");
     setAbout((editing.about ?? []).join("\n\n"));
     setSpecs(specsToText(editing));
+    setEquations(equationsToText(editing));
     setRun(editing.run ?? "");
     setVideo(null);
     setExistingVideo(editing.video);
@@ -303,6 +324,7 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
         .map((p) => p.trim())
         .filter(Boolean);
       const specList = parseSpecs(specs);
+      const equationList = parseEquations(equations);
       const yearNum = Number.parseInt(year, 10);
 
       const work: CreativeWork = {
@@ -319,6 +341,7 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
         ...(tagList.length ? { tags: tagList } : {}),
         ...(aboutList.length ? { about: aboutList } : {}),
         ...(specList.length ? { specs: specList } : {}),
+        ...(equationList.length ? { equations: equationList } : {}),
         ...(run.trim() ? { run: run.trim() } : {}),
         code: { src: codeSrc, filename: fileName, language },
       };
@@ -532,6 +555,20 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
           Specs <em>(optional, one per line as &ldquo;Label: value&rdquo;)</em>
         </span>
         <textarea value={specs} onChange={(e) => setSpecs(e.target.value)} rows={3} placeholder={"Output: 1080 x 1080, 30 fps\nLoop: 6 s, seamless"} />
+      </label>
+
+      <label className="admin-field">
+        <span>
+          Equations <em>(optional, one per line as &ldquo;Label | expression&rdquo;)</em>
+        </span>
+        <textarea
+          value={equations}
+          onChange={(e) => setEquations(e.target.value)}
+          rows={3}
+          spellCheck={false}
+          placeholder={"Wave equation | u_{tt} = c^{2}\u2207^{2}u"}
+        />
+        <p className="admin-hint">Use _{"{...}"} for subscripts and ^{"{...}"} for superscripts.</p>
       </label>
 
       <div className="admin-field-row admin-field-split">

@@ -22,6 +22,17 @@ export interface CreativeSpec {
   value: string;
 }
 
+export interface CreativeEquation {
+  /** Short caption, e.g. "Wave equation". */
+  label: string;
+  /**
+   * The expression, with _{...} for subscripts and ^{...} for superscripts,
+   * e.g. "u^{n+1} = 2u^{n} - u^{n-1}". Plain Unicode symbols (nabla, Delta,
+   * the real minus sign) are used as they are.
+   */
+  tex: string;
+}
+
 export interface CreativeWork {
   id: string;
   title: string;
@@ -42,6 +53,8 @@ export interface CreativeWork {
   tags?: string[];
   about?: string[];
   specs?: CreativeSpec[];
+  /** Equations behind the piece, shown as a typeset block in the studio. */
+  equations?: CreativeEquation[];
   /** One-line command shown with a copy button, e.g. how to run the piece. */
   run?: string;
   code: CreativeCode;

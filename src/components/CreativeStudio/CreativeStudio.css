@@ -441,3 +441,59 @@
     animation: none;
   }
 }
+
+/* ---------- equations ---------- */
+
+.cs-math {
+  margin: 0.2rem 0;
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(124, 136, 145, 0.07), transparent 70%), var(--bg-2);
+}
+
+.cs-math figcaption {
+  padding: 0.7rem 1.1rem 0;
+  font-family: var(--cs-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.cs-eq {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.85rem 1.1rem 1rem;
+}
+
+.cs-eq + .cs-eq {
+  border-top: 1px solid var(--border);
+}
+
+.cs-eq-label {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--text-2);
+}
+
+.math {
+  font-family: "STIX Two Math", "Cambria Math", "Latin Modern Math", "Noto Serif", var(--font-display), Georgia, serif;
+  font-size: clamp(1.15rem, 1.6vw + 0.5rem, 1.55rem);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scrollbar-width: thin;
+}
+
+.math sub,
+.math sup {
+  font-size: 0.64em;
+  line-height: 0;
+}
