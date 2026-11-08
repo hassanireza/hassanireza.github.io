@@ -456,7 +456,7 @@ export default function Admin() {
               />
             </div>
           ) : tab === "creative" ? (
-            <div className="admin-grid">
+            <div className="admin-grid admin-grid-creative">
               <CreativeForm
                 works={creativeFile?.data.works ?? []}
                 editing={editingWork}
