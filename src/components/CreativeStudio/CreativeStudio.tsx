@@ -1,6 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { AssetResolver } from "../../lib/asset";
 import type { CreativeWork } from "../../types/creative";
+import MathText from "./MathText";
 import "./CreativeStudio.css";
 
 /** Monaco lives behind this boundary, so the editor chunk loads on demand. */
@@ -251,6 +252,18 @@ export default function CreativeStudio({ works, activeId, onClose, onNavigate }:
                   {p}
                 </p>
               ))}
+
+              {work.equations && work.equations.length > 0 && (
+                <figure className="cs-math">
+                  <figcaption>The mathematics</figcaption>
+                  {work.equations.map((eq) => (
+                    <div key={eq.label + eq.tex} className="cs-eq">
+                      <span className="cs-eq-label">{eq.label}</span>
+                      <MathText tex={eq.tex} />
+                    </div>
+                  ))}
+                </figure>
+              )}
 
               {work.specs && work.specs.length > 0 && (
                 <dl className="cs-specs">
