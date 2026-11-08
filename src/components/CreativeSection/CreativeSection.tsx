@@ -25,7 +25,7 @@ interface RunItem {
 }
 
 interface Run {
-  cover: CreativeCover;
+  cover: CreativeCover | "masonry";
   items: RunItem[];
 }
 
@@ -94,6 +94,50 @@ function SquareRun({ items, onOpen }: { items: RunItem[]; onOpen: (w: CreativeWo
 }
 
 /**
+ * Masonry: tiles keep their own cover shape (16:9 or 1:1), cropped to fill it,
+ * and flow into columns in reading order, each going to the shortest column.
+ * Columns never outnumber the works, so a few works always share one row.
+ */
+function MasonryRun({ items, onOpen }: { items: RunItem[]; onOpen: (w: CreativeWork) => void }) {
+  const base = useSquareColumns();
+  const columns = Math.max(1, Math.min(items.length, Math.min(base, 4)));
+  const cols = useMemo(() => {
+    const out: RunItem[][] = Array.from({ length: columns }, () => []);
+    const heights = Array<number>(columns).fill(0);
+    for (const it of items) {
+      let at = 0;
+      for (let c = 1; c < columns; c++) if (heights[c] < heights[at] - 0.001) at = c;
+      out[at].push(it);
+      heights[at] += (coverOf(it.work) === "wide" ? 9 / 16 : 1) + 0.4;
+    }
+    return out;
+  }, [items, columns]);
+
+  return (
+    <div
+      className="cc-masonry cc-run"
+      style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
+    >
+      {cols.map((col, c) => (
+        <div className="cc-col" key={c}>
+          {col.map(({ work, n }, r) => (
+            <CreativeCard
+              key={work.id}
+              work={work}
+              number={num(n)}
+              cover={coverOf(work)}
+              feature={false}
+              stagger={c + (r % 2)}
+              onOpen={onOpen}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
  * The Creative Coding chapter. Works keep their order and share one grid,
  * so wide and square covers can be mixed freely. Tiles open the studio (video plus source) instead of linking out.
  */
@@ -101,15 +145,13 @@ export default function CreativeSection({ index, title, blurb, works, onOpen }: 
   const { ref: headRef, visible } = useReveal<HTMLElement>(0.3);
   const count = String(works.length).padStart(2, "0");
 
-  // One flow. A set of only wide covers uses the 3-column wide plan; as soon
-  // as square covers are present, every work shares one compact grid (up to 5
-  // across) so a handful of mixed works sit together in a single row instead
-  // of each style forming its own row.
+  // A lone work is a feature (cover beside a larger caption); two or more
+  // flow into one masonry, each tile keeping its own 16:9 or 1:1 shape.
   const runs = useMemo(() => {
     const items = works.map((work, n) => ({ work, n }));
-    const allWide = works.every((w) => coverOf(w) === "wide");
-    const out: Run[] = items.length ? [{ cover: allWide ? "wide" : "square", items }] : [];
-    return out;
+    if (items.length === 0) return [] as Run[];
+    const kind = items.length === 1 ? coverOf(items[0].work) : "masonry";
+    return [{ cover: kind, items }] as Run[];
   }, [works]);
 
   return (
@@ -131,7 +173,9 @@ export default function CreativeSection({ index, title, blurb, works, onOpen }: 
       </header>
 
       {runs.map((run, i) =>
-        run.cover === "square" ? (
+        run.cover === "masonry" ? (
+          <MasonryRun key={i} items={run.items} onOpen={onOpen} />
+        ) : run.cover === "square" ? (
           <SquareRun key={i} items={run.items} onOpen={onOpen} />
         ) : (
           <WideRun key={i} items={run.items} onOpen={onOpen} />

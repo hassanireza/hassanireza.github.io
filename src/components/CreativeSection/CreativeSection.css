@@ -143,3 +143,70 @@
     inset: 8px;
   }
 }
+
+/* ---------- masonry ---------- */
+
+.cc-masonry {
+  display: grid;
+  align-items: start;
+  column-gap: clamp(1.25rem, 2.4vw, 2.25rem);
+}
+
+.cc-col {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.2rem, 3.6vw, 3.2rem);
+  min-width: 0;
+  container-type: inline-size;
+}
+
+/* Crop to fill: a 16:9 tile shows 16:9, a 1:1 tile shows 1:1. */
+.cc-masonry .cc-frame img.cc-poster,
+.cc-masonry .cc-frame .cc-preview {
+  object-fit: cover;
+}
+
+.cc-masonry .cc-card:not(.is-square) .pf-frame {
+  aspect-ratio: 16 / 9;
+}
+
+@container (max-width: 400px) {
+  .cc-card .pf-caption {
+    padding-top: 0.8rem;
+  }
+
+  .cc-card .pf-title {
+    font-size: clamp(1.15rem, 0.6vw + 1rem, 1.35rem);
+  }
+
+  .cc-card .pf-desc {
+    margin-top: 0.35rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .cc-card .cc-tags {
+    display: none;
+  }
+
+  .cc-card .pf-go {
+    width: 26px;
+    height: 26px;
+  }
+
+  .cc-card .pf-badge {
+    left: 8px;
+    bottom: 8px;
+    padding: 0.32rem 0.6rem 0.32rem 0.5rem;
+    font-size: 0.5rem;
+    letter-spacing: 0.16em;
+  }
+
+  .cc-card .pf-corners {
+    inset: 8px;
+  }
+}
