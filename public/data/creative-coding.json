@@ -3,13 +3,13 @@
   "blurb": "Motion and image made from code alone. Watch the output, then open the source behind it.",
   "works": [
     {
-      "id": "abyssal-tide",
-      "title": "Abyssal Tide",
+      "id": "tidal-liturgy",
+      "title": "Tidal Liturgy",
       "desc": "Pulses cross a dark plane and show only where the crests catch a low, raking light.",
       "year": 2026,
-      "poster": "assets/creative/abyssal-tide/poster.webp",
-      "video": "assets/creative/abyssal-tide/abyssal-tide.mp4",
-      "preview": "assets/creative/abyssal-tide/abyssal-tide-preview.mp4",
+      "poster": "assets/creative/tidal-liturgy/poster.webp",
+      "video": "assets/creative/tidal-liturgy/tidal-liturgy.mp4",
+      "preview": "assets/creative/tidal-liturgy/tidal-liturgy-preview.mp4",
       "width": 1920,
       "height": 1080,
       "cover": "wide",
@@ -49,7 +49,7 @@
       ],
       "run": "python wave_field.py --save wave.mp4",
       "code": {
-        "src": "assets/creative/abyssal-tide/wave_field.py",
+        "src": "assets/creative/tidal-liturgy/wave_field.py",
         "filename": "wave_field.py",
         "language": "python"
       }
