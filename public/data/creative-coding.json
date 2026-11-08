@@ -3,48 +3,6 @@
   "blurb": "Motion and image made from code alone. Watch the output, then open the source behind it.",
   "works": [
     {
-      "id": "scrying-basin",
-      "title": "Scrying Basin",
-      "desc": "A crystal sphere pulses over a basin of black oil, and the ripples bend a rotating ceiling of sigils.",
-      "year": 2026,
-      "poster": "assets/creative/scrying-basin/poster.webp",
-      "video": "assets/creative/scrying-basin/scrying-basin.mp4",
-      "preview": "assets/creative/scrying-basin/scrying-basin-preview.mp4",
-      "cover": "square",
-      "width": 1080,
-      "height": 1080,
-      "tags": [
-        "Python",
-        "NumPy",
-        "Generative",
-        "Seamless loop"
-      ],
-      "about": [
-        "A generative occult motion piece written in pure NumPy and SciPy, with no image or video assets. Each time the sphere pulses it sends ripples across the oil, and the oil mirrors a rotating ceiling of sigils, a rune ring, a hexagram and star nodes. The ripples bend that reflection.",
-        "The sphere itself is a halftone RGB dot-matrix lens holding a miniature of the same sigil, ringed by chains of chromatic flares. Every motion is built from 6, 12, 36 or 180 fold symmetries, so the six second clip loops without a seam."
-      ],
-      "specs": [
-        {
-          "label": "Output",
-          "value": "1080 x 1080, 30 fps"
-        },
-        {
-          "label": "Loop",
-          "value": "6 s, seamless"
-        },
-        {
-          "label": "Stack",
-          "value": "NumPy, SciPy, Pillow, FFmpeg"
-        }
-      ],
-      "run": "python scrying_basin.py --save scrying_basin.mp4",
-      "code": {
-        "src": "assets/creative/scrying-basin/scrying_basin.py",
-        "filename": "scrying_basin.py",
-        "language": "python"
-      }
-    },
-    {
       "id": "nodal-descent",
       "title": "Nodal Descent",
       "desc": "Pulses cross a dark plane and show only where the crests catch a low, raking light.",
@@ -93,6 +51,90 @@
       "code": {
         "src": "assets/creative/nodal-descent/wave_field.py",
         "filename": "wave_field.py",
+        "language": "python"
+      }
+    },
+    {
+      "id": "scrying-basin",
+      "title": "Scrying Basin",
+      "desc": "A crystal sphere pulses over a basin of black oil, and the ripples bend a rotating ceiling of sigils.",
+      "year": 2026,
+      "poster": "assets/creative/scrying-basin/poster.webp",
+      "video": "assets/creative/scrying-basin/scrying-basin.mp4",
+      "preview": "assets/creative/scrying-basin/scrying-basin-preview.mp4",
+      "cover": "square",
+      "width": 1080,
+      "height": 1080,
+      "tags": [
+        "Python",
+        "NumPy",
+        "Generative",
+        "Seamless loop"
+      ],
+      "about": [
+        "A generative occult motion piece written in pure NumPy and SciPy, with no image or video assets. Each time the sphere pulses it sends ripples across the oil, and the oil mirrors a rotating ceiling of sigils, a rune ring, a hexagram and star nodes. The ripples bend that reflection.",
+        "The sphere itself is a halftone RGB dot-matrix lens holding a miniature of the same sigil, ringed by chains of chromatic flares. Every motion is built from 6, 12, 36 or 180 fold symmetries, so the six second clip loops without a seam."
+      ],
+      "specs": [
+        {
+          "label": "Output",
+          "value": "1080 x 1080, 30 fps"
+        },
+        {
+          "label": "Loop",
+          "value": "6 s, seamless"
+        },
+        {
+          "label": "Stack",
+          "value": "NumPy, SciPy, Pillow, FFmpeg"
+        }
+      ],
+      "run": "python scrying_basin.py --save scrying_basin.mp4",
+      "code": {
+        "src": "assets/creative/scrying-basin/scrying_basin.py",
+        "filename": "scrying_basin.py",
+        "language": "python"
+      }
+    },
+    {
+      "id": "oracle",
+      "title": "Oracle",
+      "desc": "A halftone portrait holds a scrying orb over black water that ripples with every heartbeat.",
+      "year": 2026,
+      "poster": "assets/creative/oracle/poster.webp",
+      "video": "assets/creative/oracle/oracle.mp4",
+      "preview": "assets/creative/oracle/oracle-preview.mp4",
+      "width": 1920,
+      "height": 1080,
+      "cover": "wide",
+      "tags": [
+        "Python",
+        "NumPy",
+        "Halftone",
+        "Seamless loop"
+      ],
+      "about": [
+        "A portrait re-printed as a fixed stipple dither, so the dots stay put while light moves through them. The black water in front of her is a real wave simulation: pulses from the orb bend a mirrored copy of the portrait and catch the orb light as concentric glints.",
+        "The orb is an RGB dot-matrix lens holding refracted smoke, a miniature sigil and her magnified face, ringed by chromatic flare chains. Every loop is built from periodic motions, so the four second clip repeats without a seam."
+      ],
+      "specs": [
+        {
+          "label": "Output",
+          "value": "1920 x 1080, 25 fps"
+        },
+        {
+          "label": "Loop",
+          "value": "4 s, seamless"
+        },
+        {
+          "label": "Stack",
+          "value": "NumPy, SciPy, Pillow, FFmpeg"
+        }
+      ],
+      "run": "python oracle.py --image portrait.webp --save oracle.mp4",
+      "code": {
+        "src": "assets/creative/oracle/oracle.py",
+        "filename": "oracle.py",
         "language": "python"
       }
     }
