@@ -14,8 +14,10 @@ import type { Category, Project, SiteConfig } from "../../types/project";
 import {
   CREATIVE_SECTION_ID,
   FALLBACK_CREATIVE,
-  workHash,
+  isCreativePath,
   workIdFromHash,
+  workIdFromPath,
+  workPath,
   type CreativeCollection,
   type CreativeWork,
 } from "../../types/creative";
@@ -157,23 +159,29 @@ export default function Portfolio() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
-  // Creative studio is driven by the URL hash (#creative-coding/<id>), so a
-  // piece can be linked to directly and the browser Back button closes it.
+  // Creative studio is driven by the path (/portfolio/creative-coding/<id>), so
+  // a piece can be linked to directly and the browser Back button closes it.
   const studioId = useMemo(() => {
-    const id = workIdFromHash(location.hash);
+    const id = workIdFromPath(location.pathname);
     return id && creativeWorks.some((w) => w.id === id) ? id : null;
-  }, [location.hash, creativeWorks]);
+  }, [location.pathname, creativeWorks]);
+
+  // Older links used #creative-coding/<id>; send them to the clean path.
+  useEffect(() => {
+    const id = workIdFromHash(location.hash);
+    if (id) navigate(workPath(id), { replace: true, preventScrollReset: true });
+  }, [location.hash, navigate]);
 
   const openWork = useCallback(
-    (work: CreativeWork) => navigate({ hash: workHash(work.id) }, { preventScrollReset: true }),
+    (work: CreativeWork) => navigate(workPath(work.id), { preventScrollReset: true }),
     [navigate],
   );
   const stepWork = useCallback(
-    (id: string) => navigate({ hash: workHash(id) }, { replace: true, preventScrollReset: true }),
+    (id: string) => navigate(workPath(id), { replace: true, preventScrollReset: true }),
     [navigate],
   );
   const closeStudio = useCallback(
-    () => navigate({ hash: `#${CREATIVE_SECTION_ID}` }, { replace: true, preventScrollReset: true }),
+    () => navigate(`/portfolio/${CREATIVE_SECTION_ID}`, { replace: true, preventScrollReset: true }),
     [navigate],
   );
 
@@ -183,11 +191,11 @@ export default function Portfolio() {
   useEffect(() => {
     if (loading || landedRef.current) return;
     landedRef.current = true;
-    const target = location.hash.slice(1).split("/")[0];
+    const target = isCreativePath(location.pathname) ? CREATIVE_SECTION_ID : location.hash.slice(1).split("/")[0];
     if (target && ids.includes(target)) {
       document.getElementById(target)?.scrollIntoView({ behavior: "auto", block: "start" });
     }
-  }, [loading, ids, location.hash]);
+  }, [loading, ids, location.hash, location.pathname]);
 
   const flash = useCallback((el: HTMLElement) => {
     el.classList.add("is-flash");

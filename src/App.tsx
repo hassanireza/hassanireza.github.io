@@ -36,6 +36,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/portfolio/creative-coding/*" element={<Portfolio />} />
           <Route path="/portfolio/admin" element={<Admin />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/branding" element={<Branding />} />
