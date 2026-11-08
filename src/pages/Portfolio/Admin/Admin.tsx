@@ -6,12 +6,16 @@ import AdminAuthGate from "../../../lib/admin/AdminAuthGate";
 import ProjectList from "./ProjectList";
 import ProjectForm from "./ProjectForm";
 import SiteSettingsForm from "./SiteSettingsForm";
+import CreativeForm from "./CreativeForm";
+import CreativeList from "./CreativeList";
 import { removeOrphanedAssets } from "../../../lib/admin/projectAssets";
+import { CREATIVE_DATA_PATH, removeCreativePaths } from "../../../lib/admin/creativeAssets";
+import { FALLBACK_CREATIVE, type CreativeCollection, type CreativeWork } from "../../../types/creative";
 import type { Category, Project, SiteConfig } from "../../../types/project";
 import "../../../lib/admin/admin-shared.css";
 import "./Admin.css";
 
-type Tab = "projects" | "settings";
+type Tab = "projects" | "creative" | "settings";
 
 interface RepoFile<T> {
   data: T;
@@ -25,7 +29,9 @@ export default function Admin() {
   const [projectsFile, setProjectsFile] = useState<RepoFile<Project[]> | null>(null);
   const [categoriesFile, setCategoriesFile] = useState<RepoFile<Category[]> | null>(null);
   const [configFile, setConfigFile] = useState<RepoFile<SiteConfig> | null>(null);
+  const [creativeFile, setCreativeFile] = useState<RepoFile<CreativeCollection> | null>(null);
   const [editing, setEditing] = useState<Project | null>(null);
+  const [editingWork, setEditingWork] = useState<CreativeWork | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -35,11 +41,17 @@ export default function Admin() {
     setLoading(true);
     setLoadError(null);
     try {
-      const [p, c, s] = await Promise.all([
+      const [p, c, s, cc] = await Promise.all([
         getFile(token, "public/data/projects.json"),
         getFile(token, "public/data/categories.json"),
         getFile(token, "public/data/site-config.json"),
+        getFile(token, CREATIVE_DATA_PATH),
       ]);
+      setCreativeFile(
+        cc
+          ? { data: normalizeCreative(JSON.parse(cc.content)), sha: cc.sha }
+          : { data: FALLBACK_CREATIVE, sha: "" },
+      );
       if (p) setProjectsFile({ data: JSON.parse(p.content), sha: p.sha });
       if (c) setCategoriesFile({ data: JSON.parse(c.content), sha: c.sha });
       if (s) setConfigFile({ data: JSON.parse(s.content), sha: s.sha });
@@ -83,6 +95,86 @@ export default function Admin() {
       setSaveError(`Save failed: ${message}`);
       throw err;
     }
+  }
+
+  /**
+   * Same pattern as saveProjects: re-fetch the live creative-coding.json,
+   * apply the change to that, write it back with that file's sha. A missing
+   * file (first ever save) is created from the defaults.
+   */
+  async function saveCreative(updater: (current: CreativeCollection) => CreativeCollection, commitMessage: string) {
+    const token = getToken();
+    if (!token) return;
+    setSaveError(null);
+    try {
+      const latest = await getFile(token, CREATIVE_DATA_PATH);
+      const current = latest ? normalizeCreative(JSON.parse(latest.content)) : FALLBACK_CREATIVE;
+      const next = updater(current);
+      await putTextFile(token, CREATIVE_DATA_PATH, JSON.stringify(next, null, 2) + "\n", commitMessage, latest?.sha);
+      await loadData();
+    } catch (err) {
+      const message = err instanceof GitHubApiError ? err.message : "Check your connection and try again.";
+      setSaveError(`Save failed: ${message}`);
+      throw err;
+    }
+  }
+
+  const workPaths = (w: CreativeWork) => [w.video, w.preview, w.poster, w.code.src];
+
+  async function submitWork(work: CreativeWork) {
+    setNotice(null);
+    const previous = creativeFile?.data.works.find((w) => w.id === work.id);
+    await saveCreative(
+      (current) => {
+        const exists = current.works.some((w) => w.id === work.id);
+        // New works go first, like projects, so they are the first thing seen.
+        return {
+          ...current,
+          works: exists ? current.works.map((w) => (w.id === work.id ? work : w)) : [work, ...current.works],
+        };
+      },
+      previous ? `Update creative work: ${work.title}` : `Add creative work: ${work.title}`,
+    );
+    // Replacing media or renaming the code file strands the old file: clean up.
+    const token = getToken();
+    if (token && previous) {
+      const keep = new Set(workPaths(work));
+      const stale = workPaths(previous).filter((p) => p && !keep.has(p));
+      if (stale.length > 0) {
+        const { removed, failed } = await removeCreativePaths(token, stale, `replaced for ${work.id}`);
+        reportCleanup(removed, failed);
+      }
+    }
+    setEditingWork(null);
+  }
+
+  async function deleteWork(id: string) {
+    setNotice(null);
+    const token = getToken();
+    let removedWork: CreativeWork | undefined;
+    await saveCreative((current) => {
+      removedWork = current.works.find((w) => w.id === id);
+      return { ...current, works: current.works.filter((w) => w.id !== id) };
+    }, `Remove creative work: ${id}`);
+    if (token && removedWork) {
+      const { removed, failed } = await removeCreativePaths(token, workPaths(removedWork), `work ${id} deleted`);
+      reportCleanup(removed, failed);
+    }
+  }
+
+  async function moveWork(id: string, direction: "up" | "down") {
+    await saveCreative((current) => {
+      const i = current.works.findIndex((w) => w.id === id);
+      const j = direction === "up" ? i - 1 : i + 1;
+      if (i === -1 || j < 0 || j >= current.works.length) return current;
+      const works = [...current.works];
+      [works[i], works[j]] = [works[j], works[i]];
+      return { ...current, works };
+    }, `Reorder creative work: ${id}`);
+  }
+
+  async function saveCreativeText(title: string, blurb: string) {
+    await saveCreative((current) => ({ ...current, title, blurb }), "Update Creative Coding heading via admin dashboard");
   }
 
   async function saveCategories(next: Category[], commitMessage: string) {
@@ -287,6 +379,9 @@ export default function Admin() {
             <button type="button" className={tab === "projects" ? "active" : ""} onClick={() => setTab("projects")}>
               Projects
             </button>
+            <button type="button" className={tab === "creative" ? "active" : ""} onClick={() => setTab("creative")}>
+              Creative Coding
+            </button>
             <button type="button" className={tab === "settings" ? "active" : ""} onClick={() => setTab("settings")}>
               Site Settings
             </button>
@@ -360,6 +455,25 @@ export default function Admin() {
                 onMoveCategory={moveCategory}
               />
             </div>
+          ) : tab === "creative" ? (
+            <div className="admin-grid">
+              <CreativeForm
+                works={creativeFile?.data.works ?? []}
+                editing={editingWork}
+                onCancelEdit={() => setEditingWork(null)}
+                onSubmit={submitWork}
+              />
+              <CreativeList
+                collection={creativeFile?.data ?? null}
+                onEdit={(w) => {
+                  setEditingWork(w);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                onDelete={deleteWork}
+                onMove={moveWork}
+                onSaveText={saveCreativeText}
+              />
+            </div>
           ) : (
             <SiteSettingsForm config={configFile?.data ?? null} onSubmit={saveConfig} />
           )}
@@ -367,4 +481,13 @@ export default function Admin() {
       )}
     </AdminAuthGate>
   );
+}
+
+/** Guards against a hand-edited or partial creative-coding.json. */
+function normalizeCreative(raw: Partial<CreativeCollection> | null): CreativeCollection {
+  return {
+    title: raw?.title || FALLBACK_CREATIVE.title,
+    blurb: raw?.blurb ?? FALLBACK_CREATIVE.blurb,
+    works: Array.isArray(raw?.works) ? raw.works : [],
+  };
 }
