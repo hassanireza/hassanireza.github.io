@@ -3,6 +3,47 @@
   "blurb": "Motion and image made from code alone. Watch the output, then open the source behind it.",
   "works": [
     {
+      "id": "arrivals",
+      "title": "Arrivals",
+      "desc": "A single sentence about arrival is performed as five beats, each one arriving through a different rhythmic mechanic.",
+      "year": 2026,
+      "poster": "assets/creative/arrivals/poster.webp",
+      "video": "assets/creative/arrivals/arrivals.mp4",
+      "width": 1080,
+      "height": 1080,
+      "tags": [
+        "Python",
+        "NumPy",
+        "Generative",
+        "Seamless loop",
+        "point-dots"
+      ],
+      "about": [
+        "A generative typographic motion piece written in pure NumPy and SciPy. The only assets are one source portrait and three typefaces (Cormorant Garamond, Jost and JetBrains Mono); every mark on screen is generated. The sentence “Nothing on screen just appears. It arrives, and how it arrives is the message.” is staged across five beats. Each beat uses its own arrival: hairline rules that stutter in, bars that slam shut, a grain-edged sweep, slit rows, letters that rise, scramble and slide with motion blur, and a moiré mesh that converges to lock the type.",
+        "The portrait is not overlaid as a photo. It is turned into a luminance field and printed as a threshold dither of dots that rushes into place behind vertical blinds. Everything runs on a 120 bpm grid at three tempos at once: extreme 2 to 5 frame hits, medium moves, and slow drifts such as the dot settle, the light sweep and the drifting dust. The palette is the brand’s void, bone and silver."
+      ],
+      "specs": [
+        {
+          "label": "Output",
+          "value": "1080 x 1080, 30 fps"
+        },
+        {
+          "label": "Length",
+          "value": "18 s, fading in from and out to black"
+        },
+        {
+          "label": "Stack",
+          "value": "NumPy, SciPy, Pillow, FFmpeg"
+        }
+      ],
+      "run": "python arrivals.py --save arrivals.mp4",
+      "code": {
+        "src": "assets/creative/arrivals/arrivals.py",
+        "filename": "arrivals.py",
+        "language": "python"
+      }
+    },
+    {
       "id": "nodal-descent",
       "title": "Nodal Descent",
       "desc": "Pulses cross a dark plane and show only where the crests catch a low, raking light.",
