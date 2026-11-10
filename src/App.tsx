@@ -35,8 +35,9 @@ export default function App() {
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/portfolio" element={<Portfolio />} />
-          <Route path="/portfolio/creative-coding/*" element={<Portfolio />} />
+          {/* One route for the portfolio and its work pages, so opening or closing a
+              creative work never remounts the page or loses the scroll position. */}
+          <Route path="/portfolio/*" element={<Portfolio />} />
           <Route path="/portfolio/admin" element={<Admin />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/branding" element={<Branding />} />
