@@ -1,4 +1,5 @@
 import { deleteFile } from "./githubApi";
+import { commit } from "./commitMessages";
 import type { Project } from "../../types/project";
 
 /** Repo folder that holds every project thumbnail (and motion video). */
@@ -54,7 +55,7 @@ export async function removeOrphanedAssets(
   const result: CleanupResult = { removed: [], failed: [] };
   for (const name of findOrphanedAssets(candidates, remaining)) {
     try {
-      const existed = await deleteFile(token, `${ASSET_DIR}/${name}`, `Remove asset ${name} (${reason})`);
+      const existed = await deleteFile(token, `${ASSET_DIR}/${name}`, commit.fileCleanup(name, reason));
       if (existed) result.removed.push(name);
     } catch {
       result.failed.push(name);

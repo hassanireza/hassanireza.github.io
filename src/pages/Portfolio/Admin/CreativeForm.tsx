@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type DragEvent, type FormEvent } from "react";
 import { useGitHubAuth } from "../../../lib/admin/useGitHubAuth";
-import { GitHubApiError, getFile, getFileSha, putBinaryFile, putTextFile } from "../../../lib/admin/githubApi";
+import { GitHubApiError, assertSignedIn, getFile, getFileSha, putBinaryFile, putTextFile } from "../../../lib/admin/githubApi";
+import { commit } from "../../../lib/admin/commitMessages";
+import TagInput from "./TagInput";
 import { repoPath, workDir } from "../../../lib/admin/creativeAssets";
 import { slugifyId, type ConvertedImage } from "./imageToWebp";
 import {
@@ -80,7 +82,7 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [year, setYear] = useState("");
-  const [tags, setTags] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
   const [cover, setCover] = useState<CoverChoice>("auto");
   const [about, setAbout] = useState("");
   const [specs, setSpecs] = useState("");
@@ -89,8 +91,6 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
 
   const [video, setVideo] = useState<VideoProbe | null>(null);
   const [existingVideo, setExistingVideo] = useState<string | null>(null);
-  const [previewFile, setPreviewFile] = useState<File | null>(null);
-  const [existingPreview, setExistingPreview] = useState<string | null>(null);
   const [poster, setPoster] = useState<ConvertedImage | null>(null);
   const [existingPoster, setExistingPoster] = useState<string | null>(null);
   const [posterTime, setPosterTime] = useState(0);
@@ -100,13 +100,13 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
   const [language, setLanguage] = useState("python");
   const [existingCodeSrc, setExistingCodeSrc] = useState<string | null>(null);
   const [codeLoading, setCodeLoading] = useState(false);
+  const [loadedCode, setLoadedCode] = useState<string | null>(null);
 
   const [dragOver, setDragOver] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const videoInput = useRef<HTMLInputElement>(null);
-  const previewInput = useRef<HTMLInputElement>(null);
   const posterInput = useRef<HTMLInputElement>(null);
   const codeInput = useRef<HTMLInputElement>(null);
   const captureSeq = useRef(0);
@@ -115,7 +115,7 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
     setTitle("");
     setDesc("");
     setYear("");
-    setTags("");
+    setTags([]);
     setCover("auto");
     setAbout("");
     setSpecs("");
@@ -123,12 +123,11 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
     setRun("");
     setVideo(null);
     setExistingVideo(null);
-    setPreviewFile(null);
-    setExistingPreview(null);
     setPoster(null);
     setExistingPoster(null);
     setPosterTime(0);
     setCodeText("");
+    setLoadedCode(null);
     setCodeName("");
     setLanguage("python");
     setExistingCodeSrc(null);
@@ -143,7 +142,7 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
     setTitle(editing.title);
     setDesc(editing.desc);
     setYear(editing.year ? String(editing.year) : "");
-    setTags((editing.tags ?? []).join(", "));
+    setTags(editing.tags ?? []);
     setCover(editing.cover ?? "auto");
     setAbout((editing.about ?? []).join("\n\n"));
     setSpecs(specsToText(editing));
@@ -151,8 +150,6 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
     setRun(editing.run ?? "");
     setVideo(null);
     setExistingVideo(editing.video);
-    setPreviewFile(null);
-    setExistingPreview(editing.preview ?? null);
     setPoster(null);
     setExistingPoster(editing.poster);
     setCodeName(editing.code.filename);
@@ -167,7 +164,10 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
     setCodeLoading(true);
     getFile(token, repoPath(editing.code.src))
       .then((f) => {
-        if (!off) setCodeText(f?.content ?? "");
+        if (!off) {
+          setCodeText(f?.content ?? "");
+          setLoadedCode(f?.content ?? null);
+        }
       })
       .catch(() => {
         if (!off) setError("Could not load the current source code from the repo.");
@@ -200,6 +200,9 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
       setVideo(probe);
       setPosterTime(t);
       setPoster(frame);
+      setSpecs((current) =>
+        current.trim() ? current : `Output: ${probe.width} x ${probe.height}\nLoop: ${probe.duration.toFixed(0)} s`,
+      );
     } catch {
       setError("Couldn't read that video. Try re-exporting it as H.264 MP4.");
     } finally {
@@ -233,14 +236,6 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
     }
   }
 
-  function handlePreview(file: File | undefined) {
-    if (!file) return;
-    if (!VIDEO_TYPES[file.type]) return setError("The preview loop must be an MP4 or WebM.");
-    if (file.size > MAX_UPLOAD_MB * 1024 * 1024) return setError(`Preview is ${mb(file.size)} MB. Keep it under ${MAX_UPLOAD_MB} MB.`);
-    setError(null);
-    setPreviewFile(file);
-  }
-
   async function handleCodeFile(file: File | undefined) {
     if (!file) return;
     if (file.size > 1024 * 1024) return setError("Source files over 1 MB are not supported.");
@@ -251,74 +246,79 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
     if (lang) setLanguage(lang);
   }
 
+  function onCodeName(value: string) {
+    setCodeName(value);
+    const lang = languageForFilename(value);
+    if (lang) setLanguage(lang);
+  }
+
   function onVideoDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
     setDragOver(false);
     handleVideo(e.dataTransfer.files[0]);
   }
 
-  async function put(token: string, path: string, base64: string, message: string) {
+  /** Writes a file at its fixed path; an existing file there is replaced in place, never duplicated. */
+  async function put(token: string, path: string, base64: string, message: (replaced: boolean) => string) {
     const sha = await getFileSha(token, path).catch(() => null);
-    await putBinaryFile(token, path, base64, message, sha ?? undefined);
+    await putBinaryFile(token, path, base64, message(sha !== null), sha ?? undefined);
   }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
 
-    if (!title.trim()) return setError("Give the work a name.");
-    if (!desc.trim()) return setError("Add a short description.");
+    if (!title.trim()) return setError("Give the work a title.");
+    if (!desc.trim()) return setError("Add a short description for the tile.");
     if (!video && !existingVideo) return setError("Add the video.");
-    if (!poster && !existingPoster) return setError("A poster image is required.");
+    if (!poster && !existingPoster) return setError("Add a poster image. Choosing a video creates one for you.");
     const fileName = safeFilename(codeName);
-    if (!fileName) return setError("Give the code file a name, e.g. sketch.py.");
-    if (!codeText.trim()) return setError("Paste the source code or choose a file.");
+    if (!fileName) return setError("Name the code file, for example sketch.py.");
+    if (!codeText.trim()) return setError("Paste the source code or open a file.");
 
     const id = editing?.id ?? slugifyId(title);
-    if (!editing && works.some((w) => w.id === id)) return setError("A work with that name already exists.");
+    if (!editing && works.some((w) => w.id === id)) return setError("A work with this title already exists. Choose a different title.");
 
     const token = getToken();
-    if (!token) return setError("Your session expired - sign in again.");
+    if (!token) return setError("Your GitHub session has expired. Sign in again to publish.");
 
+    // Files are named after the title, so the repo reads the way the site does.
+    const base = slugifyId(title) || id;
     const dir = workDir(id);
+    const name = title.trim();
     try {
+      setBusy("Checking your GitHub sign-in…");
+      await assertSignedIn(token);
+
       let videoPath = existingVideo ?? "";
-      let previewPath = existingPreview ?? undefined;
       let posterPath = existingPoster ?? "";
       let width = editing?.width ?? 0;
       let height = editing?.height ?? 0;
 
       if (video) {
         const ext = VIDEO_TYPES[video.file.type];
-        videoPath = `${dir}/${id}.${ext}`;
-        setBusy(`Uploading video (${mb(video.file.size)} MB)…`);
-        await put(token, repoPath(videoPath), await fileToBase64(video.file), `Upload video for creative work: ${title}`);
+        videoPath = `${dir}/${base}.${ext}`;
+        setBusy(`Uploading the video (${mb(video.file.size)} MB)…`);
+        await put(token, repoPath(videoPath), await fileToBase64(video.file), (r) => commit.workFile("video", name, r));
         width = video.width;
         height = video.height;
       }
 
-      if (previewFile) {
-        const ext = VIDEO_TYPES[previewFile.type];
-        previewPath = `${dir}/${id}-preview.${ext}`;
-        setBusy("Uploading preview loop…");
-        await put(token, repoPath(previewPath), await fileToBase64(previewFile), `Upload preview for creative work: ${title}`);
-      }
-
       if (poster) {
         posterPath = `${dir}/poster.webp`;
-        setBusy("Uploading poster…");
-        await put(token, repoPath(posterPath), poster.base64, `Upload poster for creative work: ${title}`);
+        setBusy("Uploading the poster…");
+        await put(token, repoPath(posterPath), poster.base64, (r) => commit.workFile("poster", name, r));
       }
 
       const codeSrc = `${dir}/${fileName}`;
-      setBusy("Uploading code…");
-      const codeSha = await getFileSha(token, repoPath(codeSrc)).catch(() => null);
-      await putTextFile(token, repoPath(codeSrc), codeText, `Upload code for creative work: ${title}`, codeSha ?? undefined);
+      const codeUnchanged = editing !== null && codeSrc === existingCodeSrc && loadedCode === codeText;
+      if (!codeUnchanged) {
+        setBusy("Uploading the code…");
+        const codeSha = await getFileSha(token, repoPath(codeSrc)).catch(() => null);
+        await putTextFile(token, repoPath(codeSrc), codeText, commit.workFile("source code", name, codeSha !== null), codeSha ?? undefined);
+      }
 
-      const tagList = tags
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean);
+      const tagList = tags;
       const aboutList = about
         .split(/\n\s*\n/)
         .map((p) => p.trim())
@@ -334,7 +334,6 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
         ...(Number.isFinite(yearNum) ? { year: yearNum } : {}),
         poster: posterPath,
         video: videoPath,
-        ...(previewPath ? { preview: previewPath } : {}),
         width,
         height,
         ...(cover !== "auto" ? { cover } : {}),
@@ -346,12 +345,12 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
         code: { src: codeSrc, filename: fileName, language },
       };
 
-      setBusy("Saving to the portfolio…");
+      setBusy("Publishing to the portfolio…");
       await onSubmit(work);
       if (!editing) reset();
     } catch (err) {
       const message = err instanceof GitHubApiError ? err.message : null;
-      setError(message ? `Save failed: ${message}` : "Save failed - check your connection and try again.");
+      setError(message ? `Couldn't publish. ${message}` : "Couldn't publish. Check your connection and try again.");
     } finally {
       setBusy(null);
     }
@@ -367,34 +366,54 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
     poster?.previewUrl ?? (existingPoster ? `${import.meta.env.BASE_URL}${existingPoster}` : null);
   const saving = busy !== null;
 
+  const slug = slugifyId(title);
+  const allTags = Array.from(new Set(works.flatMap((w) => w.tags ?? [])));
+
   return (
     <form className="admin-card admin-form" onSubmit={handleSubmit}>
       <div className="admin-card-head">
-        <h2>{editing ? "Edit Creative Work" : "Add Creative Work"}</h2>
+        <h2>{editing ? `Edit ${editing.title}` : "Add a Creative Coding work"}</h2>
         {editing && (
           <button type="button" className="admin-btn admin-btn-ghost admin-btn-sm" onClick={onCancelEdit}>
-            Cancel edit
+            Cancel
           </button>
         )}
       </div>
 
-      <label className="admin-field">
-        <span>Title</span>
-        <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Scrying Basin" maxLength={80} />
-      </label>
+      <section className="admin-group">
+        <h3 className="admin-group-title">1. The basics</h3>
+        <label className="admin-field">
+          <span>Title</span>
+          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Scrying Basin" maxLength={80} />
+          {!editing && title.trim() && slug && (
+            <p className="admin-hint">
+              Files are saved as <code>{slug}.mp4</code> in <code>assets/creative/{slug}/</code>.
+            </p>
+          )}
+        </label>
 
-      <label className="admin-field">
-        <span>
-          Short description <em>({desc.length}/{DESC_LIMIT})</em>
-        </span>
-        <textarea
-          value={desc}
-          onChange={(e) => setDesc(e.target.value.slice(0, DESC_LIMIT))}
-          rows={2}
-          placeholder="One or two lines shown on the tile"
-        />
-      </label>
+        <label className="admin-field">
+          <span>
+            Tile description <em>({desc.length}/{DESC_LIMIT})</em>
+          </span>
+          <textarea
+            value={desc}
+            onChange={(e) => setDesc(e.target.value.slice(0, DESC_LIMIT))}
+            rows={2}
+            placeholder="One or two lines shown under the tile"
+          />
+        </label>
 
+        <div className="admin-field">
+          <span>
+            Tags <em>(optional)</em>
+          </span>
+          <TagInput value={tags} onChange={setTags} suggestions={allTags} placeholder="Python, NumPy, Generative" />
+        </div>
+      </section>
+
+      <section className="admin-group">
+        <h3 className="admin-group-title">2. Video and poster</h3>
       <div className="admin-field">
         <span>Video</span>
         <div
@@ -427,8 +446,8 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
               <svg viewBox="0 0 16 16" aria-hidden="true">
                 <path d="M8 1.5a.75.75 0 0 1 .75.75v7.19l2.22-2.22a.75.75 0 1 1 1.06 1.06l-3.5 3.5a.75.75 0 0 1-1.06 0l-3.5-3.5a.75.75 0 1 1 1.06-1.06l2.22 2.22V2.25A.75.75 0 0 1 8 1.5ZM2 12.5a.75.75 0 0 1 .75.75v.25c0 .28.22.5.5.5h9.5a.5.5 0 0 0 .5-.5v-.25a.75.75 0 0 1 1.5 0v.25A2 2 0 0 1 12.75 15h-9.5A2 2 0 0 1 1.25 13v-.25a.75.75 0 0 1 .75-.75Z" />
               </svg>
-              <p>Drag &amp; drop a video, or click to browse</p>
-              <p className="admin-hint">H.264 MP4 or WebM, up to {MAX_UPLOAD_MB} MB. Any aspect ratio.</p>
+              <p>Drop a video here, or click to choose one</p>
+              <p className="admin-hint">H.264 MP4 or WebM, up to {MAX_UPLOAD_MB} MB, any shape.</p>
             </div>
           )}
         </div>
@@ -439,7 +458,7 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
             {video ? ` · ${video.duration.toFixed(1)} s · ${mb(video.file.size)} MB` : " · current video"}
             {" · "}
             <button type="button" className="admin-link-btn" onClick={() => videoInput.current?.click()}>
-              Replace
+              Replace video
             </button>
           </p>
         )}
@@ -449,7 +468,7 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
         <span>Poster</span>
         <div className="admin-creative-poster">
           <div className="admin-creative-poster-box">
-            {posterSrc ? <img src={posterSrc} alt="" /> : <p className="admin-hint">Choose a video first, or upload an image.</p>}
+            {posterSrc ? <img src={posterSrc} alt="" /> : <p className="admin-hint">The poster is taken from your video. You can pick the frame once it is added.</p>}
           </div>
           <div className="admin-creative-poster-controls">
             {video && video.duration > 0 && (
@@ -466,44 +485,20 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
               </label>
             )}
             <button type="button" className="admin-btn admin-btn-ghost admin-btn-sm" onClick={() => posterInput.current?.click()}>
-              Upload image instead
+              Use my own image
             </button>
           </div>
         </div>
         <input ref={posterInput} type="file" accept="image/png,image/jpeg,image/webp" hidden onChange={(e) => handlePosterFile(e.target.files?.[0])} />
       </div>
 
-      <div className="admin-field">
-        <span>
-          Tile preview loop <em>(optional)</em>
-        </span>
-        <div className="admin-field-row">
-          <button type="button" className="admin-btn admin-btn-ghost admin-btn-sm" onClick={() => previewInput.current?.click()}>
-            {previewFile ? "Change file" : existingPreview ? "Replace preview" : "Choose file"}
-          </button>
-          <span className="admin-hint">
-            {previewFile ? `${previewFile.name} (${mb(previewFile.size)} MB)` : existingPreview ? "Current preview in use" : "Skipped: tiles play the full video"}
-          </span>
-        </div>
-        <p className="admin-hint">A small, silent 540px loop makes the grid load faster. Optional.</p>
-        <input ref={previewInput} type="file" accept="video/mp4,video/webm" hidden onChange={(e) => handlePreview(e.target.files?.[0])} />
-      </div>
+      </section>
 
-      <label className="admin-field">
-        <span>Tile cover</span>
-        <select value={cover} onChange={(e) => setCover(e.target.value as CoverChoice)}>
-          <option value="auto">
-            Auto{autoCover ? ` (${autoCover === "square" ? "1:1 square" : "16:9 wide"} for this video)` : ""}
-          </option>
-          <option value="wide">16:9 wide (3 per row)</option>
-          <option value="square">1:1 square (4 to 5 per row)</option>
-        </select>
-      </label>
-
+      <section className="admin-group">
+        <h3 className="admin-group-title">3. Source code</h3>
       <div className="admin-field">
-        <span>Source code</span>
         <div className="admin-field-row">
-          <input value={codeName} onChange={(e) => setCodeName(e.target.value)} placeholder="sketch.py" aria-label="Code filename" />
+          <input value={codeName} onChange={(e) => onCodeName(e.target.value)} placeholder="sketch.py" aria-label="Code filename" />
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
@@ -516,7 +511,7 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
             ))}
           </select>
           <button type="button" className="admin-btn admin-btn-ghost admin-btn-sm" onClick={() => codeInput.current?.click()}>
-            Open file
+            Choose file
           </button>
         </div>
         <textarea
@@ -527,7 +522,7 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
           rows={12}
           spellCheck={false}
           wrap="off"
-          placeholder="Paste your code here, or use Open file"
+          placeholder="Paste your code here, or choose a file"
         />
         <p className="admin-hint">
           {codeText ? `${codeText.split("\n").length} lines` : "Shown on the site in a syntax-highlighted viewer."}
@@ -536,30 +531,42 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
         <input ref={codeInput} type="file" hidden onChange={(e) => handleCodeFile(e.target.files?.[0])} />
       </div>
 
+      </section>
+
+      <details className="admin-group admin-more">
+        <summary>
+          More options <em>(all optional)</em>
+        </summary>
+
       <label className="admin-field">
-        <span>
-          Tags <em>(comma separated, optional)</em>
-        </span>
-        <input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="Python, NumPy, Generative" />
+        <span>Tile shape</span>
+        <select value={cover} onChange={(e) => setCover(e.target.value as CoverChoice)}>
+          <option value="auto">
+            Auto{autoCover ? ` (${autoCover === "square" ? "1:1 square" : "16:9 wide"} for this video)` : ""}
+          </option>
+          <option value="wide">16:9 wide </option>
+          <option value="square">1:1 square </option>
+        </select>
       </label>
+
 
       <label className="admin-field">
         <span>
-          About <em>(optional, blank line between paragraphs)</em>
+          About <em>(a blank line starts a new paragraph)</em>
         </span>
         <textarea value={about} onChange={(e) => setAbout(e.target.value)} rows={5} />
       </label>
 
       <label className="admin-field">
         <span>
-          Specs <em>(optional, one per line as &ldquo;Label: value&rdquo;)</em>
+          Specs <em>(one per line, like &ldquo;Output: 1080 x 1080&rdquo;)</em>
         </span>
         <textarea value={specs} onChange={(e) => setSpecs(e.target.value)} rows={3} placeholder={"Output: 1080 x 1080, 30 fps\nLoop: 6 s, seamless"} />
       </label>
 
       <label className="admin-field">
         <span>
-          Equations <em>(optional, one per line as &ldquo;Label | expression&rdquo;)</em>
+          Equations <em>(one per line, like &ldquo;Label | expression&rdquo;)</em>
         </span>
         <textarea
           value={equations}
@@ -568,23 +575,20 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
           spellCheck={false}
           placeholder={"Wave equation | u_{tt} = c^{2}\u2207^{2}u"}
         />
-        <p className="admin-hint">Use _{"{...}"} for subscripts and ^{"{...}"} for superscripts.</p>
+        <p className="admin-hint">Write _{"{...}"} for a subscript and ^{"{...}"} for a superscript.</p>
       </label>
 
       <div className="admin-field-row admin-field-split">
         <label className="admin-field">
-          <span>
-            Run command <em>(optional)</em>
-          </span>
+          <span>Run command</span>
           <input value={run} onChange={(e) => setRun(e.target.value)} placeholder="python sketch.py --save out.mp4" />
         </label>
         <label className="admin-field admin-field-narrow">
-          <span>
-            Year <em>(optional)</em>
-          </span>
+          <span>Year</span>
           <input value={year} onChange={(e) => setYear(e.target.value.replace(/\D/g, "").slice(0, 4))} inputMode="numeric" placeholder="2026" />
         </label>
       </div>
+      </details>
 
       {error && <p className="admin-error">{error}</p>}
       {busy && (
@@ -594,7 +598,7 @@ export default function CreativeForm({ works, editing, onCancelEdit, onSubmit }:
       )}
 
       <button type="submit" className="admin-btn admin-btn-primary" disabled={saving || codeLoading}>
-        {saving ? "Saving…" : editing ? "Save Changes" : "Publish Work"}
+        {saving ? "Working…" : editing ? "Save changes" : "Publish work"}
       </button>
     </form>
   );

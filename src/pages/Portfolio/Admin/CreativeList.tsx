@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, type DragEvent, type FormEvent } from "react";
 import { coverOf, type CreativeCollection, type CreativeWork } from "../../../types/creative";
 
 interface CreativeListProps {
@@ -6,13 +6,15 @@ interface CreativeListProps {
   onEdit: (work: CreativeWork) => void;
   onDelete: (id: string) => Promise<void>;
   onMove: (id: string, direction: "up" | "down") => Promise<void>;
+  /** Drop `id` before `beforeId`, or at the end when null. */
+  onReorder: (id: string, beforeId: string | null) => Promise<void>;
   onSaveText: (title: string, blurb: string) => Promise<void>;
 }
 
 const ARROW_UP = "M8 3.5a.75.75 0 0 1 .53.22l4 4a.75.75 0 1 1-1.06 1.06L8.75 6.06V12a.75.75 0 0 1-1.5 0V6.06L4.53 8.78a.75.75 0 0 1-1.06-1.06l4-4A.75.75 0 0 1 8 3.5Z";
 const ARROW_DOWN = "M8 12.5a.75.75 0 0 1-.53-.22l-4-4a.75.75 0 1 1 1.06-1.06l2.72 2.72V3.94a.75.75 0 0 1 1.5 0v5.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-4 4a.75.75 0 0 1-.53.22Z";
 
-export default function CreativeList({ collection, onEdit, onDelete, onMove, onSaveText }: CreativeListProps) {
+export default function CreativeList({ collection, onEdit, onDelete, onMove, onReorder, onSaveText }: CreativeListProps) {
   const works = collection?.works ?? [];
   const [title, setTitle] = useState("");
   const [blurb, setBlurb] = useState("");
@@ -21,6 +23,8 @@ export default function CreativeList({ collection, onEdit, onDelete, onMove, onS
   const [confirming, setConfirming] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dropTarget, setDropTarget] = useState<{ overId: string; edge: "before" | "after" } | null>(null);
 
   useEffect(() => {
     if (collection) {
@@ -55,6 +59,40 @@ export default function CreativeList({ collection, onEdit, onDelete, onMove, onS
     }
   }
 
+  function clearDrag() {
+    setDraggingId(null);
+    setDropTarget(null);
+  }
+
+  function onRowDragOver(e: DragEvent<HTMLLIElement>, id: string) {
+    if (!draggingId) return;
+    e.preventDefault();
+    if (id === draggingId) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const edge = e.clientY < rect.top + rect.height / 2 ? "before" : "after";
+    setDropTarget((c) => (c?.overId === id && c.edge === edge ? c : { overId: id, edge }));
+  }
+
+  async function onRowDrop(e: DragEvent<HTMLLIElement>) {
+    e.preventDefault();
+    const id = draggingId;
+    const target = dropTarget;
+    clearDrag();
+    if (!id || !target || target.overId === id) return;
+    const at = works.findIndex((w) => w.id === target.overId);
+    if (at === -1) return;
+    const beforeId = target.edge === "before" ? works[at].id : (works[at + 1]?.id ?? null);
+    if (beforeId === id) return;
+    setBusy(id);
+    try {
+      await onReorder(id, beforeId);
+    } catch {
+      /* the dashboard shows the error */
+    } finally {
+      setBusy(null);
+    }
+  }
+
   async function remove(id: string) {
     setDeleting(id);
     try {
@@ -74,7 +112,7 @@ export default function CreativeList({ collection, onEdit, onDelete, onMove, onS
       <div className="admin-card-head">
         <h2>Creative Coding</h2>
         <span className="admin-hint">
-          {works.length} {works.length === 1 ? "work" : "works"}
+          {works.length} {works.length === 1 ? "work" : "works"} &middot; newest first, drag the handle to reorder
         </span>
       </div>
 
@@ -99,11 +137,43 @@ export default function CreativeList({ collection, onEdit, onDelete, onMove, onS
       </form>
 
       {works.length === 0 ? (
-        <p className="admin-hint admin-project-empty">No creative works yet. Add the first one with the form.</p>
+        <p className="admin-hint admin-project-empty">Nothing here yet. Publish your first work with the form.</p>
       ) : (
         <ul className="admin-project-list">
           {works.map((w, i) => (
-            <li key={w.id} className="admin-project-row admin-creative-row">
+            <li
+              key={w.id}
+              className={[
+                "admin-project-row",
+                "admin-creative-row",
+                draggingId === w.id ? "is-dragging" : "",
+                dropTarget?.overId === w.id ? `drop-${dropTarget.edge}` : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              onDragOver={(e) => onRowDragOver(e, w.id)}
+              onDragLeave={() => setDropTarget((c) => (c?.overId === w.id ? null : c))}
+              onDrop={onRowDrop}
+            >
+              <div
+                className="admin-drag-handle"
+                draggable={busy === null}
+                onDragStart={(e) => {
+                  setDraggingId(w.id);
+                  e.dataTransfer.effectAllowed = "move";
+                  e.dataTransfer.setData("text/plain", w.id);
+                }}
+                onDragEnd={clearDrag}
+                role="button"
+                tabIndex={-1}
+                aria-label={`Drag to reorder ${w.title}`}
+                title="Drag to reorder"
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M5 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM5 6.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM5 10a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
+                </svg>
+              </div>
+
               <img src={`${base}${w.poster}`} alt="" className="admin-creative-thumb" />
 
               <div className="admin-project-meta">
@@ -155,7 +225,7 @@ export default function CreativeList({ collection, onEdit, onDelete, onMove, onS
                     className="admin-btn admin-btn-danger admin-btn-sm"
                     onClick={() => remove(w.id)}
                     disabled={deleting === w.id}
-                    title="Deletes the work and its video, poster and code from the repo"
+                    title="Deletes the work and all of its files from the repo"
                   >
                     {deleting === w.id ? "…" : "Confirm"}
                   </button>

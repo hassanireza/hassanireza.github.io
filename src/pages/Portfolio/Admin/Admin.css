@@ -328,7 +328,7 @@ video.admin-dropzone-preview {
 }
 
 .admin-creative-row {
-  grid-template-columns: 76px 1fr auto auto;
+  grid-template-columns: 28px 76px minmax(0, 1fr) auto auto;
 }
 
 .admin-creative-thumb {
@@ -362,11 +362,15 @@ video.admin-dropzone-preview {
 
 @media (max-width: 720px) {
   .admin-creative-row {
-    grid-template-columns: 60px 1fr;
+    grid-template-columns: 22px 60px minmax(0, 1fr);
     grid-template-areas:
-      "thumb meta"
-      "order actions";
+      "handle thumb meta"
+      "order order actions";
   }
+  .admin-creative-row .admin-drag-handle { grid-area: handle; }
+  .admin-creative-row .admin-project-meta { grid-area: meta; }
+  .admin-creative-row .admin-project-order { grid-area: order; flex-direction: row; }
+  .admin-creative-row .admin-project-actions { grid-area: actions; }
   .admin-creative-thumb { grid-area: thumb; width: 60px; height: 60px; }
   .admin-creative-poster { grid-template-columns: 1fr; }
 }
@@ -459,3 +463,110 @@ video.admin-dropzone-preview {
     border: 0;
   }
 }
+
+/* ---- creative form: guided groups ---- */
+
+.admin-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--border);
+}
+
+.admin-group-title {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.admin-more > summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.85rem;
+  color: var(--text-2);
+}
+
+.admin-more > summary::-webkit-details-marker { display: none; }
+.admin-more > summary::before { content: "+ "; color: var(--accent-bright); }
+.admin-more[open] > summary::before { content: "\2212  "; }
+.admin-more > summary em { font-style: normal; color: var(--text-3); }
+.admin-more[open] { gap: 1.1rem; }
+.admin-more[open] > summary { margin-bottom: 0.4rem; }
+
+.admin-hint code {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.72rem;
+  color: var(--text-2);
+}
+
+/* ---- tag input (like GitHub topics) ---- */
+
+.admin-tags-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-img);
+  background: var(--bg);
+  cursor: text;
+}
+
+.admin-tags-box:focus-within { border-color: var(--accent-bright); }
+
+.admin-form .admin-tags-box input {
+  flex: 1 1 90px;
+  min-width: 90px;
+  padding: 0.2rem 0.1rem;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+}
+
+.admin-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.3rem 0.2rem 0.7rem;
+  border-radius: 99px;
+  background: rgba(124, 136, 145, 0.18);
+  color: var(--text);
+  font-size: 0.78rem;
+}
+
+.admin-tag button {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.admin-tag button:hover { background: var(--surface); color: var(--text); }
+
+.admin-tag-suggest { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+.admin-tag-suggest button {
+  padding: 0.22rem 0.65rem;
+  border: 1px dashed var(--border-hover);
+  border-radius: 99px;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  font-size: 0.74rem;
+}
+
+.admin-tag-suggest button:hover { color: var(--text); border-color: var(--accent-bright); }

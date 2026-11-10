@@ -3,43 +3,43 @@
   "blurb": "Motion and image made from code alone. Watch the output, then open the source behind it.",
   "works": [
     {
-      "id": "arrivals",
-      "title": "Arrivals",
-      "desc": "A single sentence about arrival is performed as five beats, each one arriving through a different rhythmic mechanic.",
+      "id": "oracle",
+      "title": "Oracle",
+      "desc": "A halftone portrait holds a scrying orb over black water that ripples with every heartbeat.",
       "year": 2026,
-      "poster": "assets/creative/arrivals/poster.webp",
-      "video": "assets/creative/arrivals/arrivals.mp4",
-      "width": 1080,
+      "poster": "assets/creative/oracle/poster.webp",
+      "video": "assets/creative/oracle/oracle.mp4",
+      "width": 1920,
       "height": 1080,
+      "cover": "wide",
       "tags": [
         "Python",
         "NumPy",
-        "Generative",
-        "Seamless loop",
-        "point-dots"
+        "Halftone",
+        "Seamless loop"
       ],
       "about": [
-        "A generative typographic motion piece written in pure NumPy and SciPy. The only assets are one source portrait and three typefaces (Cormorant Garamond, Jost and JetBrains Mono); every mark on screen is generated. The sentence “Nothing on screen just appears. It arrives, and how it arrives is the message.” is staged across five beats. Each beat uses its own arrival: hairline rules that stutter in, bars that slam shut, a grain-edged sweep, slit rows, letters that rise, scramble and slide with motion blur, and a moiré mesh that converges to lock the type.",
-        "The portrait is not overlaid as a photo. It is turned into a luminance field and printed as a threshold dither of dots that rushes into place behind vertical blinds. Everything runs on a 120 bpm grid at three tempos at once: extreme 2 to 5 frame hits, medium moves, and slow drifts such as the dot settle, the light sweep and the drifting dust. The palette is the brand’s void, bone and silver."
+        "A portrait re-printed as a fixed stipple dither, so the dots stay put while light moves through them. The black water in front of her is a real wave simulation: pulses from the orb bend a mirrored copy of the portrait and catch the orb light as concentric glints.",
+        "The orb is an RGB dot-matrix lens holding refracted smoke, a miniature sigil and her magnified face, ringed by chromatic flare chains. Every loop is built from periodic motions, so the four second clip repeats without a seam."
       ],
       "specs": [
         {
           "label": "Output",
-          "value": "1080 x 1080, 30 fps"
+          "value": "1920 x 1080, 25 fps"
         },
         {
-          "label": "Length",
-          "value": "18 s, fading in from and out to black"
+          "label": "Loop",
+          "value": "4 s, seamless"
         },
         {
           "label": "Stack",
           "value": "NumPy, SciPy, Pillow, FFmpeg"
         }
       ],
-      "run": "python arrivals.py --save arrivals.mp4",
+      "run": "python oracle.py --image portrait.webp --save oracle.mp4",
       "code": {
-        "src": "assets/creative/arrivals/arrivals.py",
-        "filename": "arrivals.py",
+        "src": "assets/creative/oracle/oracle.py",
+        "filename": "oracle.py",
         "language": "python"
       }
     },
@@ -50,7 +50,6 @@
       "year": 2026,
       "poster": "assets/creative/nodal-descent/poster.webp",
       "video": "assets/creative/nodal-descent/nodal-descent.mp4",
-      "preview": "assets/creative/nodal-descent/nodal-descent-preview.mp4",
       "width": 1920,
       "height": 1080,
       "cover": "wide",
@@ -102,7 +101,6 @@
       "year": 2026,
       "poster": "assets/creative/scrying-basin/poster.webp",
       "video": "assets/creative/scrying-basin/scrying-basin.mp4",
-      "preview": "assets/creative/scrying-basin/scrying-basin-preview.mp4",
       "cover": "square",
       "width": 1080,
       "height": 1080,
@@ -134,48 +132,6 @@
       "code": {
         "src": "assets/creative/scrying-basin/scrying_basin.py",
         "filename": "scrying_basin.py",
-        "language": "python"
-      }
-    },
-    {
-      "id": "oracle",
-      "title": "Oracle",
-      "desc": "A halftone portrait holds a scrying orb over black water that ripples with every heartbeat.",
-      "year": 2026,
-      "poster": "assets/creative/oracle/poster.webp",
-      "video": "assets/creative/oracle/oracle.mp4",
-      "preview": "assets/creative/oracle/oracle-preview.mp4",
-      "width": 1920,
-      "height": 1080,
-      "cover": "wide",
-      "tags": [
-        "Python",
-        "NumPy",
-        "Halftone",
-        "Seamless loop"
-      ],
-      "about": [
-        "A portrait re-printed as a fixed stipple dither, so the dots stay put while light moves through them. The black water in front of her is a real wave simulation: pulses from the orb bend a mirrored copy of the portrait and catch the orb light as concentric glints.",
-        "The orb is an RGB dot-matrix lens holding refracted smoke, a miniature sigil and her magnified face, ringed by chromatic flare chains. Every loop is built from periodic motions, so the four second clip repeats without a seam."
-      ],
-      "specs": [
-        {
-          "label": "Output",
-          "value": "1920 x 1080, 25 fps"
-        },
-        {
-          "label": "Loop",
-          "value": "4 s, seamless"
-        },
-        {
-          "label": "Stack",
-          "value": "NumPy, SciPy, Pillow, FFmpeg"
-        }
-      ],
-      "run": "python oracle.py --image portrait.webp --save oracle.mp4",
-      "code": {
-        "src": "assets/creative/oracle/oracle.py",
-        "filename": "oracle.py",
         "language": "python"
       }
     }

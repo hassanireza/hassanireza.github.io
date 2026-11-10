@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getAuthenticatedUser, GitHubApiError } from "./githubApi";
+import { AUTH_EXPIRED_EVENT, getAuthenticatedUser, GitHubApiError, SESSION_EXPIRED_MESSAGE } from "./githubApi";
 
 /**
  * GitHub OAuth, shared by every admin dashboard on this site (Portfolio
@@ -108,6 +108,16 @@ export function useGitHubAuth() {
       setState({ status: "signed-out" });
     }
   }, [verify]);
+
+  // GitHub rejected the token mid-session: drop it and return to sign-in.
+  useEffect(() => {
+    const onExpired = () => {
+      sessionStorage.removeItem(STORAGE_KEY);
+      setState({ status: "error", error: SESSION_EXPIRED_MESSAGE });
+    };
+    window.addEventListener(AUTH_EXPIRED_EVENT, onExpired);
+    return () => window.removeEventListener(AUTH_EXPIRED_EVENT, onExpired);
+  }, []);
 
   const signIn = useCallback(() => {
     if (!CLIENT_ID) {

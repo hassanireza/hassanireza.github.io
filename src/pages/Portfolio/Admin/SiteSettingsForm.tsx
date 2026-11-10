@@ -33,7 +33,7 @@ export default function SiteSettingsForm({ config, onSubmit }: SiteSettingsFormP
       await onSubmit({ portfolioTitle: title.trim(), portfolioTagline: tagline.trim() });
       setSaved(true);
     } catch {
-      setError("Save failed - check your connection and try again.");
+      setError("Couldn't save. Check your connection and try again.");
     } finally {
       setSaving(false);
     }
