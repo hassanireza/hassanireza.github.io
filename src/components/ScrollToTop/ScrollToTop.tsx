@@ -9,7 +9,10 @@ import { useLocation } from "react-router-dom";
  * Router.
  */
 export default function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname: raw } = useLocation();
+  // Opening or closing a creative work changes the path but is still the same
+  // page, so it must not scroll back to the top.
+  const pathname = raw.startsWith("/portfolio/creative-coding") ? "/portfolio" : raw;
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
