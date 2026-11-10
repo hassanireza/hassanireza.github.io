@@ -56,14 +56,6 @@
     "href": "https://vespersgame.github.io/"
   },
   {
-    "id": "dota-2-knowledge-base",
-    "title": "Dota 2 knowledge base",
-    "desc": "A reference site covering every Dota 2 shop item.",
-    "img": "dota-2-knowledge-base.webp",
-    "category": "game-design",
-    "href": "https://2dota.github.io/"
-  },
-  {
     "id": "pyxis",
     "title": "Pyxis",
     "desc": "A Python only computational notebook.",
@@ -206,6 +198,14 @@
     "img": "bookStore.webp",
     "category": "frontend-development",
     "href": "https://hassanireza.github.io/bookStore/"
+  },
+  {
+    "id": "dota-2-knowledge-base",
+    "title": "Dota 2 knowledge base",
+    "desc": "A reference site covering every Dota 2 shop item.",
+    "img": "dota-2-knowledge-base.webp",
+    "category": "frontend-development",
+    "href": "https://2dota.github.io/"
   },
   {
     "id": "laser-frame",
