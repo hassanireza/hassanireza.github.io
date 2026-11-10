@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type DragEvent, type FormEvent } from "react";
 import { useGitHubAuth } from "../../../lib/admin/useGitHubAuth";
-import { GitHubApiError, getFileSha, putBinaryFile } from "../../../lib/admin/githubApi";
+import { GitHubApiError, assertSignedIn, getFileSha, putBinaryFile } from "../../../lib/admin/githubApi";
+import { commit } from "../../../lib/admin/commitMessages";
 import { convertToWebp, slugifyFilename, slugifyId, type ConvertedImage } from "./imageToWebp";
 import type { Category, Project } from "../../../types/project";
 
@@ -85,16 +86,17 @@ export default function ProjectForm({ categories, editing, onCancelEdit, onSubmi
     e.preventDefault();
     setError(null);
 
-    if (!title.trim()) return setError("Give the project a name.");
+    if (!title.trim()) return setError("Give the project a title.");
     if (!desc.trim()) return setError("Add a short description.");
     if (!categoryId) return setError("Choose a category.");
     if (!image && !existingImg) return setError("Add a 16:9 project image.");
 
     const token = getToken();
-    if (!token) return setError("Your session expired - sign in again.");
+    if (!token) return setError("Your GitHub session has expired. Sign in again to publish.");
 
     setSaving(true);
     try {
+      await assertSignedIn(token);
       // The id (and therefore the image filename) is derived from the
       // title once, at creation, and never changes again - so renaming a
       // project later doesn't orphan its image or need a rename dance.
@@ -112,7 +114,7 @@ export default function ProjectForm({ categories, editing, onCancelEdit, onSubmi
           token,
           `${UPLOAD_DIR}/${filename}`,
           image.base64,
-          `Upload image for project: ${title}`,
+          commit.projectThumbnail(title.trim(), currentSha !== null),
           currentSha ?? undefined,
         );
         imgPath = filename;
@@ -137,7 +139,7 @@ export default function ProjectForm({ categories, editing, onCancelEdit, onSubmi
       }
     } catch (err) {
       const message = err instanceof GitHubApiError ? err.message : null;
-      setError(message ? `Save failed: ${message}` : "Save failed - check your connection and try again.");
+      setError(message ? `Couldn't publish. ${message}` : "Couldn't publish. Check your connection and try again.");
     } finally {
       setSaving(false);
     }
@@ -147,7 +149,7 @@ export default function ProjectForm({ categories, editing, onCancelEdit, onSubmi
     if (!newCategoryLabel.trim()) return;
     const id = newCategoryLabel.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
     if (categories.some((c) => c.id === id)) {
-      setError("A category with that name already exists.");
+      setError("A section with that name already exists.");
       return;
     }
     setSaving(true);
@@ -157,7 +159,7 @@ export default function ProjectForm({ categories, editing, onCancelEdit, onSubmi
       setNewCategoryLabel("");
       setAddingCategory(false);
     } catch {
-      setError("Couldn't add that category - try again.");
+      setError("Couldn't add that section. Try again.");
     } finally {
       setSaving(false);
     }

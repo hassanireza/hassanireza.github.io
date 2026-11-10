@@ -40,7 +40,7 @@ export interface CreativeWork {
   year?: number;
   poster: string;
   video: string;
-  /** Small, silent loop used by the grid tile. Falls back to `video`. */
+  /** Legacy: an optional separate hover loop. Tiles now play `video` directly. */
   preview?: string;
   width: number;
   height: number;

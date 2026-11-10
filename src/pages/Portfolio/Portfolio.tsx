@@ -111,13 +111,19 @@ export default function Portfolio() {
   const loading = projects === null || categories === null || creative === null;
   const creativeWorks = useMemo<CreativeWork[]>(() => creative?.works ?? [], [creative]);
 
+  const leadSection = sections[0];
+  const restSections = useMemo(() => sections.slice(1), [sections]);
+
   /**
-   * Every chapter the page shows, in order: Creative Coding first, then the
-   * project categories. The hero index, the floating rail, the scroll-spy and
+   * Every chapter the page shows, in order: the first project category, then
+   * Creative Coding, then the remaining categories. The hero index, the floating rail, the scroll-spy and
    * the map all read from this one list, so they can never disagree.
    */
   const chapters = useMemo(() => {
     const list: { id: string; title: string; count: number }[] = [];
+    const asChapter = (s: (typeof sections)[number]) => ({ id: s.id, title: s.title, count: s.projects.length });
+    // The first discipline leads, Creative Coding comes second, the rest follow.
+    if (leadSection) list.push(asChapter(leadSection));
     if (creativeWorks.length > 0) {
       list.push({
         id: CREATIVE_SECTION_ID,
@@ -125,9 +131,9 @@ export default function Portfolio() {
         count: creativeWorks.length,
       });
     }
-    sections.forEach((s) => list.push({ id: s.id, title: s.title, count: s.projects.length }));
+    restSections.forEach((s) => list.push(asChapter(s)));
     return list.map((c, i) => ({ ...c, index: pad(i + 1) }));
-  }, [sections, creativeWorks, creative]);
+  }, [leadSection, restSections, creativeWorks, creative]);
 
   const creativeChapter = chapters.find((c) => c.id === CREATIVE_SECTION_ID);
 
@@ -384,6 +390,18 @@ export default function Portfolio() {
           <p className="pf-empty">New work is on its way. Check back soon.</p>
         )}
 
+        {leadSection && (
+          <ProjectGrid
+            key={leadSection.id}
+            id={leadSection.id}
+            index={chapters.find((c) => c.id === leadSection.id)?.index ?? leadSection.index}
+            title={leadSection.title}
+            blurb={leadSection.blurb}
+            projects={leadSection.projects}
+            onPlay={setPlaying}
+          />
+        )}
+
         {creativeChapter && (
           <CreativeSection
             index={creativeChapter.index}
@@ -394,7 +412,7 @@ export default function Portfolio() {
           />
         )}
 
-        {sections.map((section) => (
+        {restSections.map((section) => (
           <ProjectGrid
             key={section.id}
             id={section.id}

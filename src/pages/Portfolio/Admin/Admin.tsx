@@ -9,7 +9,8 @@ import SiteSettingsForm from "./SiteSettingsForm";
 import CreativeForm from "./CreativeForm";
 import CreativeList from "./CreativeList";
 import { removeOrphanedAssets } from "../../../lib/admin/projectAssets";
-import { CREATIVE_DATA_PATH, removeCreativePaths } from "../../../lib/admin/creativeAssets";
+import { CREATIVE_DATA_PATH, pruneWorkDir } from "../../../lib/admin/creativeAssets";
+import { commit } from "../../../lib/admin/commitMessages";
 import { FALLBACK_CREATIVE, type CreativeCollection, type CreativeWork } from "../../../types/creative";
 import type { Category, Project, SiteConfig } from "../../../types/project";
 import "../../../lib/admin/admin-shared.css";
@@ -62,6 +63,11 @@ export default function Admin() {
     }
   }, [getToken]);
 
+  const sectionLabel = (categoryId: string) =>
+    categoriesFile?.data.find((c) => c.id === categoryId)?.label ?? categoryId;
+  const titleOf = (id: string) => projectsFile?.data.find((p) => p.id === id)?.title ?? id;
+  const workTitleOf = (id: string) => creativeFile?.data.works.find((w) => w.id === id)?.title ?? id;
+
   const [saveError, setSaveError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -92,7 +98,7 @@ export default function Admin() {
       await loadData();
     } catch (err) {
       const message = err instanceof GitHubApiError ? err.message : "Check your connection and try again.";
-      setSaveError(`Save failed: ${message}`);
+      setSaveError(`Couldn't save your changes. ${message}`);
       throw err;
     }
   }
@@ -114,12 +120,10 @@ export default function Admin() {
       await loadData();
     } catch (err) {
       const message = err instanceof GitHubApiError ? err.message : "Check your connection and try again.";
-      setSaveError(`Save failed: ${message}`);
+      setSaveError(`Couldn't save your changes. ${message}`);
       throw err;
     }
   }
-
-  const workPaths = (w: CreativeWork) => [w.video, w.preview, w.poster, w.code.src];
 
   async function submitWork(work: CreativeWork) {
     setNotice(null);
@@ -127,38 +131,44 @@ export default function Admin() {
     await saveCreative(
       (current) => {
         const exists = current.works.some((w) => w.id === work.id);
-        // New works go first, like projects, so they are the first thing seen.
+        // Newest first: a new work goes to the top of the list, and of the site.
         return {
           ...current,
           works: exists ? current.works.map((w) => (w.id === work.id ? work : w)) : [work, ...current.works],
         };
       },
-      previous ? `Update creative work: ${work.title}` : `Add creative work: ${work.title}`,
+      previous ? commit.workUpdated(work.title) : commit.workAdded(work.title),
     );
-    // Replacing media or renaming the code file strands the old file: clean up.
+    // Keep the work's folder identical to what it references: a replaced
+    // video, a renamed code file or a retired preview loop never lingers.
     const token = getToken();
-    if (token && previous) {
-      const keep = new Set(workPaths(work));
-      const stale = workPaths(previous).filter((p) => p && !keep.has(p));
-      if (stale.length > 0) {
-        const { removed, failed } = await removeCreativePaths(token, stale, `replaced for ${work.id}`);
-        reportCleanup(removed, failed);
-      }
+    let tidied = 0;
+    if (token) {
+      const { removed, failed } = await pruneWorkDir(token, work.id, [work.video, work.poster, work.code.src], work.title);
+      tidied = removed.length;
+      reportCleanup(removed, failed, previous ? null : "");
     }
+    setNotice(
+      previous
+        ? `Saved "${work.title}".${tidied ? ` Removed ${tidied} outdated ${tidied === 1 ? "file" : "files"} from the repo.` : ""} The live site updates in about a minute.`
+        : `Published "${work.title}" at the top of Creative Coding. The live site updates in about a minute.`,
+    );
     setEditingWork(null);
   }
 
   async function deleteWork(id: string) {
     setNotice(null);
     const token = getToken();
-    let removedWork: CreativeWork | undefined;
-    await saveCreative((current) => {
-      removedWork = current.works.find((w) => w.id === id);
-      return { ...current, works: current.works.filter((w) => w.id !== id) };
-    }, `Remove creative work: ${id}`);
-    if (token && removedWork) {
-      const { removed, failed } = await removeCreativePaths(token, workPaths(removedWork), `work ${id} deleted`);
-      reportCleanup(removed, failed);
+    const title = workTitleOf(id);
+    await saveCreative(
+      (current) => ({ ...current, works: current.works.filter((w) => w.id !== id) }),
+      commit.workRemoved(title),
+    );
+    // Delete the video, poster and code from the repo, like any other dashboard delete.
+    if (token) {
+      const { removed, failed } = await pruneWorkDir(token, id, [], title);
+      if (failed.length > 0) reportCleanup(removed, failed, null);
+      else setNotice(`Deleted "${title}" and its ${removed.length} ${removed.length === 1 ? "file" : "files"} from the repo.`);
     }
   }
 
@@ -170,11 +180,24 @@ export default function Admin() {
       const works = [...current.works];
       [works[i], works[j]] = [works[j], works[i]];
       return { ...current, works };
-    }, `Reorder creative work: ${id}`);
+    }, commit.workReordered(workTitleOf(id)));
+  }
+
+  /** Drag and drop: put `id` before `beforeId`, or at the end when null. */
+  async function reorderWork(id: string, beforeId: string | null) {
+    await saveCreative((current) => {
+      const from = current.works.findIndex((w) => w.id === id);
+      if (from === -1 || id === beforeId) return current;
+      const works = [...current.works];
+      const [moved] = works.splice(from, 1);
+      const to = beforeId === null ? works.length : works.findIndex((w) => w.id === beforeId);
+      works.splice(to === -1 ? works.length : to, 0, moved);
+      return { ...current, works };
+    }, commit.workReordered(workTitleOf(id)));
   }
 
   async function saveCreativeText(title: string, blurb: string) {
-    await saveCreative((current) => ({ ...current, title, blurb }), "Update Creative Coding heading via admin dashboard");
+    await saveCreative((current) => ({ ...current, title, blurb }), commit.workHeading());
   }
 
   async function saveCategories(next: Category[], commitMessage: string) {
@@ -188,7 +211,7 @@ export default function Admin() {
       await loadData();
     } catch (err) {
       const message = err instanceof GitHubApiError ? err.message : "Check your connection and try again.";
-      setSaveError(`Save failed: ${message}`);
+      setSaveError(`Couldn't save your changes. ${message}`);
       throw err;
     }
   }
@@ -218,13 +241,13 @@ export default function Admin() {
         token,
         "public/data/categories.json",
         JSON.stringify(next, null, 2),
-        `Reorder category: ${moved.label}`,
+        commit.sectionMoved(moved.label, target === "top" ? "to the top" : target === "bottom" ? "to the bottom" : target),
         sha,
       );
       await loadData();
     } catch (err) {
       const message = err instanceof GitHubApiError ? err.message : "Check your connection and try again.";
-      setSaveError(`Save failed: ${message}`);
+      setSaveError(`Couldn't save your changes. ${message}`);
       throw err;
     }
   }
@@ -238,13 +261,13 @@ export default function Admin() {
         token,
         "public/data/site-config.json",
         JSON.stringify(next, null, 2),
-        "Update portfolio title/tagline via admin dashboard",
+        commit.siteSettings(),
         configFile.sha,
       );
       await loadData();
     } catch (err) {
       const message = err instanceof GitHubApiError ? err.message : "Check your connection and try again.";
-      setSaveError(`Save failed: ${message}`);
+      setSaveError(`Couldn't save your changes. ${message}`);
       throw err;
     }
   }
@@ -254,12 +277,14 @@ export default function Admin() {
    * save: the project is already gone from projects.json, so the site is
    * consistent; there is just a stray file left to remove by hand.
    */
-  function reportCleanup(removed: string[], failed: string[]) {
+  function reportCleanup(removed: string[], failed: string[], quiet: string | null = "") {
     if (failed.length > 0) {
-      setSaveError(`Saved, but could not delete ${failed.join(", ")} from the repo. Remove it manually.`);
+      setSaveError(
+        `Saved, but ${failed.length === 1 ? "one file" : `${failed.length} files`} could not be removed from the repo (${failed.join(", ")}). You can delete ${failed.length === 1 ? "it" : "them"} on GitHub.`,
+      );
     }
-    if (removed.length > 0) {
-      setNotice(`Also removed from the repo: ${removed.join(", ")}`);
+    if (quiet === "" && removed.length > 0) {
+      setNotice(`Saved. Also removed from the repo: ${removed.join(", ")}.`);
     }
   }
 
@@ -274,18 +299,20 @@ export default function Admin() {
     setNotice(null);
     let removedProject: Project | undefined;
     let remaining: Project[] = [];
+    const removedTitle = titleOf(id);
+    const removedSection = sectionLabel(projectsFile?.data.find((p) => p.id === id)?.category ?? "");
     await saveProjects((current) => {
       removedProject = current.find((p) => p.id === id);
       remaining = current.filter((p) => p.id !== id);
       return remaining;
-    }, `Remove project: ${id}`);
+    }, commit.projectRemoved(removedTitle, removedSection));
 
     if (token && removedProject) {
       const { removed, failed } = await removeOrphanedAssets(
         token,
         [removedProject.img, removedProject.video],
         remaining,
-        `project ${id} deleted`,
+        removedTitle,
       );
       reportCleanup(removed, failed);
     }
@@ -307,14 +334,14 @@ export default function Admin() {
       const next = [...current];
       [next[index], next[swapWith]] = [next[swapWith], next[index]];
       return next;
-    }, `Reorder project: ${id}`);
+    }, commit.projectReordered(titleOf(id), sectionLabel(projectsFile?.data.find((p) => p.id === id)?.category ?? "")));
   }
 
   /** Reassigns a project to a different category. */
   async function moveProjectToCategory(id: string, categoryId: string) {
     await saveProjects(
       (current) => current.map((p) => (p.id === id ? { ...p, category: categoryId } : p)),
-      `Move project ${id} to category: ${categoryId}`,
+      commit.projectMoved(titleOf(id), sectionLabel(categoryId)),
     );
   }
 
@@ -354,7 +381,9 @@ export default function Admin() {
         next.splice(lastIndexInCategory + 1, 0, updated);
       }
       return next;
-    }, `Reorder project: ${id}`);
+    }, targetCategoryId !== projectsFile?.data.find((p) => p.id === id)?.category
+      ? commit.projectMoved(titleOf(id), sectionLabel(targetCategoryId))
+      : commit.projectReordered(titleOf(id), sectionLabel(targetCategoryId)));
   }
 
   return (
@@ -408,7 +437,7 @@ export default function Admin() {
                 onSaveCategory={async (cat, mode) => {
                   const current = categoriesFile?.data ?? [];
                   const next = mode === "add" ? [...current, cat] : current;
-                  await saveCategories(next, `Add category: ${cat.label}`);
+                  await saveCategories(next, commit.sectionAdded(cat.label));
                 }}
                 onSubmit={async (project) => {
                   setNotice(null);
@@ -424,7 +453,9 @@ export default function Admin() {
                         ? current.map((p) => (p.id === project.id ? project : p))
                         : [project, ...current];
                     },
-                    exists ? `Update project: ${project.title}` : `Add project: ${project.title}`,
+                    exists
+                      ? commit.projectUpdated(project.title, sectionLabel(project.category))
+                      : commit.projectAdded(project.title, sectionLabel(project.category)),
                   );
                   // Replacing a legacy image uploads under a new filename, which
                   // would strand the old file in the repo. Clean it up.
@@ -434,7 +465,7 @@ export default function Admin() {
                       token,
                       [previous.img],
                       [...(projectsFile?.data ?? []).filter((p) => p.id !== project.id), project],
-                      `image replaced for ${project.id}`,
+                      project.title,
                     );
                     reportCleanup(removed, failed);
                   }
@@ -471,6 +502,7 @@ export default function Admin() {
                 }}
                 onDelete={deleteWork}
                 onMove={moveWork}
+                onReorder={reorderWork}
                 onSaveText={saveCreativeText}
               />
             </div>

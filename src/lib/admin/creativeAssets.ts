@@ -1,4 +1,5 @@
-import { deleteFile } from "./githubApi";
+import { deleteFile, listDir } from "./githubApi";
+import { commit } from "./commitMessages";
 
 /** Repo folder holding one sub-folder per creative work. */
 export const CREATIVE_DIR = "public/assets/creative";
@@ -33,6 +34,39 @@ export async function removeCreativePaths(
       if (existed) result.removed.push(p);
     } catch {
       result.failed.push(p);
+    }
+  }
+  return result;
+}
+
+/**
+ * Makes a work's folder match exactly what the work references: every other
+ * file in it is deleted (an old video, a renamed code file, a retired preview
+ * loop). Pass no `keep` paths to clear the folder entirely, which is what
+ * deleting a work does. Best effort like removeCreativePaths: the JSON is
+ * already saved, so a failure leaves a stray file but never a broken site.
+ */
+export async function pruneWorkDir(
+  token: string,
+  id: string,
+  keep: Array<string | undefined | null>,
+  title: string,
+): Promise<{ removed: string[]; failed: string[] }> {
+  const result = { removed: [] as string[], failed: [] as string[] };
+  const keepSet = new Set(keep.filter((p): p is string => !!p).map(repoPath));
+  let entries;
+  try {
+    entries = await listDir(token, `${CREATIVE_DIR}/${id}`);
+  } catch {
+    return result;
+  }
+  for (const entry of entries) {
+    if (entry.type !== "file" || keepSet.has(entry.path)) continue;
+    try {
+      const existed = await deleteFile(token, entry.path, commit.fileCleanup(entry.name, title), entry.sha);
+      if (existed) result.removed.push(entry.name);
+    } catch {
+      result.failed.push(entry.name);
     }
   }
   return result;
