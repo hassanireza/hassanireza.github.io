@@ -3,6 +3,47 @@
   "blurb": "Motion and image made from code alone. Watch the output, then open the source behind it.",
   "works": [
     {
+      "id": "arrivals",
+      "title": "Arrivals",
+      "desc": "Type that never simply appears: every word arrives by its own mechanic, and how it arrives is the message.",
+      "year": 2026,
+      "poster": "assets/creative/arrivals/poster.webp",
+      "video": "assets/creative/arrivals/arrivals.mp4",
+      "width": 1080,
+      "height": 1080,
+      "cover": "square",
+      "tags": [
+        "Python",
+        "NumPy",
+        "Typography",
+        "Motion"
+      ],
+      "about": [
+        "A typographic motion piece rendered entirely in code, in five beats. Each beat performs a different arrival mechanic: hairline rule grids that draw and retract, bars that slam in, grain-edged sweeps, slit rows, vertical blinds, and rotated outlines that converge like moire.",
+        "Kinetic-type techniques carry the words themselves: tracking collapse, per-letter rise with overshoot, glyph scramble, motion-blur slides, flash exposure, noise dissolve and slice glitch. It keeps strictly to the brand system, with a void ground, bone type, silver and ash rules, and Cormorant Garamond, Jost and JetBrains Mono."
+      ],
+      "specs": [
+        {
+          "label": "Output",
+          "value": "1080 x 1080, 30 fps"
+        },
+        {
+          "label": "Length",
+          "value": "18 s, with sound"
+        },
+        {
+          "label": "Stack",
+          "value": "NumPy, SciPy, Pillow, FFmpeg"
+        }
+      ],
+      "run": "python arrivals.py --save arrivals.mp4",
+      "code": {
+        "src": "assets/creative/arrivals/arrivals.py",
+        "filename": "arrivals.py",
+        "language": "python"
+      }
+    },
+    {
       "id": "oracle",
       "title": "Oracle",
       "desc": "A halftone portrait holds a scrying orb over black water that ripples with every heartbeat.",

@@ -27,10 +27,9 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
-from scipy.ndimage import gaussian_filter, gaussian_filter1d, map_coordinates
+from scipy.ndimage import gaussian_filter1d
 
 HERE = Path(__file__).resolve().parent
-TAU = 2 * np.pi
 
 
 def HEX(h):
@@ -49,7 +48,7 @@ RAMP_C = np.stack([VOID, DEEP, ASH, SILVER, BRIGHT, BONE])
 class Config:
     size: int = 1080
     fps: int = 30
-    duration: float = 18.0
+    duration: float = 27.0
     seed: int = 2718
 
 
@@ -82,27 +81,6 @@ def eback(x):
     c1 = 1.70158
     c3 = c1 + 1
     return 1 + c3 * (x - 1) ** 3 + c1 * (x - 1) ** 2
-
-
-# ------------------------------------------------------------- rhythm
-# Piecewise time map: performance time -> choreography time. Slopes are the tempo of each
-# passage: 4-5x = extreme fast hits, ~1x = normal, <0.5x = slow held drifts. Hits land on a
-# 120 bpm grid (0.5 s beats): 1.0 bars, 3.0 rows, 4.5 strike, 5.5 blinds, 7.0 lock,
-# 9.8 and, 10.75 it, 12.9 lines, 14.0 slam.
-WARP_NEW = [0, .25, 1.0, 1.1, 1.6, 2.9, 3.15, 3.5, 3.7, 4.2, 4.5, 4.6, 5.2, 5.5, 5.85, 6.5, 7.0, 9.3, 9.8,
-            10.2, 10.5, 10.75, 11.6, 12.6, 12.95, 13.5, 14.0, 14.12, 14.7, 17.0, 18.0]
-WARP_OLD = [0, .8, 2.0, 2.35, 4.7, 5.0, 5.9, 6.9, 7.9, 8.6, 8.75, 9.25, 9.9, 10.6, 12.5, 14.0, 14.5, 15.6, 16.7,
-            17.7, 18.5, 19.0, 20.9, 21.1, 21.9, 22.9, 23.3, 23.55, 24.9, 26.2, 27.0]
-HITS = [(1.0, 3), (3.0, 3), (4.5, 2), (5.5, 3), (7.0, 2), (9.8, 3), (10.75, 2), (12.9, 3), (14.0, 2)]
-
-
-def warp(tn):
-    return float(np.interp(tn, WARP_NEW, WARP_OLD))
-
-
-def ign(h, w):
-    iy, ix = np.mgrid[0:h, 0:w].astype(np.float32)
-    return np.mod(52.9829189 * np.mod(0.06711056 * ix + 0.00583715 * iy, 1.0), 1.0).astype(np.float32)
 
 
 # ------------------------------------------------------------------ text
@@ -242,9 +220,6 @@ class Piece:
         self.rng = rng
         self.fonts = Fonts(fonts_dir)
         self.M = int(96 * u)
-        self.cell = max(1, int(round(2 * u)))
-        self.smoke = gaussian_filter(rng.standard_normal((96, 96)), 2.0, mode="wrap")
-        self.smoke /= self.smoke.std()
         self.N = rng.random((S, S)).astype(np.float32)             # static grain threshold
         self.N2 = rng.random((S, S)).astype(np.float32)
         self.Nbig = rng.random((S, S * 2)).astype(np.float32)      # dynamic grain source
@@ -284,31 +259,19 @@ class Piece:
         return (a / np.abs(a).max()).astype(np.float32)
 
     def _load_plate(self, path):
-        """Prepare the portrait as a luminance field at dot resolution (it is re-printed as dots)."""
-        u, c = self.u, self.cell
-        self.P = int(888 * u) // c * c
-        P = self.P
-        pp = int(P * 1.12) // c * c
+        u, S = self.u, self.S
+        self.P = int(888 * u)
+        pp = int(self.P * 1.14)
         im = Image.open(path).convert("L")
         w, h = im.size
-        side = int(w * .60)
-        x0 = int(w * .24)
-        im = im.crop((x0, 0, x0 + side, side)).resize((pp, pp), Image.LANCZOS)
+        box = (int(w * .157), int(h * .007), int(w * .157) + int(w * .764), int(h * .007) + int(w * .764))
+        im = im.crop(box).resize((pp, pp), Image.LANCZOS)
         g = np.asarray(im, np.float32) / 255
-        lo, hi = np.percentile(g, 1), np.percentile(g, 99.7)
-        g = np.clip((g - lo) / (hi - lo), 0, 1) ** 0.66
-        g = np.clip(g + .8 * (g - gaussian_filter(g, 2.4 * u)), 0, 1.2)
-        n = pp // c
-        self.ppc = n
-        self.plateYc = g[:n * c, :n * c].reshape(n, c, n, c).mean((1, 3)).astype(np.float32)
-        Pc = P // c
-        self.Pc = Pc
-        iy, ix = np.mgrid[0:Pc, 0:Pc].astype(np.float32)
-        self.thrc = ign(Pc, Pc)
-        rr = np.random.default_rng(self.cfg.seed + 3)
-        self.Rr, self.Rx, self.Ry = [rr.random((Pc, Pc)).astype(np.float32) for _ in range(3)]
-        self.Rd = (np.hypot(ix - Pc / 2, iy - Pc / 2) / (Pc * .72)).astype(np.float32)
-        self.gy_c, self.gx_c, self.gxn = iy, ix, ix / Pc
+        lo, hi = np.percentile(g, 0.5), np.percentile(g, 99.8)
+        g = np.clip((g - lo) / (hi - lo), 0, 1) ** 0.72 * 1.12
+        g = np.clip(g, 0, 1)
+        self.plate = np.stack([np.interp(g, RAMP_G, RAMP_C[:, i]) for i in range(3)], -1).astype(np.float32)
+        self.pp = pp
 
     # ------------------------------------------------------------- tools
     def dyn_noise(self, f):
@@ -408,20 +371,16 @@ class Piece:
                 F.rect(x0 + xa, y0 + rb - max(1, int(u)), x0 + xb, y0 + rb, BRIGHT, .9 * alpha)
 
     # ---------------------------------------------------------- overlays
-    def pulse(self, Tn):
-        return float(np.exp(-((Tn % .5) / .5) * 7.0))
-
     def chrome(self, F, f, T):
-        """Brand chrome. T here is performance time; corner ticks flash on every beat."""
         u, S, M = self.u, self.S, self.M
-        a = eo(prog(T, .1, .5)) * (1 - eio(prog(T, 17.2, 18.0)))
+        a = eo(prog(T, .3, 1.0)) * (1 - eio(prog(T, 26.3, 27.0)))
         if a <= 0:
             return
-        pl = 1 + .9 * self.pulse(T)
         L, tk, ins = int(30 * u), max(1, int(round(u))), int(40 * u)
         for (x, y, sx, sy) in ((ins, ins, 1, 1), (S - ins, ins, -1, 1), (ins, S - ins, 1, -1), (S - ins, S - ins, -1, -1)):
-            F.rect(min(x, x + sx * L), y if sy == 1 else y - tk, max(x, x + sx * L), (y + tk) if sy == 1 else y, BONE, min(1, .42 * a * pl))
-            F.rect(x if sx == 1 else x - tk, min(y, y + sy * L), (x + tk) if sx == 1 else x, max(y, y + sy * L), BONE, min(1, .42 * a * pl))
+            F.rect(min(x, x + sx * L), y if sy == 1 else y - tk, max(x, x + sx * L), (y + tk) if sy == 1 else y, BONE, .45 * a)
+            F.rect(x if sx == 1 else x - tk, min(y, y + sy * L), (x + tk) if sx == 1 else x, max(y, y + sy * L), BONE, .45 * a)
+        # timecode (mm:ss:ff)
         s = f"{int(T // 60):02d}:{int(T % 60):02d}:{int((T % 1) * self.cfg.fps):02d}"
         cv = np.zeros((S, S), np.float32)
         tx0 = S - ins - int(len(s) * self.mono_adv) - int(4 * u)
@@ -430,33 +389,18 @@ class Piece:
             if g:
                 paste_max(cv, g[0], tx0 + i * self.mono_adv, S - ins - int(14 * u) + g[2])
         F.ink(cv, ASH, .95 * a, box=(tx0 - 4, S - ins - int(40 * u), S - ins, S - ins))
-        beats = [(0.25, "01"), (3.0, "02"), (5.5, "03"), (9.8, "04"), (12.9, "05")]
+        # scene index (scrambles to its value at each beat start)
+        beats = [(0.8, "01"), (5.6, "02"), (10.6, "03"), (16.6, "04"), (21.8, "05")]
         cur = max([b for b in beats if T >= b[0]], key=lambda b: b[0], default=None)
         if cur:
+            lab = cur[1]
             cv = np.zeros((S, S), np.float32)
-            for i, ch in enumerate(cur[1]):
-                if T < cur[0] + .2 and (f // 2) % 3:
+            for i, ch in enumerate(lab):
+                if T < cur[0] + .45 and (f // 2) % 3:
                     ch = "0123456789"[(f * 7 + i * 3) % 10]
                 g = self.mono_masks[ch]
                 paste_max(cv, g[0], ins + int(4 * u) + i * self.mono_adv, S - ins - int(14 * u) + g[2])
             F.ink(cv, FOG, .9 * a, box=(ins, S - ins - int(40 * u), ins + int(80 * u), S - ins))
-
-    def fog_dots(self, F, f, Tn):
-        """Slow layer: sparse dot-fog drifting over the whole piece; bursts denser on each beat."""
-        S, u = self.S, self.u
-        c = max(2, int(4 * u))
-        hs = S // c
-        ang = TAU * Tn / 9.0
-        gy = np.linspace(0, 1, hs, dtype=np.float32)[:, None] * 30 + 5 * np.sin(ang)
-        gx = np.linspace(0, 1, hs, dtype=np.float32)[None, :] * 30 + 5 * np.cos(ang) + Tn * .8
-        n = map_coordinates(self.smoke, [gy % 96 + 0 * gx, gx % 96 + 0 * gy], order=3, mode="wrap")
-        amp = .028 + .11 * self.pulse(Tn)
-        Y = np.clip((n - .2) / 1.4, 0, 1) ** 1.2 * amp
-        bit = (Y > ign(hs, hs)).astype(np.float32)
-        cv = np.zeros((S, S), np.float32)
-        m = np.kron(bit, np.ones((c, c), np.float32))
-        cv[:m.shape[0], :m.shape[1]] = m
-        F.ink(cv, BONE, .6 * (eo(prog(Tn, .2, .6)) * (1 - eio(prog(Tn, 17.2, 18.0)))))
 
     # ------------------------------------------------------------ beats
     def beat1(self, F, f, T):
@@ -562,59 +506,30 @@ class Piece:
         cv = w.render(dx=dx, dy=dy, a=a)
         F.ink(cv, color, 1.0, box=(max(0, w.box[0] - int(500 * self.u)), w.box[1] - 4, min(self.S, w.box[2] + int(500 * self.u)), w.box[3] + 4))
 
-    def beat3(self, F, f, T, Tn):
+    def beat3(self, F, f, T):
         u, S, M = self.u, self.S, self.M
-        P, c, Pc = self.P, self.cell, self.Pc
+        P = self.P
         x0 = y0 = int(96 * u)
-        # ---- the portrait, re-printed as a field of dots (pure threshold dither)
-        pan = np.sin(Tn * .9) * 10 * u
-        oxc = int((self.ppc - Pc) / 2 + pan / c)
-        oyc = int((self.ppc - Pc) / 2 + (1 - prog(Tn, 5.5, 9.8)) * 14 * u / c)
-        Yc = self.plateYc[oyc:oyc + Pc, oxc:oxc + Pc].copy()
-        Yc *= 1 + .20 * np.sin(TAU * (self.gxn * 1.3 - Tn * .32)) + .32 * self.pulse(Tn)       # slow light sweep + beat kick
-        g = np.linspace(0, 1, Pc, dtype=np.float32)[:, None]
-        Yc *= 1 - .85 * clamp((g - .5) / .45) ** 1.2                                           # clear the lower third for type
-        Yc = np.clip((Yc - .06) / .94, 0, 1.3)
-        bit = (Yc > self.thrc).astype(np.float32)
-        # assembly: an extreme-fast burst to 85% in 0.3 s, then a slow 2 s settle of the last dots
-        p = .85 * eexp(prog(Tn, 5.5, 5.8)) + .15 * eio(prog(Tn, 5.8, 7.8))
-        pc = clamp(p * 1.5 - .35 * self.Rr - .22 * self.Rd)
-        k = (1 - pc) ** 2
-        bit = map_coordinates(bit, [self.gy_c + (self.Ry - .5) * 2 * 150 * k, self.gx_c + (self.Rx - .5) * 2 * 150 * k],
-                              order=0, mode="constant", cval=0.0)
-        # vertical blinds open (and later close) over the dots, 0.25 s per bar
-        K = 22
-        vm = np.zeros((Pc, Pc), np.float32)
-        kw = Pc / K
-        edges = []
-        for kk in range(K):
-            d = abs(kk - (K - 1) / 2) / ((K - 1) / 2)
-            po = prog(Tn, 5.5 + d * .22, 5.5 + d * .22 + .25)
-            pcx = prog(Tn, 9.3 + d * .22, 9.3 + d * .22 + .25)
-            pk = po * (1 - pcx)
-            if pk <= 0:
-                continue
-            half = int(eo(pk) * Pc / 2)
-            a, b = Pc // 2 - half, Pc // 2 + half
-            xa, xb = int(kk * kw), int((kk + 1) * kw) - 1
-            vm[a:b, xa:xb] = 1
-            if pk < 1:
-                edges.append((xa, xb, a, b))
-        bit = bit * vm
-        cv = np.zeros((S, S), np.float32)
-        cv[y0:y0 + Pc * c, x0:x0 + Pc * c] = np.kron(bit, np.ones((c, c), np.float32))
-        F.ink(cv, BONE, 1.0, box=(x0, y0, x0 + Pc * c, y0 + Pc * c))
-        t1 = max(1, int(u))
-        for xa, xb, a, b in edges:
-            F.rect(x0 + xa * c, y0 + a * c, x0 + xb * c, y0 + a * c + t1, BRIGHT, .9)
-            F.rect(x0 + xa * c, y0 + b * c - t1, x0 + xb * c, y0 + b * c, BRIGHT, .9)
-        # ---- moire mesh converges on the line of type
+        pan = np.sin(T * .35) * 18 * u
+        ox = int((self.pp - P) / 2 + pan * .6)
+        oy = int((self.pp - P) / 2 + (1 - prog(T, 10.4, 16.6)) * 30 * u)
+        view = self.plate[oy:oy + P, ox:ox + P].copy()
+        # shade the lower third so the type sits in the dark
+        g = np.linspace(0, 1, P, dtype=np.float32)[:, None]
+        view *= (1 - .78 * clamp((g - .45) / .5) ** 1.3)[..., None]
+        # slow slit-scan wobble while it arrives
+        self.blinds(F, T, 10.6, 1.0, x0, y0, P, view, reverse=False)
+        close = prog(T, 15.7, 16.6)
+        if close > 0:
+            # blinds closing: repaint the black over the plate, bars shrinking
+            F.img[y0:y0 + P, x0:x0 + P] = VOID
+            self.blinds(F, T, 15.7, 0.8, x0, y0, P, view, reverse=True, flash=False)
+        # moire mesh converges on the line of type
         wb = self.w_it_arrives
         bx = (wb.box[0] - int(26 * u), wb.box[1] - int(26 * u), wb.box[2] + int(26 * u), wb.box[3] + int(26 * u))
         self.mesh(F, T, 12.3, 14.0, bx, fade=1 - eio(prog(T, 14.0, 14.6)) * .75)
+        # the line wipes in with a grain edge once the mesh has locked
         if T > 13.4:
-            ua = eio(prog(T, 13.4, 14.0)) * (1 - eio(prog(T, 15.6, 16.2)))
-            F.rect(bx[0], bx[1], bx[2], bx[3], VOID, .78 * ua)
             sx0, sy0, sx1, sy1 = wb.box
             wp = eio(prog(T, 13.6, 14.5))
             field = (sx0 - 40 * u + (sx1 - sx0 + 120 * u) * wp - self.xg[:, sx0:sx1]) / (90 * u)
@@ -624,6 +539,7 @@ class Piece:
             sub = F.img[sy0:sy1, sx0:sx1]
             ex = 1 + .5 * np.exp(-(T - 14.5) * 3.0) if T > 14.5 else 1.0
             sub += (np.clip(BONE * ex, 0, 1) - sub) * m[..., None]
+            # locked frame rule around the type
             fa = eio(prog(T, 14.0, 14.6)) * (1 - eio(prog(T, 15.6, 16.2)))
             if fa > 0:
                 bx0, by0, bx1, by1 = bx
@@ -747,30 +663,25 @@ class Piece:
 
     # ------------------------------------------------------------ render
     def frame(self, f):
-        Tn = f / self.cfg.fps
-        T = warp(Tn)                                  # choreography time: tempo varies by passage
+        T = f / self.cfg.fps
         F = Frame(self.S)
         F.clear()
-        self.fog_dots(F, f, Tn)
         if T >= .8:
             if T < 5.9:
                 self.beat1(F, f, T)
             if 5.6 <= T < 10.9:
                 self.beat2(F, f, T)
             if 10.5 <= T < 17.0:
-                self.beat3(F, f, T, Tn)
+                self.beat3(F, f, T)
             if 16.5 <= T < 22.1:
                 self.beat4(F, f, T)
             if T >= 21.6:
                 self.beat5(F, f, T)
-        self.chrome(F, f, Tn)
+        self.chrome(F, f, T)
         img = F.img
-        fps = self.cfg.fps
-        for t0, n in HITS:                            # impact frames on the beat grid
-            if t0 <= Tn < t0 + n / fps:
-                self.glitch(img, f, 1.0 if n > 2 else .6)
-        if any(abs(Tn - t0) < .5 / fps for t0 in (1.0, 14.0)):
-            img += .16                                # one-frame exposure on the two big slams
+        for gt in (5.62, 10.62, 16.62, 21.82):
+            if gt <= T < gt + .1:
+                self.glitch(img, f, 1.0)
         rng = np.random.default_rng(self.cfg.seed + f)
         img *= self.vig
         img += rng.standard_normal((self.S, self.S, 1)).astype(np.float32) * .013
@@ -798,7 +709,7 @@ def main():
         Image.fromarray(piece.frame(int(round(args.still * cfg.fps)))).save(args.out)
         print("saved", args.out)
     if args.sheet:
-        times = [1.0, 1.3, 1.5, 3.3, 3.8, 4.55, 5.7, 6.2, 8.0, 10.0, 10.9, 11.7, 13.3, 14.05, 14.4, 16.0]
+        times = [2.0, 3.4, 4.4, 6.4, 7.8, 9.2, 11.4, 13.2, 14.8, 18.0, 19.0, 20.2, 22.6, 23.4, 24.4, 25.6]
         tiles = [Image.fromarray(piece.frame(int(t * cfg.fps))).resize((360, 360), Image.LANCZOS) for t in times]
         sheet = Image.new("RGB", (360 * 4, 360 * 4))
         for i, im in enumerate(tiles):
