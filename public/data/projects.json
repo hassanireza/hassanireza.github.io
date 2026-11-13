@@ -1,5 +1,13 @@
 [
   {
+    "id": "aurum-maze",
+    "title": "Aurum Maze",
+    "desc": "A golden reimagining of classic Pac-Man.",
+    "img": "aurum-maze.webp",
+    "category": "game-design",
+    "href": "https://hassanireza.github.io/aurumMaze/"
+  },
+  {
     "id": "kalyxis",
     "title": "Kalyxis",
     "desc": "Code on the go, built for mobile.",
