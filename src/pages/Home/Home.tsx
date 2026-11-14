@@ -72,6 +72,17 @@ export default function Home() {
                 <path d="M3 3h10v10h-2V6.414L3.707 13.707 2.293 12.293 9.586 5H3V3z" />
               </svg>
             </Link>
+            <Link to="/gambit" className={`link${linksVisible ? " visible" : ""}`}>
+              <svg className="link-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <rect x="1.5" y="1.5" width="13" height="13" stroke="currentColor" strokeOpacity="0.7" />
+                <path d="M8 1.5v13M1.5 8h13" stroke="currentColor" strokeOpacity="0.4" />
+                <rect x="8" y="8" width="6.5" height="6.5" fill="currentColor" fillOpacity="0.45" stroke="none" />
+              </svg>
+              The Gambit
+              <svg className="link-arrow" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M3 3h10v10h-2V6.414L3.707 13.707 2.293 12.293 9.586 5H3V3z" />
+              </svg>
+            </Link>
           </nav>
 
           <nav className="links">

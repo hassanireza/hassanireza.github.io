@@ -171,6 +171,13 @@ body.home-fullscreen #root {
   transform: translate(2px, -2px);
 }
 
+/* Seven links: tighten the row on mid-size screens so it never wraps awkwardly. */
+@media (max-width: 1240px) {
+  .links {
+    gap: 0.6rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .name,
   .role,
@@ -208,5 +215,9 @@ body.home-fullscreen #root {
   }
   .name {
     font-size: 1.8rem;
+  }
+  /* Odd number of links: the last one spans the full row instead of leaving a hole. */
+  .links:last-child .link:last-child {
+    grid-column: 1 / -1;
   }
 }

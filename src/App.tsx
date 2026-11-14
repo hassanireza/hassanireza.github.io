@@ -19,6 +19,7 @@ const Admin = lazy(() => import("./pages/Portfolio/Admin/Admin"));
 const Contact = lazy(() => import("./pages/Contact/Contact"));
 const Branding = lazy(() => import("./pages/Branding/Branding"));
 const Descent = lazy(() => import("./pages/Descent/Descent"));
+const Gambit = lazy(() => import("./pages/Gambit/Gambit"));
 const JourneyLayout = lazy(() => import("./pages/Journey/JourneyLayout"));
 const Overview = lazy(() => import("./pages/Journey/Overview"));
 const Roadmap = lazy(() => import("./pages/Journey/Roadmap"));
@@ -42,6 +43,8 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/branding" element={<Branding />} />
           <Route path="/descent" element={<Descent />} />
+          {/* One splat route for the index and the reader, so filters and scroll survive opening an entry. */}
+          <Route path="/gambit/*" element={<Gambit />} />
           <Route path="/journey" element={<JourneyLayout />}>
             <Route index element={<Overview />} />
             <Route path="roadmap" element={<Roadmap />} />
