@@ -17,12 +17,14 @@ const FAVICON_BY_ROUTE: Record<string, string> = {
   "/contact": "contact",
   "/descent": "descent",
   "/journey": "journey",
+  "/gambit": "gambit",
 };
 
 function faviconNameForPath(pathname: string): string {
   if (FAVICON_BY_ROUTE[pathname]) return FAVICON_BY_ROUTE[pathname];
   if (pathname.startsWith("/descent")) return "descent";
   if (pathname.startsWith("/journey")) return "journey";
+  if (pathname.startsWith("/gambit")) return "gambit";
   return "notfound";
 }
 
