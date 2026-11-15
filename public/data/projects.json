@@ -1,5 +1,13 @@
 [
   {
+    "id": "obsidian-break",
+    "title": "Obsidian Break",
+    "desc": "A surreal battle where coffee becomes a world.",
+    "img": "obsidian-break.webp",
+    "category": "game-design",
+    "href": "https://hassanireza.github.io/obsidianBreak/"
+  },
+  {
     "id": "aurum-maze",
     "title": "Aurum Maze",
     "desc": "A golden reimagining of classic Pac-Man.",
