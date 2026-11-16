@@ -1,5 +1,13 @@
 [
   {
+    "id": "woodland-chess",
+    "title": "Woodland Chess",
+    "desc": "Mobile-first chess app with Stockfish WASM engine.",
+    "img": "woodland-chess.webp",
+    "category": "game-design",
+    "href": "https://woodlandchess.github.io/"
+  },
+  {
     "id": "obsidian-break",
     "title": "Obsidian Break",
     "desc": "A surreal battle where coffee becomes a world.",
@@ -30,14 +38,6 @@
     "img": "istanbul-navigator.webp",
     "category": "frontend-development",
     "href": "https://istanbulmap.github.io/"
-  },
-  {
-    "id": "woodland-chess",
-    "title": "Woodland Chess",
-    "desc": "Mobile-first chess app with Stockfish WASM engine.",
-    "img": "woodland-chess.webp",
-    "category": "game-design",
-    "href": "https://woodlandchess.github.io/"
   },
   {
     "id": "lexera",
