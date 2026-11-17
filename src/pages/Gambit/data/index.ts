@@ -14,7 +14,7 @@ import { craft } from "./ch10-craft";
 export { CHAPTERS };
 export type { Topic, ChapterId };
 
-const RAW: RawTopic[] = [
+const AUTHORED: RawTopic[] = [
   ...map,
   ...solutions,
   ...classics,
@@ -26,6 +26,26 @@ const RAW: RawTopic[] = [
   ...algorithms,
   ...craft,
 ];
+
+/**
+ * The reading order is the order of the game, Theory Gambit: the five that open the game first,
+ * then the rest of Foundations, then Core, then Advanced, with the hypergame finale last.
+ * Inside each level, entries keep the order they are authored in (chapter order).
+ * Numbers, the pager and the "Entry n of N" label all follow this order.
+ */
+const FIRST: readonly string[] = ["dominant-strategy", "prisoners-dilemma", "matching-pennies", "stag-hunt", "ultimatum"];
+const FINALE: readonly string[] = ["hypergame-theory", "hypergame-levels", "metagame-howard"];
+
+function inGameOrder(all: RawTopic[]): RawTopic[] {
+  const bySlug = new Map(all.map((r) => [r.i, r] as const));
+  const pinned = new Set([...FIRST, ...FINALE]);
+  const pick = (slugs: readonly string[]) => slugs.map((s) => bySlug.get(s)).filter((r): r is RawTopic => r !== undefined);
+  const rest = all.filter((r) => !pinned.has(r.i));
+  const byLevel = (level: 1 | 2 | 3) => rest.filter((r) => r.l === level);
+  return [...pick(FIRST), ...byLevel(1), ...byLevel(2), ...byLevel(3), ...pick(FINALE)];
+}
+
+const RAW: RawTopic[] = inGameOrder(AUTHORED);
 
 function minutesFor(raw: RawTopic): number {
   const words = [raw.d, ...raw.b, raw.x, raw.u, raw.o, ...(raw.m ?? [])].join(" ").split(/\s+/).length;
@@ -67,7 +87,7 @@ export function chapterOf(id: ChapterId) {
 }
 
 export const LEVEL_LABEL: Record<1 | 2 | 3, string> = {
-  1: "Intro",
+  1: "Foundations",
   2: "Core",
   3: "Advanced",
 };

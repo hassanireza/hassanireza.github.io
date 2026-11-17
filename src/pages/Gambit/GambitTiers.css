@@ -1,0 +1,74 @@
+/* The Gambit: the index is read in the order of the game. Foundations, then Core, then Advanced. */
+
+.gb-groups {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 1rem var(--gb-pad) 3rem;
+}
+
+.gb-group + .gb-group {
+  margin-top: 3.2rem;
+}
+
+.gb-group-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  column-gap: 0.9rem;
+  row-gap: 0.5rem;
+  padding: 1.1rem 0 1.3rem;
+  margin-bottom: 0.4rem;
+  border-top: 1px solid var(--border);
+}
+.gb-group-no {
+  font-family: "JetBrains Mono", var(--font-body);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+}
+.gb-group-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.9rem, 7vw, 2.6rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.gb-group-count {
+  font-family: "JetBrains Mono", var(--font-body);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.gb-group-blurb {
+  grid-column: 1 / -1;
+  max-width: 40rem;
+  font-weight: 300;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--text-3);
+}
+
+.gb-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (min-width: 640px) {
+  .gb-group-blurb {
+    grid-column: 2 / -1;
+  }
+}
+@media (min-width: 960px) {
+  .gb-grid {
+    gap: 1.2rem;
+  }
+  .gb-group + .gb-group {
+    margin-top: 4rem;
+  }
+}

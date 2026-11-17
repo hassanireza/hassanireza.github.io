@@ -7,6 +7,7 @@ import CopyButton from "./CopyButton";
 import Tex from "./Tex";
 import { IconArrow } from "./Icons";
 import { GambitPlayButton, GambitPlayStage } from "./GambitPlay";
+import "./GambitTiers.css";
 
 export type ChapterFilter = "all" | ChapterId;
 export type LevelFilter = 0 | 1 | 2 | 3;
@@ -64,6 +65,28 @@ function useColumnCount(ref: RefObject<HTMLDivElement | null>): number {
   return count;
 }
 
+/** Same order as the game: the library is read Foundations, then Core, then Advanced. */
+const LEVELS = [1, 2, 3] as const;
+
+const LEVEL_BLURB: Record<1 | 2 | 3, string> = {
+  1: "Start here. The plain ideas and the classic first games, opening with the five that start Theory Gambit.",
+  2: "The working toolkit. Most of what you need to analyse a real strategic situation.",
+  3: "Deep and demanding ideas, ending with hypergames and metagames.",
+};
+
+/** Balance a list into columns by estimated card height. */
+function distribute(items: Topic[], columns: number): Topic[][] {
+  const buckets: Topic[][] = Array.from({ length: columns }, () => []);
+  const heights = new Array<number>(columns).fill(0);
+  for (const t of items) {
+    let k = 0;
+    for (let i = 1; i < columns; i++) if (heights[i] < heights[k]) k = i;
+    buckets[k].push(t);
+    heights[k] += estimateHeight(t);
+  }
+  return buckets;
+}
+
 function LevelDots({ level }: { level: 1 | 2 | 3 }) {
   return (
     <span className="gb-level" role="img" aria-label={`Level: ${LEVEL_LABEL[level]}`}>
@@ -113,17 +136,14 @@ export default function GambitIndex({
     });
   }, [query, chapter, level]);
 
-  const cols = useMemo(() => {
-    const buckets: Topic[][] = Array.from({ length: columns }, () => []);
-    const heights = new Array<number>(columns).fill(0);
-    for (const t of shown) {
-      let k = 0;
-      for (let i = 1; i < columns; i++) if (heights[i] < heights[k]) k = i;
-      buckets[k].push(t);
-      heights[k] += estimateHeight(t);
-    }
-    return buckets;
-  }, [shown, columns]);
+  const groups = useMemo(
+    () =>
+      LEVELS.map((l) => {
+        const items = shown.filter((t) => t.level === l);
+        return { level: l, items, cols: distribute(items, columns) };
+      }).filter((g) => g.items.length > 0),
+    [shown, columns],
+  );
 
   const activeChapter = chapter === "all" ? null : chapterOf(chapter);
 
@@ -223,52 +243,70 @@ export default function GambitIndex({
         </p>
       </section>
 
-      <div className="gb-masonry" ref={gridRef} style={vars({ "--cols": columns })}>
-        {cols.map((col, ci) => (
-          <div className="gb-col" key={ci}>
-            {col.map((t, i) => (
-              <article className="gb-card" key={t.slug} style={vars({ "--i": (i + ci) % 10 })}>
-                <div className="gb-card-top">
-                  <span className="gb-card-no">
-                    {pad(t.number)} &nbsp;&middot;&nbsp; {chapterOf(t.chapter).numeral}
-                  </span>
-                  <LevelDots level={t.level} />
+      <div className="gb-groups" ref={gridRef} style={vars({ "--cols": columns })}>
+        {groups.map((g) => (
+          <section className="gb-group" key={g.level} aria-labelledby={`gb-group-${g.level}`}>
+            <header className="gb-group-head">
+              <span className="gb-group-no" aria-hidden="true">
+                {String(g.level).padStart(2, "0")}
+              </span>
+              <h2 className="gb-group-title" id={`gb-group-${g.level}`}>
+                {LEVEL_LABEL[g.level]}
+              </h2>
+              <span className="gb-group-count">
+                {g.items.length} {g.items.length === 1 ? "entry" : "entries"}
+              </span>
+              <p className="gb-group-blurb">{LEVEL_BLURB[g.level]}</p>
+            </header>
+            <div className="gb-grid">
+              {g.cols.map((col, ci) => (
+                <div className="gb-col" key={ci}>
+                  {col.map((t, i) => (
+                    <article className="gb-card" key={t.slug} style={vars({ "--i": (i + ci) % 10 })}>
+                      <div className="gb-card-top">
+                        <span className="gb-card-no">
+                          {pad(t.number)} &nbsp;&middot;&nbsp; {chapterOf(t.chapter).numeral}
+                        </span>
+                        <LevelDots level={t.level} />
+                      </div>
+                      <h3 className="gb-card-title">
+                        <Link to={`/gambit/${t.slug}`} onClick={onOpen} className="gb-card-link">
+                          {t.name}
+                        </Link>
+                      </h3>
+                      {t.fa && (
+                        <p className="gb-fa" lang="fa" dir="rtl">
+                          {t.fa}
+                        </p>
+                      )}
+                      <p className="gb-card-idea">{t.idea}</p>
+                      {t.math[0] && (
+                        <div className="gb-card-math" aria-hidden="true">
+                          <Tex tex={t.math[0].tex} />
+                        </div>
+                      )}
+                      <div className="gb-card-foot">
+                        <span className="gb-card-meta">
+                          {t.tags[0]} &nbsp;&middot;&nbsp; {t.minutes} min
+                        </span>
+                        <span className="gb-card-actions">
+                          <CopyButton
+                            compact
+                            label={`Copy ${t.name} as Markdown`}
+                            copied={copiedKey === `topic:${t.slug}`}
+                            onCopy={() => copy(`topic:${t.slug}`, topicToMarkdown(t), `Copied "${t.name}" as Markdown`)}
+                          />
+                          <span className="gb-card-open" aria-hidden="true">
+                            <IconArrow dir="right" />
+                          </span>
+                        </span>
+                      </div>
+                    </article>
+                  ))}
                 </div>
-                <h2 className="gb-card-title">
-                  <Link to={`/gambit/${t.slug}`} onClick={onOpen} className="gb-card-link">
-                    {t.name}
-                  </Link>
-                </h2>
-                {t.fa && (
-                  <p className="gb-fa" lang="fa" dir="rtl">
-                    {t.fa}
-                  </p>
-                )}
-                <p className="gb-card-idea">{t.idea}</p>
-                {t.math[0] && (
-                  <div className="gb-card-math" aria-hidden="true">
-                    <Tex tex={t.math[0].tex} />
-                  </div>
-                )}
-                <div className="gb-card-foot">
-                  <span className="gb-card-meta">
-                    {t.tags[0]} &nbsp;&middot;&nbsp; {t.minutes} min
-                  </span>
-                  <span className="gb-card-actions">
-                    <CopyButton
-                      compact
-                      label={`Copy ${t.name} as Markdown`}
-                      copied={copiedKey === `topic:${t.slug}`}
-                      onCopy={() => copy(`topic:${t.slug}`, topicToMarkdown(t), `Copied "${t.name}" as Markdown`)}
-                    />
-                    <span className="gb-card-open" aria-hidden="true">
-                      <IconArrow dir="right" />
-                    </span>
-                  </span>
-                </div>
-              </article>
-            ))}
-          </div>
+              ))}
+            </div>
+          </section>
         ))}
       </div>
 
