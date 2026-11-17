@@ -6,6 +6,7 @@ import type { ChapterId, Topic } from "./data";
 import CopyButton from "./CopyButton";
 import Tex from "./Tex";
 import { IconArrow } from "./Icons";
+import { GambitPlayButton, GambitPlayStage } from "./GambitPlay";
 
 export type ChapterFilter = "all" | ChapterId;
 export type LevelFilter = 0 | 1 | 2 | 3;
@@ -70,31 +71,6 @@ function LevelDots({ level }: { level: 1 | 2 | 3 }) {
         <i key={n} className={n <= level ? "on" : ""} />
       ))}
     </span>
-  );
-}
-
-function PayoffMark() {
-  return (
-    <svg className="gb-hero-mark" viewBox="0 0 260 200" aria-hidden="true">
-      <g fill="none" stroke="currentColor" strokeOpacity="0.28">
-        <rect x="40" y="30" width="200" height="150" />
-        <path d="M140 30v150M40 105h200" />
-      </g>
-      <rect x="140" y="105" width="100" height="75" fill="rgba(230,227,218,0.06)" stroke="#c9cfd2" strokeOpacity="0.7" />
-      <g fontFamily="JetBrains Mono, monospace" fontSize="11" fill="currentColor" fillOpacity="0.6" textAnchor="middle">
-        <text x="90" y="72">3, 3</text>
-        <text x="190" y="72">0, 5</text>
-        <text x="90" y="147">5, 0</text>
-        <text x="190" y="147" fill="#e6e3da" fillOpacity="0.95">1, 1</text>
-      </g>
-      <g fontFamily="JetBrains Mono, monospace" fontSize="8" fill="currentColor" fillOpacity="0.4" textAnchor="middle" letterSpacing="2">
-        <text x="90" y="20">C</text>
-        <text x="190" y="20">D</text>
-        <text x="26" y="72">C</text>
-        <text x="26" y="147">D</text>
-      </g>
-      <circle cx="190" cy="165" r="2.4" fill="#e6e3da" />
-    </svg>
   );
 }
 
@@ -166,8 +142,9 @@ export default function GambitIndex({
           <p className="gb-sub gb-sub-2">
             Read in order or wander. Each card opens a full entry, and every entry can be copied as Markdown.
           </p>
+          <GambitPlayButton />
         </div>
-        <PayoffMark />
+        <GambitPlayStage />
       </header>
 
       <section className="gb-controls" aria-label="Filter entries">

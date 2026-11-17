@@ -1,0 +1,632 @@
+/* The Gambit: promo for Theory Gambit, the game. Abyssal Liturgy, mobile first.
+ *
+ * The resting state of the stage is the finished picture, so reduced motion shows it still.
+ * Everything under the motion query is one 12 second loop: Feel (0 to 4s), See (4 to 8s), Prove (8 to 12s).
+ * The @keyframes at the bottom are generated from one timeline, so every beat stays in sync.
+ */
+
+/* Call to action */
+.gb-play-cta {
+  margin-top: 1.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.85rem;
+  animation: fadeUp 1.2s var(--ease-liturgy) 0.5s both;
+}
+.gb-play-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  min-height: 52px;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: var(--accent-dim);
+  border: 1px solid rgba(201, 207, 210, 0.42);
+  border-radius: 3px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease),
+    box-shadow 0.5s var(--ease);
+}
+.gb-play-btn:hover {
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+  color: var(--bg);
+  box-shadow: 0 0 34px rgba(201, 207, 210, 0.18);
+}
+.gb-play-btn:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 3px;
+}
+.gb-play-btn-text {
+  white-space: nowrap;
+}
+.gb-play-pair {
+  width: 24px;
+  height: 12px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+.gb-play-pair circle {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.5s var(--ease-liturgy);
+}
+.gb-play-btn:hover .gb-play-pair-them {
+  transform: scale(1.3);
+}
+.gb-play-btn:hover .gb-play-pair-you {
+  transform: translateX(3px);
+}
+.gb-play-ext {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: transform 0.3s var(--ease);
+}
+.gb-play-btn:hover .gb-play-ext {
+  transform: translate(2px, -2px);
+}
+.gb-play-note {
+  font-weight: 300;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--text-3);
+}
+.gb-play-note em {
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  color: var(--text-2);
+}
+
+/* Stage */
+.gb-play-stage {
+  position: relative;
+  display: block;
+  width: min(100%, 340px);
+  justify-self: start;
+  aspect-ratio: 320 / 270;
+  overflow: hidden;
+  color: var(--text);
+  background: linear-gradient(180deg, rgba(214, 219, 222, 0.045), rgba(214, 219, 222, 0.012));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+  -webkit-tap-highlight-color: transparent;
+  animation: fadeUp 1.4s var(--ease-liturgy) 0.35s both;
+  transition: border-color 0.5s var(--ease), box-shadow 0.6s var(--ease);
+}
+.gb-play-stage:hover,
+.gb-hero:has(.gb-play-btn:hover) .gb-play-stage {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-hover);
+}
+.gbp {
+  display: block;
+  width: 100%;
+  height: 100%;
+  --gbp-t: 12s;
+}
+
+/* Resting state: the finished picture */
+.gbp circle {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.gbp-contours circle {
+  fill: none;
+  stroke: var(--text-3);
+  stroke-opacity: 0.09;
+  stroke-width: 1;
+}
+.gbp-contours .gbp-orbit {
+  stroke-opacity: 0.2;
+  stroke-dasharray: 1 7;
+}
+.gbp-mono {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  fill: var(--text-3);
+}
+.gbp-play-word {
+  transition: fill 0.4s var(--ease);
+}
+.gb-play-stage:hover .gbp-play-word,
+.gb-hero:has(.gb-play-btn:hover) .gbp-play-word {
+  fill: var(--text);
+}
+.gbp-hair {
+  fill: none;
+  stroke: var(--border-hover);
+  stroke-width: 0.6;
+}
+.gbp-ring {
+  fill: none;
+  stroke: var(--accent-bright);
+  stroke-width: 1;
+  opacity: 0.6;
+}
+.gbp-board path {
+  fill: none;
+  stroke: var(--text-3);
+  stroke-opacity: 0.6;
+  stroke-width: 1;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.gbp-band {
+  fill: var(--text);
+  opacity: 0.075;
+}
+.gbp-bandline {
+  fill: none;
+  stroke: var(--accent-bright);
+  stroke-opacity: 0.75;
+  stroke-width: 1;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.gbp-alt {
+  fill: none;
+  stroke: var(--accent-bright);
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+  opacity: 0;
+}
+.gbp-win,
+.gbp-you {
+  fill: var(--text);
+}
+.gbp-you {
+  opacity: 0.28;
+}
+.gbp-arrow,
+.gbp-head {
+  fill: none;
+  stroke: var(--accent-bright);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.gbp-arrow {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.gbp-num text {
+  fill: var(--text);
+}
+.gbp-num .gbp-num-tl,
+.gbp-num .gbp-num-tr {
+  opacity: 0.3;
+}
+.gbp-cap {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 15px;
+  fill: var(--text-2);
+  opacity: 0;
+}
+.gbp-cap-3 {
+  fill: var(--text);
+  opacity: 1;
+}
+.gbp-bar-bg {
+  fill: none;
+  stroke: var(--border-hover);
+  stroke-width: 1;
+}
+.gbp-bar {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 1.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.gbp-labs text,
+.gbp-row-down {
+  fill: var(--text);
+}
+
+/* Motion */
+@media (prefers-reduced-motion: no-preference) {
+  .gbp-orbit {
+    animation: gbp-spin 140s linear infinite;
+  }
+  .gbp-board path {
+    animation: gbp-draw 1.8s var(--ease-liturgy) both;
+  }
+  .gbp-board path:nth-child(2) {
+    animation-delay: 0.35s;
+  }
+  .gbp-board path:nth-child(3) {
+    animation-delay: 0.55s;
+  }
+
+  .gbp-them-l,
+  .gbp-them-r,
+  .gbp-you,
+  .gbp-alt,
+  .gbp-win,
+  .gbp-arrow,
+  .gbp-head,
+  .gbp-band,
+  .gbp-bandline,
+  .gbp-num text,
+  .gbp-cap,
+  .gbp-bar,
+  .gbp-labs text,
+  .gbp-row-down {
+    animation-duration: var(--gbp-t);
+    animation-timing-function: var(--ease-liturgy);
+    animation-iteration-count: infinite;
+  }
+  .gbp-them-l { animation-name: gbp-themL; }
+  .gbp-them-r { animation-name: gbp-themR; }
+  .gbp-you-tl { animation-name: gbp-youTL; }
+  .gbp-you-tr { animation-name: gbp-youTR; }
+  .gbp-alt-bl { animation-name: gbp-altBL; }
+  .gbp-alt-br { animation-name: gbp-altBR; }
+  .gbp-win-bl { animation-name: gbp-winBL; }
+  .gbp-win-br { animation-name: gbp-winBR; }
+  .gbp-arrow-l { animation-name: gbp-arrowL; }
+  .gbp-arrow-r { animation-name: gbp-arrowR; }
+  .gbp-head-l { animation-name: gbp-headL; }
+  .gbp-head-r { animation-name: gbp-headR; }
+  .gbp-band { animation-name: gbp-band; }
+  .gbp-bandline { animation-name: gbp-bandLine; }
+  .gbp-bandline-2 { animation-name: gbp-bandLine; }
+  .gbp-row-down { animation-name: gbp-rowDown; }
+  .gbp-num-tl { animation-name: gbp-numTL; }
+  .gbp-num-tr { animation-name: gbp-numTR; }
+  .gbp-num-bl { animation-name: gbp-numBL; }
+  .gbp-num-br { animation-name: gbp-numBR; }
+  .gbp-cap-1 { animation-name: gbp-cap1; }
+  .gbp-cap-2 { animation-name: gbp-cap2; }
+  .gbp-cap-3 { animation-name: gbp-cap3; }
+  .gbp-lab-1 { animation-name: gbp-lab1; }
+  .gbp-lab-2 { animation-name: gbp-lab2; }
+  .gbp-lab-3 { animation-name: gbp-lab3; }
+  .gbp-bar-1 { animation-name: gbp-bar1; }
+  .gbp-bar-2 { animation-name: gbp-bar2; }
+  .gbp-bar-3 { animation-name: gbp-bar3; }
+
+  .gb-play-pair-them {
+    animation: gb-play-breathe 3.6s var(--ease-liturgy) infinite;
+  }
+  .gb-play-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -40%;
+    width: 28%;
+    background: linear-gradient(100deg, transparent, rgba(230, 227, 218, 0.16), transparent);
+    transform: skewX(-18deg);
+    pointer-events: none;
+    animation: gb-play-sheen 7s var(--ease) 2.2s infinite;
+  }
+}
+
+@keyframes gbp-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes gbp-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes gb-play-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+}
+@keyframes gb-play-sheen {
+  0% { left: -40%; }
+  26%, 100% { left: 140%; }
+}
+
+/* Tablet and up: the stage sits beside the copy */
+@media (min-width: 640px) {
+  .gb-play-cta {
+    align-items: flex-start;
+  }
+  .gb-play-btn {
+    justify-content: flex-start;
+  }
+  .gb-play-stage {
+    justify-self: end;
+    width: 300px;
+  }
+}
+@media (min-width: 960px) {
+  .gb-play-stage {
+    width: 340px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gb-play-cta,
+  .gb-play-stage {
+    animation: none;
+  }
+}
+
+/* Generated from one timeline: Feel 0 to 4s, See 4 to 8s, Prove 8 to 12s */
+@keyframes gbp-themL{
+  0%{opacity:0.5;transform:scale(1)}
+  3.75%{opacity:0.5;transform:scale(1)}
+  5.833%{opacity:1;transform:scale(1.35)}
+  9.167%{opacity:0.5;transform:scale(1)}
+  16.667%{opacity:0.5;transform:scale(1)}
+  18.75%{opacity:1;transform:scale(1.35)}
+  22.083%{opacity:0.5;transform:scale(1)}
+  75%{opacity:0.5;transform:scale(1)}
+  77.5%{opacity:1;transform:scale(1.5)}
+  82.5%{opacity:0.55;transform:scale(1)}
+  100%{opacity:0.5;transform:scale(1)}
+}
+@keyframes gbp-themR{
+  0%{opacity:0.5;transform:scale(1)}
+  10.833%{opacity:0.5;transform:scale(1)}
+  12.917%{opacity:1;transform:scale(1.35)}
+  16.25%{opacity:0.5;transform:scale(1)}
+  23.75%{opacity:0.5;transform:scale(1)}
+  25.833%{opacity:1;transform:scale(1.35)}
+  29.167%{opacity:0.5;transform:scale(1)}
+  75%{opacity:0.5;transform:scale(1)}
+  77.5%{opacity:1;transform:scale(1.5)}
+  82.5%{opacity:0.55;transform:scale(1)}
+  100%{opacity:0.5;transform:scale(1)}
+}
+@keyframes gbp-youTL{
+  0%{opacity:0;transform:scale(0.15)}
+  3.75%{opacity:0;transform:scale(0.15)}
+  7.917%{opacity:1;transform:scale(1)}
+  16.667%{opacity:1;transform:scale(1)}
+  18.75%{opacity:1;transform:scale(1.1)}
+  22.083%{opacity:1;transform:scale(1)}
+  33.333%{opacity:1;transform:scale(1)}
+  39.167%{opacity:0.45;transform:scale(1)}
+  66.667%{opacity:0.45;transform:scale(1)}
+  73.333%{opacity:0.28;transform:scale(1)}
+  90%{opacity:0.28;transform:scale(1)}
+  94.167%{opacity:0;transform:scale(1)}
+  100%{opacity:0;transform:scale(0.15)}
+}
+@keyframes gbp-youTR{
+  0%{opacity:0;transform:scale(0.15)}
+  10.833%{opacity:0;transform:scale(0.15)}
+  15%{opacity:1;transform:scale(1)}
+  23.75%{opacity:1;transform:scale(1)}
+  25.833%{opacity:1;transform:scale(1.1)}
+  29.167%{opacity:1;transform:scale(1)}
+  33.333%{opacity:1;transform:scale(1)}
+  39.167%{opacity:0.45;transform:scale(1)}
+  66.667%{opacity:0.45;transform:scale(1)}
+  73.333%{opacity:0.28;transform:scale(1)}
+  90%{opacity:0.28;transform:scale(1)}
+  94.167%{opacity:0;transform:scale(1)}
+  100%{opacity:0;transform:scale(0.15)}
+}
+@keyframes gbp-numTL{
+  0%{opacity:0}
+  5.833%{opacity:0}
+  9.167%{opacity:0.75}
+  33.333%{opacity:0.75}
+  39.167%{opacity:0.4}
+  73.333%{opacity:0.3}
+  90%{opacity:0.3}
+  94.167%{opacity:0}
+  100%{opacity:0}
+}
+@keyframes gbp-numTR{
+  0%{opacity:0}
+  12.917%{opacity:0}
+  16.25%{opacity:0.75}
+  33.333%{opacity:0.75}
+  39.167%{opacity:0.4}
+  73.333%{opacity:0.3}
+  90%{opacity:0.3}
+  94.167%{opacity:0}
+  100%{opacity:0}
+}
+@keyframes gbp-altBL{
+  0%{opacity:0;transform:scale(0.15)}
+  6.25%{opacity:0;transform:scale(0.15)}
+  10.417%{opacity:0.85;transform:scale(1)}
+  18.75%{opacity:0.85;transform:scale(1)}
+  20.417%{opacity:1;transform:scale(1)}
+  24.167%{opacity:0.85;transform:scale(1)}
+  32.5%{opacity:0.85;transform:scale(1)}
+  37.5%{opacity:0;transform:scale(1)}
+  100%{opacity:0;transform:scale(0.15)}
+}
+@keyframes gbp-altBR{
+  0%{opacity:0;transform:scale(0.15)}
+  13.333%{opacity:0;transform:scale(0.15)}
+  17.5%{opacity:0.85;transform:scale(1)}
+  25.833%{opacity:0.85;transform:scale(1)}
+  27.5%{opacity:1;transform:scale(1)}
+  31.25%{opacity:0.85;transform:scale(1)}
+  37.5%{opacity:0;transform:scale(1)}
+  100%{opacity:0;transform:scale(0.15)}
+}
+@keyframes gbp-numBL{
+  0%{opacity:0}
+  8.333%{opacity:0}
+  11.667%{opacity:0.55}
+  33.333%{opacity:0.55}
+  39.167%{opacity:0.8}
+  66.667%{opacity:0.8}
+  73.333%{opacity:1}
+  90%{opacity:1}
+  94.167%{opacity:0}
+  100%{opacity:0}
+}
+@keyframes gbp-numBR{
+  0%{opacity:0}
+  15.417%{opacity:0}
+  18.75%{opacity:0.55}
+  33.333%{opacity:0.55}
+  39.167%{opacity:0.8}
+  66.667%{opacity:0.8}
+  73.333%{opacity:1}
+  90%{opacity:1}
+  94.167%{opacity:0}
+  100%{opacity:0}
+}
+@keyframes gbp-winBL{
+  0%{opacity:0;transform:scale(0.9)}
+  33.333%{opacity:0;transform:scale(0.9)}
+  39.167%{opacity:1;transform:scale(1)}
+  90%{opacity:1;transform:scale(1)}
+  94.167%{opacity:0;transform:scale(1)}
+  100%{opacity:0;transform:scale(0.9)}
+}
+@keyframes gbp-winBR{
+  0%{opacity:0;transform:scale(0.9)}
+  34.333%{opacity:0;transform:scale(0.9)}
+  40.167%{opacity:1;transform:scale(1)}
+  90%{opacity:1;transform:scale(1)}
+  94.167%{opacity:0;transform:scale(1)}
+  100%{opacity:0;transform:scale(0.9)}
+}
+@keyframes gbp-arrowL{
+  0%{opacity:0;stroke-dashoffset:1}
+  40%{opacity:0;stroke-dashoffset:1}
+  40.083%{opacity:1;stroke-dashoffset:1}
+  48.333%{opacity:1;stroke-dashoffset:0}
+  90%{opacity:1;stroke-dashoffset:0}
+  94.167%{opacity:0;stroke-dashoffset:0}
+  100%{opacity:0;stroke-dashoffset:1}
+}
+@keyframes gbp-arrowR{
+  0%{opacity:0;stroke-dashoffset:1}
+  41.5%{opacity:0;stroke-dashoffset:1}
+  41.583%{opacity:1;stroke-dashoffset:1}
+  49.833%{opacity:1;stroke-dashoffset:0}
+  90%{opacity:1;stroke-dashoffset:0}
+  94.167%{opacity:0;stroke-dashoffset:0}
+  100%{opacity:0;stroke-dashoffset:1}
+}
+@keyframes gbp-headL{
+  0%{opacity:0}
+  45.833%{opacity:0}
+  48.75%{opacity:1}
+  90%{opacity:1}
+  94.167%{opacity:0}
+  100%{opacity:0}
+}
+@keyframes gbp-headR{
+  0%{opacity:0}
+  47.333%{opacity:0}
+  50.25%{opacity:1}
+  90%{opacity:1}
+  94.167%{opacity:0}
+  100%{opacity:0}
+}
+@keyframes gbp-band{
+  0%{opacity:0}
+  66.667%{opacity:0}
+  74.167%{opacity:0.075}
+  90%{opacity:0.075}
+  94.167%{opacity:0}
+  100%{opacity:0}
+}
+@keyframes gbp-bandLine{
+  0%{opacity:0;stroke-dashoffset:1}
+  66.667%{opacity:0;stroke-dashoffset:1}
+  66.75%{opacity:1;stroke-dashoffset:1}
+  74.167%{opacity:1;stroke-dashoffset:0}
+  90%{opacity:1;stroke-dashoffset:0}
+  94.167%{opacity:0;stroke-dashoffset:0}
+  100%{opacity:0;stroke-dashoffset:1}
+}
+@keyframes gbp-rowDown{
+  0%{fill:var(--text-3)}
+  66.667%{fill:var(--text-3)}
+  73.333%{fill:var(--text)}
+  90%{fill:var(--text)}
+  94.167%{fill:var(--text-3)}
+  100%{fill:var(--text-3)}
+}
+@keyframes gbp-cap1{
+  0%{opacity:0;transform:translateY(4px)}
+  2.5%{opacity:0;transform:translateY(4px)}
+  6.667%{opacity:1;transform:translateY(0px)}
+  29.167%{opacity:1;transform:translateY(0px)}
+  32.5%{opacity:0;transform:translateY(-2px)}
+  100%{opacity:0;transform:translateY(-2px)}
+}
+@keyframes gbp-cap2{
+  0%{opacity:0;transform:translateY(4px)}
+  33.333%{opacity:0;transform:translateY(4px)}
+  37.5%{opacity:1;transform:translateY(0px)}
+  62.5%{opacity:1;transform:translateY(0px)}
+  65.833%{opacity:0;transform:translateY(-2px)}
+  100%{opacity:0;transform:translateY(-2px)}
+}
+@keyframes gbp-cap3{
+  0%{opacity:0;transform:translateY(4px)}
+  66.667%{opacity:0;transform:translateY(4px)}
+  70.833%{opacity:1;transform:translateY(0px)}
+  90%{opacity:1;transform:translateY(0px)}
+  94.167%{opacity:0;transform:translateY(-2px)}
+  100%{opacity:0;transform:translateY(4px)}
+}
+@keyframes gbp-lab1{
+  0%{fill:var(--text)}
+  31.667%{fill:var(--text)}
+  35%{fill:var(--text-3)}
+  97.5%{fill:var(--text-3)}
+  100%{fill:var(--text)}
+}
+@keyframes gbp-lab2{
+  0%{fill:var(--text-3)}
+  32.5%{fill:var(--text-3)}
+  35.833%{fill:var(--text)}
+  65%{fill:var(--text)}
+  68.333%{fill:var(--text-3)}
+  100%{fill:var(--text-3)}
+}
+@keyframes gbp-lab3{
+  0%{fill:var(--text-3)}
+  65.833%{fill:var(--text-3)}
+  69.167%{fill:var(--text)}
+  91.667%{fill:var(--text)}
+  96.667%{fill:var(--text-3)}
+  100%{fill:var(--text-3)}
+}
+@keyframes gbp-bar1{
+  0%{stroke-dashoffset:1}
+  0.833%{stroke-dashoffset:1}
+  32.5%{stroke-dashoffset:0}
+  94.167%{stroke-dashoffset:0}
+  96.667%{stroke-dashoffset:1}
+  100%{stroke-dashoffset:1}
+}
+@keyframes gbp-bar2{
+  0%{stroke-dashoffset:1}
+  33.333%{stroke-dashoffset:1}
+  65.833%{stroke-dashoffset:0}
+  94.167%{stroke-dashoffset:0}
+  96.667%{stroke-dashoffset:1}
+  100%{stroke-dashoffset:1}
+}
+@keyframes gbp-bar3{
+  0%{stroke-dashoffset:1}
+  66.667%{stroke-dashoffset:1}
+  91.667%{stroke-dashoffset:0}
+  94.167%{stroke-dashoffset:0}
+  96.667%{stroke-dashoffset:1}
+  100%{stroke-dashoffset:1}
+}
