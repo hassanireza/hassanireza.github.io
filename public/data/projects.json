@@ -1,5 +1,13 @@
 [
   {
+    "id": "theory-gambit",
+    "title": "Theory Gambit",
+    "desc": "An interactive game-theory learning experience.",
+    "img": "theory-gambit.webp",
+    "category": "game-design",
+    "href": "https://theorygambit.github.io/"
+  },
+  {
     "id": "woodland-chess",
     "title": "Woodland Chess",
     "desc": "Mobile-first chess app with Stockfish WASM engine.",
