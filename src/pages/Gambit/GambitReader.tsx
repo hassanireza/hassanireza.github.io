@@ -85,7 +85,7 @@ export default function GambitReader({ topic, copy, copiedKey }: ReaderProps) {
           )}
           <p className="gb-r-idea">{topic.idea}</p>
           <div className="gb-r-meta">
-            <span>{LEVEL_LABEL[topic.level]}</span>
+            <span>{LEVEL_LABEL[topic.tier]}</span>
             <span>{topic.minutes} min read</span>
             {topic.tags.slice(0, 3).map((t) => (
               <span key={t}>{t}</span>
