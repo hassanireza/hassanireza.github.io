@@ -10,7 +10,7 @@ import { GambitPlayButton, GambitPlayStage } from "./GambitPlay";
 import "./GambitTiers.css";
 
 export type ChapterFilter = "all" | ChapterId;
-export type LevelFilter = 0 | 1 | 2 | 3;
+export type LevelFilter = 0 | 1 | 2 | 3 | 4;
 
 interface IndexProps {
   query: string;
@@ -66,12 +66,13 @@ function useColumnCount(ref: RefObject<HTMLDivElement | null>): number {
 }
 
 /** Same order as the game: the library is read Foundations, then Core, then Advanced. */
-const LEVELS = [1, 2, 3] as const;
+const LEVELS = [1, 2, 3, 4] as const;
 
-const LEVEL_BLURB: Record<1 | 2 | 3, string> = {
+const LEVEL_BLURB: Record<1 | 2 | 3 | 4, string> = {
   1: "Start here. The plain ideas and the classic first games, opening with the five that start Theory Gambit.",
   2: "The working toolkit. Most of what you need to analyse a real strategic situation.",
   3: "Deep and demanding ideas, ending with hypergames and metagames.",
+  4: "Several theories at once. Hypergames and the whole board.",
 };
 
 /** Balance a list into columns by estimated card height. */
@@ -129,7 +130,7 @@ export default function GambitIndex({
     const terms = q ? q.split(/\s+/) : [];
     return TOPICS.filter((t) => {
       if (chapter !== "all" && t.chapter !== chapter) return false;
-      if (level !== 0 && t.level !== level) return false;
+      if (level !== 0 && t.tier !== level) return false;
       if (terms.length === 0) return true;
       const hay = HAYSTACK.get(t.slug) ?? "";
       return terms.every((term) => hay.includes(term));
@@ -139,7 +140,7 @@ export default function GambitIndex({
   const groups = useMemo(
     () =>
       LEVELS.map((l) => {
-        const items = shown.filter((t) => t.level === l);
+        const items = shown.filter((t) => t.tier === l);
         return { level: l, items, cols: distribute(items, columns) };
       }).filter((g) => g.items.length > 0),
     [shown, columns],
@@ -208,7 +209,7 @@ export default function GambitIndex({
 
         <div className="gb-row">
           <div className="gb-chips gb-chips-levels" role="group" aria-label="Level">
-            {([0, 1, 2, 3] as const).map((l) => (
+            {([0, 1, 2, 3, 4] as const).map((l) => (
               <button
                 key={l}
                 type="button"

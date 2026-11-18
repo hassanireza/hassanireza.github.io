@@ -1,4 +1,4 @@
-import type { RawTopic, Topic, ChapterId } from "./types";
+import type { RawTopic, Topic, ChapterId, Tier } from "./types";
 import { CHAPTERS } from "./chapters";
 import { map } from "./ch1-map";
 import { solutions } from "./ch2-solutions";
@@ -10,6 +10,7 @@ import { mind } from "./ch7-mind";
 import { frames } from "./ch8-frames";
 import { algorithms } from "./ch9-algorithms";
 import { craft } from "./ch10-craft";
+import { synthesis } from "./synthesis";
 
 export { CHAPTERS };
 export type { Topic, ChapterId };
@@ -45,7 +46,7 @@ function inGameOrder(all: RawTopic[]): RawTopic[] {
   return [...pick(FIRST), ...byLevel(1), ...byLevel(2), ...byLevel(3), ...pick(FINALE)];
 }
 
-const RAW: RawTopic[] = inGameOrder(AUTHORED);
+const RAW: RawTopic[] = [...inGameOrder(AUTHORED), ...synthesis];
 
 function minutesFor(raw: RawTopic): number {
   const words = [raw.d, ...raw.b, raw.x, raw.u, raw.o, ...(raw.m ?? [])].join(" ").split(/\s+/).length;
@@ -65,6 +66,7 @@ export const TOPICS: Topic[] = RAW.map((raw, index) => ({
   fa: raw.fa,
   chapter: raw.c,
   level: raw.l,
+  tier: (raw.s ? 4 : raw.l) as Tier,
   tags: raw.g,
   idea: raw.d,
   body: raw.b,
@@ -86,10 +88,12 @@ export function chapterOf(id: ChapterId) {
   return CHAPTERS.find((c) => c.id === id)!;
 }
 
-export const LEVEL_LABEL: Record<1 | 2 | 3, string> = {
+/** Reading groups, in the order of the game. */
+export const LEVEL_LABEL: Record<Tier, string> = {
   1: "Foundations",
   2: "Core",
   3: "Advanced",
+  4: "Synthesis",
 };
 
 /** Plain-text math for clipboard: strip the _{} and ^{} wrappers into readable ASCII-ish form. */
@@ -102,7 +106,7 @@ export function topicToMarkdown(t: Topic): string {
   const ch = chapterOf(t.chapter);
   const lines: string[] = [];
   lines.push(`# ${t.name}${t.fa ? ` (${t.fa})` : ""}`);
-  lines.push(`*Chapter ${ch.numeral}: ${ch.title} | ${LEVEL_LABEL[t.level]} | ${t.minutes} min read*`);
+  lines.push(`*Chapter ${ch.numeral}: ${ch.title} | ${LEVEL_LABEL[t.tier]} | ${t.minutes} min read*`);
   lines.push("");
   lines.push(`> ${t.idea}`);
   lines.push("");

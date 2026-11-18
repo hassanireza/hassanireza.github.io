@@ -16,8 +16,11 @@ export type ChapterId =
   | "algorithms"
   | "craft";
 
-/** 1 = Intro, 2 = Core, 3 = Advanced */
+/** 1 = Foundations, 2 = Core, 3 = Advanced */
 export type Level = 1 | 2 | 3;
+
+/** Reading group: the three levels, then 4 = Synthesis (the capstones). */
+export type Tier = 1 | 2 | 3 | 4;
 
 export interface Chapter {
   id: ChapterId;
@@ -38,6 +41,8 @@ export interface RawTopic {
   c: ChapterId;
   /** level */
   l: Level;
+  /** synthesis capstone, shown after Advanced */
+  s?: boolean;
   /** tags */
   g: string[];
   /** one-sentence plain-language idea */
@@ -63,6 +68,7 @@ export interface Topic {
   fa?: string;
   chapter: ChapterId;
   level: Level;
+  tier: Tier;
   tags: string[];
   idea: string;
   body: string[];
