@@ -9,7 +9,7 @@ Content lives in `src/pages/Gambit/data/ch*.ts`. Each entry uses short keys:
 `x` example, `u` use in design, `o` origin, `r` related slugs.
 Entries are authored in chapter order, but the library is read in the order of the game, Theory Gambit:
 the five that open the game, then the rest of Foundations (level 1), then Core (level 2), then Advanced
-(level 3), with the hypergame and metagame finale last. `src/pages/Gambit/data/index.ts` builds that order
+(level 3), with the hypergame and metagame finale last, then the two Synthesis capstones (`data/synthesis.ts`). `src/pages/Gambit/data/index.ts` builds that order
 (`FIRST`, `FINALE`), so numbers, the pager and "Entry n of N" all follow it. A new entry lands at the end of
 its level automatically. Keep `FIRST` and `FINALE` in step with `src/catalog/curriculum.ts` in the game repo.
 
