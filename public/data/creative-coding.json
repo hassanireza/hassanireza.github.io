@@ -3,6 +3,102 @@
   "blurb": "Motion and image made from code alone. Watch the output, then open the source behind it.",
   "works": [
     {
+      "id": "theory-gambit-promo",
+      "title": "Theory Gambit: The Promo",
+      "desc": "A sixty second promo for Theory Gambit. Point clouds, hypersonic type and a beat-locked techno score, all rendered from code.",
+      "year": 2026,
+      "poster": "assets/creative/theory-gambit-promo/poster.webp",
+      "video": "assets/creative/theory-gambit-promo/theory-gambit-promo.mp4",
+      "width": 1920,
+      "height": 1080,
+      "cover": "wide",
+      "tags": [
+        "Python",
+        "NumPy",
+        "Point clouds",
+        "Kinetic type",
+        "Synthesis"
+      ],
+      "about": [
+        "One timeline drives picture and sound. At 120 BPM and 30 fps a beat is exactly 15 frames, so every kick, snare, arp note and impact in the score fires a visual on the very frame it sounds.",
+        "Eighteen thousand particles are pulled between shapes by exact critically damped springs: payoff tables, saddles, galaxies, the brand mark. Type slams in with tracking collapse and motion blur. The music is synthesized in NumPy: kick, rolling bass, clap, hats, arps, pads, FM bells, risers and impacts, sidechained and limited."
+      ],
+      "equations": [
+        {
+          "label": "Critically damped spring (exact step)",
+          "tex": "x(t+Δt) = x_{T} + (d + (v + ωd)Δt)e^{-ωΔt}"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Output",
+          "value": "1920 x 1080, 30 fps, 60 s"
+        },
+        {
+          "label": "Tempo",
+          "value": "120 BPM, 30 bars"
+        },
+        {
+          "label": "Stack",
+          "value": "NumPy, SciPy, OpenCV, Pillow, FFmpeg"
+        }
+      ],
+      "run": "python theory_gambit_promo.py --save promo.mp4",
+      "code": {
+        "src": "assets/creative/theory-gambit-promo/theory_gambit_promo.py",
+        "filename": "theory_gambit_promo.py",
+        "language": "python"
+      }
+    },
+    {
+      "id": "woodland-chess-promo",
+      "title": "Woodland Chess: Play with Intent",
+      "desc": "A fifteen second trailer for Woodland Chess. A trident and a knight built from points, an orchestral score that hits on every frame it should.",
+      "year": 2026,
+      "poster": "assets/creative/woodland-chess-promo/poster.webp",
+      "video": "assets/creative/woodland-chess-promo/woodland-chess-promo.mp4",
+      "width": 1920,
+      "height": 1080,
+      "cover": "wide",
+      "tags": [
+        "Python",
+        "NumPy",
+        "Point clouds",
+        "Cinematic",
+        "Synthesis"
+      ],
+      "about": [
+        "The brand's own geometry becomes the material: the trident mark and the cburnett pieces from the app are sampled into twenty thousand points, and exact critically damped springs pull the cloud from shape to shape on the beat.",
+        "The score is synthesized in NumPy at 90 BPM in D minor: braams, taiko, a 3+3+2 string ostinato, a formant choir, glass bells and a snare roll into one beat of silence. Twenty frames to the beat means every hit lands on a frame. A vertical cut ships with the code."
+      ],
+      "equations": [
+        {
+          "label": "Frames per beat",
+          "tex": "\\frac{60}{90}\\,\\mathrm{s} \\times 30\\,\\mathrm{fps} = 20"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Output",
+          "value": "1920 x 1080, 30 fps, 15 s (9:16 option)"
+        },
+        {
+          "label": "Tempo",
+          "value": "90 BPM, D minor"
+        },
+        {
+          "label": "Stack",
+          "value": "NumPy, SciPy, OpenCV, Pillow, FFmpeg"
+        }
+      ],
+      "run": "python woodland_chess_promo.py --save promo.mp4",
+      "code": {
+        "src": "assets/creative/woodland-chess-promo/woodland_chess_promo.py",
+        "filename": "woodland_chess_promo.py",
+        "language": "python"
+      }
+    },
+    {
       "id": "arrivals",
       "title": "Arrivals",
       "desc": "Type that never simply appears: every word arrives by its own mechanic, and how it arrives is the message.",
