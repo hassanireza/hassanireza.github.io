@@ -3,6 +3,54 @@
   "blurb": "Motion and image made from code alone. Watch the output, then open the source behind it.",
   "works": [
     {
+      "id": "noctiluca-promo",
+      "title": "Noctiluca: The Dive",
+      "desc": "A thirty three second rave trailer for Noctiluca. Matrix-style code rain, a difficulty ladder from print(\"hello\") to N-Queens, and a psytrance score synthesized in code.",
+      "year": 2026,
+      "poster": "assets/creative/noctiluca-promo/poster.webp",
+      "video": "assets/creative/noctiluca-promo/noctiluca-promo.mp4",
+      "width": 1920,
+      "height": 1080,
+      "cover": "wide",
+      "tags": [
+        "Python",
+        "NumPy",
+        "Code rain",
+        "Typography",
+        "Synthesis"
+      ],
+      "about": [
+        "Code is the material. Columns of Python glyphs fall behind every scene, and each snippet decodes out of noise one character at a time. The reveal is driven by the arpeggio notes in the score, so the music types the code.",
+        "The film climbs the app's own difficulty curve, from a single print call to dynamic programming, Dijkstra and N-Queens, with the rating counting up. The score is synthesized in NumPy at 150 BPM: a rolling psytrance bass, Goa arpeggios through a flanger and ping-pong echo, a hard kick, sirens and orchestral braams. Twelve frames to the beat means every hit lands on a frame."
+      ],
+      "equations": [
+        {
+          "label": "Frames per beat",
+          "tex": "\\frac{60}{150}\\,\\mathrm{s} \\times 30\\,\\mathrm{fps} = 12"
+        }
+      ],
+      "specs": [
+        {
+          "label": "Output",
+          "value": "1920 x 1080, 30 fps, 33 s"
+        },
+        {
+          "label": "Tempo",
+          "value": "150 BPM, C phrygian dominant"
+        },
+        {
+          "label": "Stack",
+          "value": "NumPy, SciPy, OpenCV, Pillow, FFmpeg"
+        }
+      ],
+      "run": "python noctiluca_promo.py --save promo.mp4",
+      "code": {
+        "src": "assets/creative/noctiluca-promo/noctiluca_promo.py",
+        "filename": "noctiluca_promo.py",
+        "language": "python"
+      }
+    },
+    {
       "id": "theory-gambit-promo",
       "title": "Theory Gambit: The Promo",
       "desc": "A sixty second promo for Theory Gambit. Point clouds, hypersonic type and a beat-locked techno score, all rendered from code.",
