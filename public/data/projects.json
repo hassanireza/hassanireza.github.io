@@ -56,14 +56,6 @@
     "href": "https://lexeraapp.github.io/"
   },
   {
-    "id": "lumenari-system",
-    "title": "Lumenari System",
-    "desc": "Six coding worlds, one cosmic learning adventure.",
-    "img": "lumenari-system.webp",
-    "category": "game-design",
-    "href": "https://hassanireza.github.io/lumenari-system/"
-  },
-  {
     "id": "cosmodrome",
     "title": "Cosmodrome",
     "desc": "A monochrome cosmic racer.",
