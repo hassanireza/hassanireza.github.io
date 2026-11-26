@@ -1,5 +1,13 @@
 [
   {
+    "id": "noctulica",
+    "title": "Noctulica",
+    "desc": "An adaptive Python learning game.",
+    "img": "noctulica.webp",
+    "category": "game-design",
+    "href": "https://noctilucapy.github.io/"
+  },
+  {
     "id": "theory-gambit",
     "title": "Theory Gambit",
     "desc": "An interactive game-theory learning experience.",
