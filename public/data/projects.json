@@ -1,19 +1,19 @@
 [
   {
-    "id": "hadopsalm",
-    "title": "Hadopsalm",
-    "desc": "Web riddles and wargames, rebuilt for your thumb.",
-    "img": "hadopsalm.webp",
-    "category": "game-design",
-    "href": "https://hadopsalm.github.io/"
-  },
-  {
     "id": "noctulica",
     "title": "Noctulica",
     "desc": "An adaptive Python learning game.",
     "img": "noctulica.webp",
     "category": "game-design",
     "href": "https://noctilucapy.github.io/"
+  },
+  {
+    "id": "hadopsalm",
+    "title": "Hadopsalm",
+    "desc": "Web riddles and wargames, rebuilt for your thumb.",
+    "img": "hadopsalm.webp",
+    "category": "game-design",
+    "href": "https://hadopsalm.github.io/"
   },
   {
     "id": "theory-gambit",
